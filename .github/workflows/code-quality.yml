@@ -1,87 +1,52 @@
-name: Code Quality
+name: CodeQL
 
 on:
   push:
-    branches:
-      - main
-      - develop
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - main
-      - develop
+    branches: [ "main" ]
   schedule:
-    - cron: '0 0 * * 0'
+    - cron: "0 3 * * 0"
 
 permissions:
+  actions: read
   contents: read
   security-events: write
 
 jobs:
-  php-lint:
-    name: PHP Code Linting
+  analyze:
+    name: Analyze (JavaScript/TypeScript)
     runs-on: ubuntu-latest
+
     strategy:
+      fail-fast: false
       matrix:
-        php-version: ['8.1', '8.2']
+        language: [ "javascript-typescript" ]
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
         with:
-          php-version: ${{ matrix.php-version }}
-          tools: phpstan, phpcs
+          languages: ${{ matrix.language }}
+          # Wichtig: NICHT "none"
+          build-mode: autobuild
 
-      - name: Validate PHP syntax
-        run: |
-          find public -name "*.php" -type f -exec php -l {} \;
+      # Falls autobuild bei euch nicht greift, kommentiere autobuild aus
+      # und nutze stattdessen diese manuellen Steps:
+      #
+      # - name: Setup Node
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: "20"
+      #
+      # - name: Install dependencies
+      #   run: npm ci
+      #
+      # - name: Build
+      #   run: npm run build --if-present
 
-      - name: Run PHPCS
-        run: |
-          phpcs --standard=PSR12 public/ --ignore=public/database/ || true
-
-  js-lint:
-    name: JavaScript Code Quality
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18.x]
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Install dependencies
-        run: npm ci || true
-
-      - name: Run ESLint
-        run: npx eslint public --ext .js || true
-
-  security-scan:
-    name: Security Scanning
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-
-      - name: Upload Trivy results
-        uses: github/codeql-action/upload-sarif@v3
-        if: ${{ always() && github.event_name != 'pull_request' }}
-        with:
-          sarif_file: 'trivy-results.sarif'
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3

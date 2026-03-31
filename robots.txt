@@ -4,4 +4,3 @@ Allow: /
 
 Disallow: /logs/
 Disallow: /public/database/
-Disallow: /upload/

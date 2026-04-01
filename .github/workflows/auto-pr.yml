@@ -11,20 +11,25 @@ permissions:
 jobs:
   auto-pr:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Automatic PR: Changes"
-          branch: auto-pr/${{ github.ref_name }}
-          branch-suffix: short-commit-hash
-          base: main
-          title: "Automatic PR from ${{ github.ref_name }}"
-          body-path: .github/PULL_REQUEST_TEMPLATE/auto-pr.md
-          draft: false
+      - name: Create or update Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BRANCH="${{ github.ref_name }}"
+          TITLE="Automatic PR from ${BRANCH}"
+          BODY_FILE=".github/PULL_REQUEST_TEMPLATE/auto-pr.md"
+
+          EXISTING_PR_NUMBER="$(gh pr list --head "${BRANCH}" --base main --state open --json number --jq '.[0].number // empty')"
+
+          if [ -n "${EXISTING_PR_NUMBER}" ]; then
+            echo "Updating existing PR #${EXISTING_PR_NUMBER}"
+            gh pr edit "${EXISTING_PR_NUMBER}" --title "${TITLE}" --body-file "${BODY_FILE}"
+          else
+            echo "Creating new PR for branch ${BRANCH}"
+            gh pr create --base main --head "${BRANCH}" --title "${TITLE}" --body-file "${BODY_FILE}"
+          fi

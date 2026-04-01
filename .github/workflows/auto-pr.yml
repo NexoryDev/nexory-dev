@@ -1,0 +1,30 @@
+name: Automatic Pull Request
+on:
+  push:
+    branches-ignore:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-pr:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Automatic PR: Changes"
+          branch: auto-pr/${{ github.ref_name }}
+          branch-suffix: short-commit-hash
+          base: main
+          title: "Automatic PR from ${{ github.ref_name }}"
+          body-path: .github/PULL_REQUEST_TEMPLATE/auto-pr.md
+          draft: false

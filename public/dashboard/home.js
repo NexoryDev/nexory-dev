@@ -31,4 +31,8 @@ if __name__ == "__main__":
         }
     }
     typeCode();
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 05c0230ec6f00b0a3d3924f3aef7b970cebbbdc1

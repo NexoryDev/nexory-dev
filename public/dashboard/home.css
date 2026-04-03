@@ -1,5 +1,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
 
+:root {
+    /* -- Background -- */
+    --color-bg:              #0d1117;
+    --color-bg-surface:      #161b22;
+    --color-bg-surface-2:    rgba(22, 27, 34, 0.92);
+
+    /* -- Borders -- */
+    --color-border:          #30363d;
+    --color-border-subtle:   #21262d;
+
+    /* -- Accent (blue) -- */
+    --color-accent:          #58a6ff;
+
+    /* -- Gradient stops -- */
+    --color-grad-1:          #7ee8fa;
+    --color-grad-2:          #58a6ff;
+    --color-grad-3:          #a78bfa;
+    --color-grad-4:          #c084fc;
+
+    /* -- Text -- */
+    --color-text:            #c9d1d9;
+    --color-text-muted:      #6e7681;
+
+    /* -- Dot colors -- */
+    --color-dot-red:         #ff5f57;
+    --color-dot-yellow:      #ffbd2e;
+    --color-dot-green:       #28c940;
+}
+
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -7,7 +36,7 @@
 body {
     margin: 0;
     font-family: 'Fira Code', monospace;
-    background-color: #0d1117;
+    background-color: var(--color-bg);
 }
 
 /* -- Preloader -- */
@@ -25,7 +54,7 @@ body {
     position: fixed;
     inset: 0;
     z-index: 9999;
-    background: #0d1117;
+    background: var(--color-bg);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -42,7 +71,7 @@ body {
 .preloader-logo {
     font-size: 2rem;
     font-weight: 600;
-    background: linear-gradient(135deg, #7ee8fa 0%, #58a6ff 35%, #a78bfa 70%, #c084fc 100%);
+    background: linear-gradient(135deg, var(--color-grad-1) 0%, var(--color-grad-2) 35%, var(--color-grad-3) 70%, var(--color-grad-4) 100%);
     background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -53,7 +82,7 @@ body {
 .preloader-bar {
     width: 200px;
     height: 3px;
-    background: #21262d;
+    background: var(--color-border-subtle);
     border-radius: 99px;
     overflow: hidden;
 }
@@ -61,7 +90,7 @@ body {
 .preloader-bar-inner {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, #58a6ff, #a78bfa);
+    background: linear-gradient(90deg, var(--color-grad-2), var(--color-grad-3));
     border-radius: 99px;
     animation: load-bar 1.2s ease forwards;
 }
@@ -120,8 +149,8 @@ body {
     font-weight: 600;
     margin: 0 0 0.75rem;
     letter-spacing: -0.02em;
-    background: linear-gradient(135deg, #7ee8fa 0%, #58a6ff 35%, #a78bfa 70%, #c084fc 100%);
-    background-size: 200% auto;
+    background: linear-gradient(135deg, var(--color-grad-1) 0%, var(--color-grad-2) 25%, #7b9fff 45%, var(--color-grad-3) 65%, var(--color-grad-4) 85%, var(--color-grad-1) 100%);
+    background-size: 300% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -134,7 +163,7 @@ body {
 
 .info p {
     font-size: clamp(0.8rem, 2vw, 0.95rem);
-    color: #6e7681;
+    color: var(--color-text-muted);
     margin: 0;
     letter-spacing: 0.04em;
 }
@@ -142,8 +171,8 @@ body {
 /* -- Coding animation -- */
 .terminal {
     width: 100%;
-    background: rgba(22, 27, 34, 0.92);
-    border: 1px solid #30363d;
+    background: var(--color-bg-surface-2);
+    border: 1px solid var(--color-border);
     border-radius: 12px;
     overflow: hidden;
     backdrop-filter: blur(8px);
@@ -154,12 +183,12 @@ body {
 }
 
 .terminal-header {
-    background: #161b22;
+    background: var(--color-bg-surface);
     padding: 11px 16px;
     display: flex;
     align-items: center;
     gap: 8px;
-    border-bottom: 1px solid #21262d;
+    border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .dot {
@@ -167,12 +196,12 @@ body {
     height: 12px;
     border-radius: 50%;
 }
-.dot.red    { background: #ff5f57; box-shadow: 0 0 5px rgba(255,95,87,0.6); }
-.dot.yellow { background: #ffbd2e; box-shadow: 0 0 5px rgba(255,189,46,0.6); }
-.dot.green  { background: #28c940; box-shadow: 0 0 5px rgba(40,201,64,0.6); }
+.dot.red    { background: var(--color-dot-red);    box-shadow: 0 0 5px rgba(255,95,87,0.6); }
+.dot.yellow { background: var(--color-dot-yellow); box-shadow: 0 0 5px rgba(255,189,46,0.6); }
+.dot.green  { background: var(--color-dot-green);  box-shadow: 0 0 5px rgba(40,201,64,0.6); }
 
 .terminal-title {
-    color: #6e7681;
+    color: var(--color-text-muted);
     font-size: 0.76rem;
     margin-left: 6px;
 }
@@ -183,7 +212,7 @@ body {
 }
 
 #code-output {
-    color: #c9d1d9;
+    color: var(--color-text);
     font-size: 0.875rem;
     line-height: 1.65;
     white-space: pre;
@@ -196,7 +225,7 @@ body {
     display: inline-block;
     width: 2px;
     height: 0.9em;
-    background: #58a6ff;
+    background: var(--color-accent);
     margin-left: 1px;
     vertical-align: text-bottom;
     animation: blink 1s step-end infinite;

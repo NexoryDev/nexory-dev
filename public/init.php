@@ -12,7 +12,7 @@ if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ($_SERVER['SER
     header('Strict-Transport-Security: max-age=63072000; includeSubDomains; preload');
 }
 
-$csp = "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; img-src 'self' data: blob:; script-src 'self' https://cdnjs.cloudflare.com https://unpkg.com 'unsafe-inline' blob:; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://cdnjs.cloudflare.com;";
+$csp = "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; img-src 'self' data: blob:; script-src 'self' https://cdnjs.cloudflare.com https://unpkg.com 'unsafe-inline' blob:; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://cdnjs.cloudflare.com https://unpkg.com;";
 header("Content-Security-Policy: $csp");
 
 $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ($_SERVER['SERVER_PORT'] ?? '') == 443;

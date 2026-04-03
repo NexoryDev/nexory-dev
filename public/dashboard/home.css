@@ -10,6 +10,67 @@ body {
     background-color: #0d1117;
 }
 
+/* -- Preloader -- */
+
+.page-hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+#page {
+    transition: opacity 0.4s ease;
+}
+
+#preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #0d1117;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#preloader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.preloader-logo {
+    font-size: 2rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #7ee8fa 0%, #58a6ff 35%, #a78bfa 70%, #c084fc 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 2s linear infinite;
+}
+
+.preloader-bar {
+    width: 200px;
+    height: 3px;
+    background: #21262d;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.preloader-bar-inner {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #58a6ff, #a78bfa);
+    border-radius: 99px;
+    animation: load-bar 1.2s ease forwards;
+}
+
+@keyframes load-bar {
+    to { width: 100%; }
+}
+
+/* -- Hero Section -- */
 .hero {
     position: relative;
     width: 100vw;
@@ -25,7 +86,7 @@ body {
     inset: 0;
     width: 100%;
     height: 100%;
-    opacity: 0.3;
+    opacity: 0.7;
     pointer-events: none;
 }
 
@@ -38,7 +99,6 @@ body {
     z-index: 1;
 }
 
-/* ── Content ────────────────────────────────────────── */
 .hero-content {
     position: relative;
     z-index: 2;
@@ -51,7 +111,6 @@ body {
     max-width: 680px;
 }
 
-/* ── Info ───────────────────────────────────────────── */
 .info {
     text-align: center;
 }
@@ -80,7 +139,7 @@ body {
     letter-spacing: 0.04em;
 }
 
-/* ── Terminal ───────────────────────────────────────── */
+/* -- Coding animation -- */
 .terminal {
     width: 100%;
     background: rgba(22, 27, 34, 0.92);

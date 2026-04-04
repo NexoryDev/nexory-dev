@@ -3,14 +3,20 @@ require_once __DIR__ . '/../init.php';
 ?>
 
 <!DOCTYPE html>
-<html lang="<?=  e(current_lang()) ?>">
+<html lang="<?=  e(current_language()) ?>">
 
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <base href="/">
-        <title><?=  e(t('home.title')) ?> </title>
+        <title data-i18n="home.title"><?= e(t('home.title')) ?></title>
+        <script>
+        window.__i18nPage = {
+            de: { 'home.title': 'Nexory.Org' },
+            en: { 'home.title': 'Nexory.Org \u2013 Open Source Projects' }
+        };
+        </script>
         <link rel="stylesheet" href="../dashboard/home.css">
         <link rel="stylesheet" href="../navebar/navebar.css">
         <link rel="stylesheet" href="../footer/footer.css">

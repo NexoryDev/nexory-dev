@@ -8,84 +8,123 @@ if (!function_exists('supported_languages')) {
 }
 
 if (!function_exists('normalize_language')) {
-	function normalize_language($lang) {
-		$lang = strtolower((string)$lang);
-		return in_array($lang, supported_languages(), true) ? $lang : '';
+	function normalize_language($language) {
+		$language = strtolower((string)$language);
+		return in_array($language, supported_languages(), true) ? $language : '';
 	}
 }
 
 if (!function_exists('bootstrap_language')) {
 	function bootstrap_language() {
-		$lang = '';
+		$language = '';
 
-		if (isset($_GET['lang'])) {
-			$lang = normalize_language($_GET['lang']);
-			if ($lang !== '') {
-				$_SESSION['lang'] = $lang;
+		if (isset($_GET['language'])) {
+			$language = normalize_language($_GET['language']);
+			if ($language !== '') {
+				$_SESSION['language'] = $language;
 			}
 		}
 
-		if ($lang === '' && isset($_SESSION['lang'])) {
-			$lang = normalize_language($_SESSION['lang']);
+		if ($language === '' && isset($_SESSION['language'])) {
+			$language = normalize_language($_SESSION['language']);
+			if ($language === '') {
+				unset($_SESSION['language']);
+			}
 		}
 
-		if ($lang === '') {
+		if ($language === '') {
 			$acceptLanguage = (string)($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '');
 			foreach (preg_split('/\s*,\s*/', $acceptLanguage) as $entry) {
 				$candidate = normalize_language(substr($entry, 0, 2));
 				if ($candidate !== '') {
-					$lang = $candidate;
+					$language = $candidate;
 					break;
 				}
 			}
 		}
 
-		if ($lang === '') {
-			$lang = 'de';
+		if ($language === '') {
+			$language = 'de';
 		}
 
-		$_SESSION['lang'] = $lang;
-		$GLOBALS['app_lang'] = $lang;
+		$_SESSION['language'] = $language;
+		$GLOBALS['app_language'] = $language;
 	}
 }
 
-if (!function_exists('current_lang')) {
-	function current_lang() {
-		return (string)($GLOBALS['app_lang'] ?? 'de');
+if (!function_exists('current_language')) {
+	function current_language() {
+		return (string)($GLOBALS['app_language'] ?? 'de');
+	}
+}
+
+if (!function_exists('with_language')) {
+    function with_language($url, $language = null) {
+        $language = normalize_language($language ?? current_language());
+        if ($language === '') {
+            $language = current_language();
+        }
+
+        $parts = parse_url((string)$url);
+        $path = $parts['path'] ?? '/';
+        $query = [];
+        if (!empty($parts['query'])) {
+            parse_str($parts['query'], $query);
+        }
+
+        $query['language'] = $language;
+        $qs = http_build_query($query);
+        $result = $path . ($qs !== '' ? '?' . $qs : '');
+
+        if (!empty($parts['fragment'])) {
+            $result .= '#' . $parts['fragment'];
+        }
+
+        return $result;
+    }
+}
+
+if (!function_exists('current_url_with_language')) {
+    function current_url_with_language($language) {
+        $current = (string)($_SERVER['REQUEST_URI'] ?? '/dashboard/home.php');
+        return with_language($current, $language);
+    }
+}
+
+if (!function_exists('e')) {
+	function e($s) {
+		return htmlspecialchars((string)$s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 	}
 }
 
 if (!function_exists('t')) {
 	function t($key) {
-		static $translations = [
+		$language = current_language();
+		$translations = [
 			'de' => [
-				'home.title' => 'Startseite',
+				'nav.home' => 'Startseite',
+				'nav.github' => 'Github',
+				'nav.contact' => 'Kontakt',
+				'nav.language_switcher' => 'Sprachwechsel',
+				'home.title' => 'Nexory.Org',
 			],
 			'en' => [
-				'home.title' => 'Home',
-			],
+				'nav.home' => 'Home',
+				'nav.github' => 'Github',
+				'nav.contact' => 'Contact',
+				'nav.language_switcher' => 'Language Switcher',
+				'home.title' => 'Nexory.Org',
+			]
 		];
 
-		$lang = current_lang();
-		if (!isset($translations[$lang])) {
-			$lang = 'de';
+		$language = current_language();
+		if (isset($translations[$language][$key])) {
+			return $translations[$language][$key];
 		}
 
-		if (isset($translations[$lang][$key])) {
-			return $translations[$lang][$key];
+		if (isset($translations['en'][$key])) {
+            return $translations['en'][$key];
 		}
-
-		if (isset($translations['de'][$key])) {
-			return $translations['de'][$key];
-		}
-
 		return (string)$key;
 	}
 }
-
-if (!function_exists('e')) {
-	function e($value) {
-		return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
-	}
-}
-

@@ -36,7 +36,7 @@ $cookieParams = [
 $rawHost = (string)($_SERVER['HTTP_HOST'] ?? '');
 $cookieHost = (string)parse_url(($secure ? 'https' : 'http') . '://' . $rawHost, PHP_URL_HOST);
 
-$allowedCookieBaseDomains = ['nexory.org'];
+$allowedCookieBaseDomains = ['nexory.dev'];
 
 if ($cookieHost !== '' && filter_var($cookieHost, FILTER_VALIDATE_IP) === false) {
     foreach ($allowedCookieBaseDomains as $baseDomain) {

@@ -92,11 +92,7 @@ body {
     width: 0%;
     background: linear-gradient(90deg, var(--color-grad-2), var(--color-grad-3));
     border-radius: 99px;
-    animation: load-bar 1.2s ease forwards;
-}
-
-@keyframes load-bar {
-    to { width: 100%; }
+    transition: width 0.35s ease;
 }
 
 /* -- Hero Section -- */

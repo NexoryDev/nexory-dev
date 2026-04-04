@@ -1,36 +1,73 @@
 /* -- React Preloader -- */
-
-const { useEffect, useRef } = React;
+const { useEffect, useRef, useState } = React;
 
 function Preloader() {
     const ref = useRef(null);
+    const progressRef = useRef(0);
+    const [progress, setProgress] = useState(0);
 
     useEffect(() => {
-        function showPage() {
-            ref.current.classList.add('hidden');
-
-            setTimeout(() => {
-                document.getElementById('page').classList.remove('page-hidden');
-                startAnimations();
-            }, 500);
+        function advance(value) {
+            if (value > progressRef.current) {
+                progressRef.current = value;
+                setProgress(value);
+            }
         }
 
-        function trigger() {
-            setTimeout(showPage, 1300);
+        advance(5);
+
+        const resources = document.querySelectorAll(
+            'link[rel="stylesheet"], script[src], img[src]'
+        );
+        const expectedCount = resources.length;
+        let loadedCount = 0;
+
+        let observer;
+        try {
+            observer = new PerformanceObserver((list) => {
+                loadedCount += list.getEntries().length;
+                if (expectedCount > 0) {
+                    const pct = Math.min(85, Math.round((loadedCount / expectedCount) * 85));
+                    advance(pct);
+                }
+            });
+            observer.observe({ type: 'resource', buffered: true });
+        } catch (_) {}
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => advance(25), { once: true });
+        } else {
+            advance(25);
+        }
+
+        function finishLoading() {
+            if (observer) observer.disconnect();
+            advance(100);
+            setTimeout(() => {
+                if (ref.current) ref.current.classList.add('hidden');
+                setTimeout(() => {
+                    document.getElementById('page').classList.remove('page-hidden');
+                    startAnimations();
+                }, 500);
+            }, 450);
         }
 
         if (document.readyState === 'complete') {
-            trigger();
+            setTimeout(finishLoading, 200);
         } else {
-            window.addEventListener('load', trigger, { once: true });
+            window.addEventListener('load', () => setTimeout(finishLoading, 200), { once: true });
         }
+
+        return () => {
+            if (observer) observer.disconnect();
+        };
     }, []);
 
     return (
         <div id="preloader" ref={ref}>
-            <div className="preloader-logo">Nexory.Org</div>
+            <div className="preloader-logo">nexory.dev</div>
             <div className="preloader-bar">
-                <div className="preloader-bar-inner"></div>
+                <div className="preloader-bar-inner" style={{ width: progress + '%' }}></div>
             </div>
         </div>
     );
@@ -42,7 +79,7 @@ ReactDOM.createRoot(document.getElementById('preloader-root')).render(<Preloader
 function startAnimations() {
     const canvas = document.getElementById('code-canvas');
     const ctx = canvas.getContext('2d');
-    const PARTICLE_COUNT = 100;
+    const PARTICLE_COUNT = 150;
     const CONNECTION_DIST = 200;
     const SPEED = 0.4;
     let particles = [];
@@ -108,7 +145,7 @@ function startAnimations() {
     draw();
 
     const CODE =
-`class NexoryOrg:
+`class nexory:
     def __init__(self, org_name):
         self.org = org_name
         self.people = []
@@ -118,7 +155,7 @@ function startAnimations() {
         print(f"Welcome to {self.org}, {new_user}!")
 
 if __name__ == "__main__":
-    org = NexoryOrg("Nexory.Org")
+    org = NexoryOrg("nexory.dev")
     org.join("Your Name")
     org.run()`;
 

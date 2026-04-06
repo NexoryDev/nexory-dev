@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
+
+:root {
+    --color-bg:              #0d1117;
+    --color-bg-surface:      #161b22;
+    --color-border:          #30363d;
+    --color-border-subtle:   #21262d;
+    --color-accent:          #58a6ff;
+    --color-grad-1:          #7ee8fa;
+    --color-grad-2:          #58a6ff;
+    --color-grad-3:          #a78bfa;
+    --color-grad-4:          #c084fc;
+    --color-text:            #c9d1d9;
+    --color-text-muted:      #6e7681;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Fira Code', monospace;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+}
+
+/* -- Layout -- */
+
+.legal-page {
+    min-height: calc(100vh - 64px);
+    padding: 5rem 1.5rem 4rem;
+}
+
+.legal-container {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+/* -- Header -- */
+
+.legal-header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 2rem;
+}
+
+.legal-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-accent);
+    margin: 0 0 0.75rem;
+}
+
+.legal-title {
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin: 0 0 0.6rem;
+    background: linear-gradient(135deg, var(--color-grad-1) 0%, var(--color-grad-2) 35%, var(--color-grad-3) 70%, var(--color-grad-4) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.legal-subtitle {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+/* -- Sections -- */
+
+.legal-section {
+    margin-bottom: 2.5rem;
+}
+
+.legal-section h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.legal-section h3 {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    margin: 1.25rem 0 0.5rem;
+}
+
+.legal-section p {
+    font-size: 0.85rem;
+    line-height: 1.75;
+    color: var(--color-text-muted);
+    margin: 0 0 0.75rem;
+}
+
+.legal-section a {
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.legal-section a:hover {
+    opacity: 0.75;
+}
+
+/* -- Footer note -- */
+
+.legal-foot {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border-subtle);
+}
+
+.legal-foot p {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin: 0;
+}

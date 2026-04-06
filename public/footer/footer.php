@@ -16,6 +16,14 @@
         </div>
 
         <div class="footer-section">
+            <h4 class="footer-section-title">Legal</h4>
+            <ul class="footer-nav-list">
+                <li><a href="<?= e(with_language('../imprint/imprint.php')) ?>">Imprint</a></li>
+                <li><a href="<?= e(with_language('../privacy/privacy.php')) ?>">Privacy Policy</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-section">
             <h4 class="footer-section-title"><?= e(t('footer.links_heading')) ?></h4>
             <ul class="footer-nav-list">
                 <li>

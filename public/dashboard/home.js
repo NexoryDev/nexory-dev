@@ -65,7 +65,7 @@ function Preloader() {
 
     return (
         <div id="preloader" ref={ref}>
-            <div className="preloader-logo">nexory.dev</div>
+            <div className="preloader-logo">nexory-dev.de</div>
             <div className="preloader-bar">
                 <div className="preloader-bar-inner" style={{ width: progress + '%' }}></div>
             </div>
@@ -155,7 +155,7 @@ function startAnimations() {
         print(f"Welcome to {self.org}, {new_user}!")
 
 if __name__ == "__main__":
-    org = NexoryOrg("nexory.dev")
+    org = NexoryOrg("nexory-dev.de")
     org.join("Your Name")
     org.run()`;
 

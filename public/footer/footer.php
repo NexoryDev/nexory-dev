@@ -9,17 +9,17 @@
         <div class="footer-section">
             <h4 class="footer-section-title"><?= e(t('footer.nav_heading')) ?></h4>
             <ul class="footer-nav-list">
-                <li><a href="<?= e(with_language('public/dashboard/home.php')) ?>"><?= e(t('nav.home')) ?></a></li>
-                <li><a href="<?= e(with_language('public/github/github.php')) ?>"><?= e(t('nav.github')) ?></a></li>
-                <li><a href="<?= e(with_language('public/contact/contact.php')) ?>"><?= e(t('nav.contact')) ?></a></li>
+                <li><a href="<?= e(with_language('dashboard/home.php')) ?>"><?= e(t('nav.home')) ?></a></li>
+                <li><a href="<?= e(with_language('github/github.php')) ?>"><?= e(t('nav.github')) ?></a></li>
+                <li><a href="<?= e(with_language('contact/contact.php')) ?>"><?= e(t('nav.contact')) ?></a></li>
             </ul>
         </div>
 
         <div class="footer-section">
             <h4 class="footer-section-title">Legal</h4>
             <ul class="footer-nav-list">
-                <li><a href="<?= e(with_language('public/imprint/imprint.php')) ?>">Imprint</a></li>
-                <li><a href="<?= e(with_language('public/privacy/privacy.php')) ?>">Privacy Policy</a></li>
+                <li><a href="<?= e(with_language('imprint/imprint.php')) ?>">Imprint</a></li>
+                <li><a href="<?= e(with_language('privacy/privacy.php')) ?>">Privacy Policy</a></li>
             </ul>
         </div>
 

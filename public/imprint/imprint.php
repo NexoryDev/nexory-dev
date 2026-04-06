@@ -12,9 +12,9 @@ require_once __DIR__ . '/../init.php';
         <base href="/">
         <title>Imprint &mdash; nexory.dev</title>
 
-        <link rel="stylesheet" href="public/imprint/imprint.css">
-        <link rel="stylesheet" href="public/navebar/navebar.css">
-        <link rel="stylesheet" href="public/footer/footer.css">
+        <link rel="stylesheet" href="imprint/imprint.css">
+        <link rel="stylesheet" href="navebar/navebar.css">
+        <link rel="stylesheet" href="footer/footer.css">
     </head>
 
     <body>
@@ -85,7 +85,7 @@ require_once __DIR__ . '/../init.php';
         <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
         <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
         <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-        <script type="text/babel" src="public/navebar/navebar.js"></script>
+        <script type="text/babel" src="navebar/navebar.js"></script>
     </body>
 
 </html>

@@ -10,13 +10,7 @@ require_once __DIR__ . '/../init.php';
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <base href="/">
-        <title data-i18n="home.title"><?= e(t('home.title')) ?></title>
-        <script>
-        window.__i18nPage = {
-            de: { 'home.title': 'nexory-dev.de' },
-            en: { 'home.title': 'nexory-dev.de' }
-        };
-        </script>
+        <title data-i18n="home.title">nexory-dev.de</title>
         <link rel="stylesheet" href="/dashboard/home.css">
         <link rel="stylesheet" href="/navebar/navebar.css">
         <link rel="stylesheet" href="/footer/footer.css">

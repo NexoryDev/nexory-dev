@@ -15,7 +15,7 @@ export default function GitHub() {
           <p>
             Coming soon. Visit{' '}
             <a
-              href="https://github.com/NexoryOrg"
+              href="https://github.com/NexoryDev"
               target="_blank"
               rel="noopener noreferrer"
             >

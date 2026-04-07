@@ -7,10 +7,6 @@ Header always set X-Content-Type-Options "nosniff"
 Header always set Referrer-Policy "strict-origin-when-cross-origin"
 Header always set Permissions-Policy "geolocation=(), camera=(), microphone=()"
 
-# Proxy /api/ requests to Spring Boot backend (Port 8080)
-RewriteCond %{REQUEST_URI} ^/api/
-RewriteRule ^(.*)$ http://localhost:8080/$1 [P,L]
-
 # React Router: redirect all non-file, non-dir requests to index.html
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

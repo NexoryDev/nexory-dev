@@ -1,9 +1,0 @@
-Options -Indexes
-
-DirectoryIndex dashboard/home.php
-
-RewriteEngine On
-RewriteBase /
-
-# Redirect bare root to home
-RewriteRule ^$ dashboard/home.php [L]

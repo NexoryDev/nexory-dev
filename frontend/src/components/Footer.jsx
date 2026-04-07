@@ -28,10 +28,10 @@ export default function Footer() {
 
         {/* Legal */}
         <div className="footer-section">
-          <h4 className="footer-section-title">Legal</h4>
+          <h4 className="footer-section-title">{t('footer.nav_section_title')}</h4>
           <ul className="footer-nav-list">
-            <li><Link to="/imprint">Imprint</Link></li>
-            <li><Link to="/privacy">Privacy Policy</Link></li>
+            <li><Link to="/imprint">{t('nav.imprint')}</Link></li>
+            <li><Link to="/privacy">{t('nav.policy')}</Link></li>
           </ul>
         </div>
 

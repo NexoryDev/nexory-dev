@@ -80,7 +80,36 @@ export default function Privacy() {
         </section>
 
         <section className="legal-section">
-          <h2>5. Your Rights</h2>
+          <h2>5. External Services — GitHub API</h2>
+          <p>
+            When you visit the <strong>GitHub</strong> page of this website, your browser connects
+            directly to the GitHub REST API (<code>api.github.com</code>), operated by GitHub, Inc.,
+            a subsidiary of Microsoft Corporation (USA). This connection causes your IP address and
+            browser information (User-Agent) to be transmitted to GitHub's servers in the United States.
+          </p>
+          <p>
+            The legal basis for this transfer is Art. 6 (1)(f) GDPR (legitimate interest in displaying
+            publicly available open-source repository data). GitHub, Inc. participates in the EU–US Data
+            Privacy Framework, which provides an adequate level of data protection pursuant to Art. 45 GDPR.
+          </p>
+          <p>
+            No personal data entered by you is transmitted to GitHub. Only the technical connection data
+            (IP address, browser type) is transferred as part of the HTTP request.
+          </p>
+          <p>
+            GitHub's privacy policy is available at:{' '}
+            <a
+              href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement
+            </a>
+          </p>
+        </section>
+
+        <section className="legal-section">
+          <h2>6. Your Rights</h2>
           <p>Under the GDPR you have the following rights regarding your personal data:</p>
           <ul>
             <li><strong>Right of access</strong> (Art. 15 GDPR)</li>
@@ -95,10 +124,20 @@ export default function Privacy() {
             <a href="mailto:support@nexory-dev.de">support@nexory-dev.de</a>.
             You also have the right to lodge a complaint with a supervisory authority.
           </p>
+          <p>
+            Competent supervisory authority for Baden-Württemberg:{' '}
+            <a
+              href="https://www.baden-wuerttemberg.datenschutz.de"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Landesbeauftragter für den Datenschutz und die Informationsfreiheit Baden-Württemberg
+            </a>
+          </p>
         </section>
 
         <footer className="legal-foot">
-          <p>Last updated: April 2026</p>
+          <p>Last updated: 8 April 2026</p>
         </footer>
 
       </div>

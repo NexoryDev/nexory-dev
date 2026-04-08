@@ -4,11 +4,25 @@
   "nav.contact": "Kontakt",
   "nav.policy": "Datenschutz",
   "nav.imprint": "Impressum",
-  "footer.nav_section_title": "Rechtliches",
   "nav.language_switcher": "Sprachwechsel",
-  "home.title": "nexory-dev.de",
-  "home.subtext": "Open-Source-Projekte · Python, JavaScript, PHP und mehr",
+
+  "footer.nav_section_title": "Rechtliches",
   "footer.tagline": "Open-Source-Projekte · Python, JavaScript, PHP und mehr",
   "footer.nav_heading": "Navigation",
-  "footer.links_heading": "Links"
+  "footer.links_heading": "Links",
+
+  "home.title": "nexory-dev.de",
+  "home.subtext": "Open-Source-Projekte · Python, JavaScript, PHP und mehr",
+
+  "github.stars": "Sterne",
+  "github.forks": "Verzweigungen",
+  "github.issues": "Probleme",
+  "github.updated": "Letztes Update",
+  "github.repo_lang": "Hauptsprache",
+  "github.desc": "Beschreibung",
+  "github.loading": "Lade Repositories...",
+  "github.error": "Daten konnten nicht geladen werden. Bitte versuche es später erneut.",
+  "github.stats_header": "Statistiken",
+  "github.repos_header": "Repositories",
+  "github.visit_org": "Auf GitHub anzeigen →"
 }

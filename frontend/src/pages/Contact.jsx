@@ -19,7 +19,7 @@ export default function Contact() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              github.com/NexoryOrg
+              github.com/NexoryDev
             </a>{' '}
             in the meantime.
           </p>

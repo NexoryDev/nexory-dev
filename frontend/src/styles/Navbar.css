@@ -130,12 +130,12 @@
   }
 
   .navebar-toggle.active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
+    transform: rotate(45deg) translate(7.5px, 7.5px);
   }
   .navebar-toggle.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
   .navebar-toggle.active span:nth-child(3) { opacity: 0; transform: scaleX(0); }
   .navebar-toggle.active span:nth-child(4) {
-    transform: rotate(-45deg) translate(5px, -5px);
+    transform: rotate(-45deg) translate(7.5px, -7.5px);
   }
 
   .navebar-menu {

@@ -1,7 +1,41 @@
 import { useEffect, useRef } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import '../styles/Home.css';
 
+const CODE_MAP = {
+  de:
+`class nexory:
+    def __init__(self, org_name):
+        self.org = org_name
+        self.people = []
+
+    def join(self, neuer_nutzer):
+        self.people.append(neuer_nutzer)
+        print(f"Willkommen bei {self.org}, {neuer_nutzer}!")
+
+if __name__ == "__main__":
+    org = NexoryOrg("nexory-dev.de")
+    org.join("Dein Name")
+    org.run()`,
+
+  en:
+`class nexory:
+    def __init__(self, org_name):
+        self.org = org_name
+        self.people = []
+
+    def join(self, new_user):
+        self.people.append(new_user)
+        print(f"Welcome to {self.org}, {new_user}!")
+
+if __name__ == "__main__":
+    org = NexoryOrg("nexory-dev.de")
+    org.join("Your Name")
+    org.run()`,
+};
+
 export default function Home() {
+  const { language, t } = useLanguage();
   const canvasRef = useRef(null);
   const outputRef = useRef(null);
 
@@ -19,6 +53,11 @@ export default function Home() {
     function resize() {
       canvas.width  = window.innerWidth;
       canvas.height = window.innerHeight;
+      particles = particles.map(p => ({
+        ...p,
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+      }))
     }
     resize();
     window.addEventListener('resize', resize);
@@ -82,20 +121,7 @@ export default function Home() {
 
   /* Typing Animation */
   useEffect(() => {
-    const CODE =
-`class nexory:
-    def __init__(self, org_name):
-        self.org = org_name
-        self.people = []
-
-    def join(self, new_user):
-        self.people.append(new_user)
-        print(f"Welcome to {self.org}, {new_user}!")
-
-if __name__ == "__main__":
-    org = NexoryOrg("nexory-dev.de")
-    org.join("Your Name")
-    org.run()`;
+    const CODE = CODE_MAP[language] ?? CODE_MAP['de'];
 
     const TYPE_SPEED = 58;
     const WAIT_MS    = 20000;
@@ -122,7 +148,7 @@ if __name__ == "__main__":
     startTyping();
 
     return () => clearTimeout(timeoutId);
-  }, []);
+  }, [language]);
 
   return (
     <section className="hero">
@@ -132,7 +158,7 @@ if __name__ == "__main__":
       <div className="hero-content">
         <div className="info">
           <h1>nexory-dev</h1>
-          <p>Open source projects &middot; Python, JavaScript, PHP and more</p>
+          <p>{t('home.subtext')}</p>
         </div>
 
         <div className="terminal">

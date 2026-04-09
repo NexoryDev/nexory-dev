@@ -209,8 +209,9 @@
 }
 
 .gh-members-grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 760px;
     gap: 1rem;
 }
 

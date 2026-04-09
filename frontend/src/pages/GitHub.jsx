@@ -32,9 +32,8 @@ export default function GitHub() {
       fetch(`https://api.github.com/orgs/${ORG}`, { headers: HEADERS }).then(res => res.json()),
       fetch(`https://api.github.com/orgs/${ORG}/repos?per_page=10&sort=stars`, { headers: HEADERS }).then(res => res.json()),
       fetch(`/api/github.php?endpoint=members`, { headers: HEADERS }).then(res => res.json()),
-      fetch(`/api/github.php?endpoint=admins`, { headers: HEADERS }).then(res => res.json()),
     ])
-      .then(([orgData, reposData, allMembers, adminMembers]) => {
+      .then(([orgData, reposData, allMembers]) => {
         if (orgData.message) throw new Error();
         setOrg(orgData);
         setRepos(reposData);

@@ -24,7 +24,6 @@ if (!$token) {
 
 $allowed = [
     'members'       => 'https://api.github.com/orgs/NexoryDev/members',
-    'admins'        => 'https://api.github.com/orgs/NexoryDev/members?role=admin',
 ];
 
 $endpoint = $_GET['endpoint'] ?? '';

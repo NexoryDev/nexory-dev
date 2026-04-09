@@ -314,4 +314,7 @@
     .gh-repo-grid {
         grid-template-columns: 1fr;
     }
+    .gh-members-grid {
+        grid-template-columns: 1fr;
+    }
 }

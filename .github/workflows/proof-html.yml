@@ -27,3 +27,4 @@ jobs:
         uses: anishathalye/proof-html@v1.1.0
         with:
           directory: ./frontend/public
+          url_ignore_re: "^https://fonts\\.(googleapis|gstatic)\\.com"

@@ -17,23 +17,75 @@ const LANG_COLORS = {
   'C++': '#f34b7d',
 };
 
+const ROLE_RANK = { admin: 1, maintain: 2, push: 3, triage: 4, pull: 5 };
+
 export default function GitHub() {
   const { t } = useLanguage();
   const [org, setOrg]         = useState(null);
   const [repos, setRepos]     = useState([]);
   const [error, setError]     = useState(null);
   const [loading, setLoading] = useState(true);
+  const [members, setMembers]   = useState([]);
 
   useEffect(() => {
     Promise.all([
       fetch(`https://api.github.com/orgs/${ORG}`, { headers: HEADERS }).then(res => res.json()),
       fetch(`https://api.github.com/orgs/${ORG}/repos?per_page=10&sort=stars`, { headers: HEADERS }).then(res => res.json()),
+      fetch(`/api/github.php?endpoint=members`, { headers: HEADERS }).then(res => res.json()),
     ])
-      .then(([orgData, reposData]) => {
+      .then(([orgData, reposData, allMembers]) => {
         if (orgData.message) throw new Error();
         setOrg(orgData);
         setRepos(reposData);
-      })
+
+        return Promise.all(
+          reposData.map(repo => Promise.all([
+            fetch(`/api/github.php?endpoint=collaborators&repo=${repo.name}`, { headers: HEADERS })
+              .then(r => r.json()).catch(() => []),
+            fetch(`https://api.github.com/repos/${ORG}/${repo.name}/contributors`, { headers: HEADERS })
+              .then(r => r.json()).catch(() => []),
+          ]))
+        ).then(results => {
+          const allCollaborators = results.map(r => r[0]);
+          const allContributors  = results.map(r => r[1]);
+
+          const roleMap = {};
+          allCollaborators.flat().forEach(c => {
+            if (!c?.login) return;
+            const perms = c.permissions ?? {};
+            let role = 'pull';
+            if (perms.admin)         role = 'admin';
+            else if (perms.maintain) role = 'maintain';
+            else if (perms.push)     role = 'push';
+            else if (perms.triage)   role = 'triage';
+            if (!roleMap[c.login] || ROLE_RANK[role] < ROLE_RANK[roleMap[c.login]]) {
+              roleMap[c.login] = role;
+            }
+          });
+
+          const commitMap = {};
+          allContributors.flat().forEach(c => {
+            if (c?.login) commitMap[c.login] = (commitMap[c.login] || 0) + c.contributions;
+          });
+
+          const repoCountMap = {};
+          allCollaborators.forEach(repoCollabs => {
+            repoCollabs.forEach(c => {
+              if (c?.login) repoCountMap[c.login] = (repoCountMap[c.login] || 0) + 1;
+            });
+          });
+
+          const enriched = allMembers.map(member => ({
+            ...member,
+            role: roleMap[member.login] ?? 'member',
+            commits: commitMap[member.login] ?? 0,
+            repoCount: repoCountMap[member.login] ?? 0,
+          }));
+
+          enriched.sort((a, b) => (ROLE_RANK[a.role] ?? 99) - (ROLE_RANK[b.role] ?? 99));
+          setMembers(enriched);
+        });
+    })
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, []);
@@ -137,7 +189,32 @@ export default function GitHub() {
             ))}
           </div>
         </section>
-
+        {members.length > 0 && (
+          <section className="gh-members">
+            <h2 className="gh-section-title">{t('github.members_header')}</h2>
+            <div className="gh-members-grid">
+              {members.map(member => (
+                <a key={member.id} href={member.html_url} target="_blank" rel="noopener noreferrer" className="gh-member-card">
+                  <img src={member.avatar_url} alt={member.login} className="gh-member-avatar" />
+                  <div className="gh-member-info">
+                    <span className="gh-member-login">{member.login}</span>
+                    <span className={`gh-role-badge gh-role-badge--${member.role}`}>
+                      {t(`github.role_${member.role}`)}
+                    </span>
+                  </div>
+                  <div className="gh-member-commits">
+                    <span className="gh-stat-label">{t('github.commits')}</span>
+                    <span>{member.commits > 0 ? member.commits : '-'}</span>
+                  </div>
+                  <div className="gh-member-commits">
+                    <span className="gh-stat-label">{t('github.repos')}</span>
+                    <span>{member.repoCount > 0 ? member.repoCount : '–'}</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

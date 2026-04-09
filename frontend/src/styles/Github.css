@@ -8,6 +8,8 @@
     margin: 0 auto;
 }
 
+/* Github Org */
+
 .gh-org-header {
     display: flex;
     align-items: center;
@@ -58,6 +60,8 @@
     letter-spacing: 0.08em;
     margin: 0 0 1rem;
 }
+
+/* Github Repo */
 
 .gh-repo-top {
     display: flex;
@@ -198,8 +202,119 @@
     flex-shrink: 0;
 }
 
+/* Github Commits */
+
+.gh-members {
+    margin-top: 3rem;
+}
+
+.gh-members-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 760px;
+    gap: 1rem;
+}
+
+.gh-member-card {
+    background: var(--color-bg-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: border-color 0.2s;
+    min-width: 220px;
+}
+
+.gh-member-card:hover {
+    border-color: var(--color-accent);
+}
+
+.gh-member-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--color-border);
+    flex-shrink: 0;
+}
+
+.gh-member-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.gh-member-login {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.gh-role-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-radius: 999px;
+    padding: 2px 8px;
+    width: fit-content;
+}
+
+.gh-role-badge--admin {
+    background: rgba(255, 166, 0, 0.15);
+    color: #ffa600;
+    border: 1px solid rgba(255, 166, 0, 0.3);
+}
+
+.gh-role-badge--maintain {
+    background: rgba(63, 185, 80, 0.15);
+    color: #3fb950;
+    border: 1px solid rgba(63, 185, 80, 0.3);
+}
+
+.gh-role-badge--push {
+    background: rgba(139, 148, 158, 0.15);
+    color: #8b949e;
+    border: 1px solid rgba(139, 148, 158, 0.3);
+}
+
+.gh-role-badge--triage {
+    background: rgba(188, 140, 255, 0.15);
+    color: #bc8cff;
+    border: 1px solid rgba(188, 140, 255, 0.3);
+}
+
+.gh-role-badge--pull {
+    background: rgba(88, 166, 255, 0.07);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+}
+
+.gh-role-badge--member {
+    background: rgba(88, 166, 255, 0.1);
+    color: var(--color-accent);
+    border: 1px solid rgba(88, 166, 255, 0.25);
+}
+
+.gh-member-commits {
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    font-size: 0.85rem;
+}
+
 @media (max-width: 768px) {
-  .gh-repo-grid {
-    grid-template-columns: 1fr;
-  }
+    .gh-page {
+        padding: 7rem 1rem 2rem;
+    }
+    .gh-repo-grid {
+        grid-template-columns: 1fr;
+    }
+    .gh-members-grid {
+        grid-template-columns: 1fr;
+    }
 }

@@ -24,5 +24,14 @@
   "github.error": "Daten konnten nicht geladen werden. Bitte versuche es später erneut.",
   "github.stats_header": "Statistiken",
   "github.repos_header": "Repositories",
-  "github.visit_org": "Auf GitHub anzeigen →"
+  "github.visit_org": "Auf GitHub anzeigen →",
+  "github.members_header": "Mitglieder",
+  "github.role_admin": "Owner",
+  "github.role_maintain": "Maintainer",
+  "github.role_push": "Contributor",
+  "github.role_triage": "Triager",
+  "github.role_pull": "Leser",
+  "github.role_member": "Mitglied",
+  "github.commits": "Kommentare",
+  "github.repos": "Repos"
 }

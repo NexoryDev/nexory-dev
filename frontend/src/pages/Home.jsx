@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import '../styles/Home.css';
 
@@ -151,30 +152,45 @@ export default function Home() {
   }, [language]);
 
   return (
-    <section className="hero">
-      {/* ref={canvasRef} */}
-      <canvas ref={canvasRef} id="code-canvas" />
+    <div className="home-page">
+      <section className="hero">
+        {/* ref={canvasRef} */}
+        <canvas ref={canvasRef} id="code-canvas" />
 
-      <div className="hero-content">
-        <div className="info">
-          <h1>nexory-dev</h1>
-          <p>{t('home.subtext')}</p>
-        </div>
+        <div className="hero-content">
+          <div className="info">
+            <h1>nexory-dev</h1>
+            <p>{t('home.subtext')}</p>
+          </div>
 
-        <div className="terminal">
-          <div className="terminal-header">
-            <span className="dot red"    />
-            <span className="dot yellow" />
-            <span className="dot green"  />
-            <span className="terminal-title">nexory.py</span>
-          </div>
-          <div className="terminal-body">
-            {/* ref={outputRef} */}
-            <pre id="code-output" ref={outputRef} />
-            <span className="cursor" />
+          <div className="terminal">
+            <div className="terminal-header">
+              <span className="dot red"    />
+              <span className="dot yellow" />
+              <span className="dot green"  />
+              <span className="terminal-title">nexory.py</span>
+            </div>
+            <div className="terminal-body">
+              {/* ref={outputRef} */}
+              <pre id="code-output" ref={outputRef} />
+              <span className="cursor" />
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+      <section>
+        <div className="home-infos" id="infos">
+            <h2>{t('home.infos_header')}</h2>
+            <Link to="/github" className="home-infos-contact">
+              <h3>{t('home.infos_github_header')}</h3>
+              <p>{t('home.infos_github_text')}</p>
+            </Link>
+            <Link to="/contact" className="home-infos-contact">
+              <h3>{t('home.infos_contact_header')}</h3>
+              <p>{t('home.infos_contact_text')}</p>
+            </Link>
+          </div>
+      </section>
+    </div>
   );
 }

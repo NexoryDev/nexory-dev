@@ -13,6 +13,11 @@
 
   "home.title": "nexory-dev.de",
   "home.subtext": "Open-Source-Projekte · Python, JavaScript, PHP und mehr",
+  "home.infos_header": "Informationen",
+  "home.infos_github_header": "Github",
+  "home.infos_github_text": "in Arbeit, geplant für den 15.04.2026",
+  "home.infos_contact_header": "Kontakt",
+  "home.infos_contact_text": "in Arbeit, geplant für den 15.04.2026",
 
   "github.stars": "Sterne",
   "github.forks": "Verzweigungen",

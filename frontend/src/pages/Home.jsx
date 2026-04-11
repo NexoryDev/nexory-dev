@@ -52,28 +52,34 @@ export default function Home() {
 
     Promise.all([
       fetch(`https://api.github.com/orgs/${ORG}/repos?per_page=100`, { headers: HEADERS }).then(r => r.json()),
+      fetch(`https://api.github.com/orgs/${ORG}/members?per_page=100`, { headers: HEADERS }).then(r => r.json())
     ])
-      .then(([reposData]) => {
+      .then(([reposData, membersData]) => {
+        const memberSet = new Set();
+
+        membersData
+          .filter(m => m?.type === "User" && m?.login && !m.login.includes("[bot]"))
+          .forEach(m => memberSet.add(m.login));
+
         return Promise.all(
           reposData.map(repo =>
-            Promise.all([
-              fetch(`/api/github.php?endpoint=collaborators&repo=${repo.name}`).then(r => r.json()).catch(() => []),
-              fetch(`https://api.github.com/repos/${ORG}/${repo.name}/contributors?per_page=100`).then(r => r.json()).catch(() => [])
-            ])
+            fetch(`https://api.github.com/repos/${ORG}/${repo.name}/contributors?per_page=100`, {
+              headers: HEADERS
+            })
+              .then(r => r.json())
+              .catch(() => [])
           )
-        ).then(results => ({ reposData, results }));
+        ).then(contribResults => ({ reposData, contribResults, memberSet }));
       })
-      .then(({ reposData, results }) => {
-        const memberSet = new Set();
+      .then(({ reposData, contribResults, memberSet }) => {
         let totalCommits = 0;
 
-        results.forEach(([collabs, contribs]) => {
-          collabs.forEach(c => c?.login && memberSet.add(c.login));
-
-          contribs.forEach(c => {
-            if (c?.login) memberSet.add(c.login);
-            if (c?.contributions) totalCommits += c.contributions;
-          });
+        contribResults.forEach(contribs => {
+          contribs
+            .filter(c => c?.type === "User" && c?.login && !c.login.includes("[bot]"))
+            .forEach(c => {
+              if (c?.contributions) totalCommits += c.contributions;
+            });
         });
 
         setStats({

@@ -12,7 +12,10 @@
   "footer.links_heading": "Links",
 
   "home.title": "nexory-dev.de",
-  "home.subtext": "Open source projects · Python, JavaScript, PHP and more",
+  "home.stats_loading": "Data loading ...",
+  "home.stats_members": "Members",
+  "home.stats_repos": "Repos",
+  "home.stats_commits": "Commits",
   "home.infos_header": "Informations",
   "home.infos_github_header": "Github",
   "home.infos_github_text": "in progress, planned for April 15, 2026",

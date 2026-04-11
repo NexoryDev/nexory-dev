@@ -19,7 +19,6 @@ const CODE_MAP = {
 if __name__ == "__main__":
     org = Nexory()
     org.beitreten("Du")`,
-
   en: `class nexory:
     def __init__(self):
         self.name = "nexory-dev"
@@ -61,35 +60,40 @@ export default function Home() {
           .filter(m => m?.type === "User" && m?.login && !m.login.includes("[bot]"))
           .forEach(m => memberSet.add(m.login));
 
-        return Promise.all(
-          reposData.map(repo =>
-            fetch(`https://api.github.com/repos/${ORG}/${repo.name}/contributors?per_page=100`, {
-              headers: HEADERS
-            })
-              .then(r => r.json())
-              .catch(() => [])
-          )
-        ).then(contribResults => ({ reposData, contribResults, memberSet }));
-      })
-      .then(({ reposData, contribResults, memberSet }) => {
-        let totalCommits = 0;
-
-        contribResults.forEach(contribs => {
-          contribs
-            .filter(c => c?.type === "User" && c?.login && !c.login.includes("[bot]"))
-            .forEach(c => {
-              if (c?.contributions) totalCommits += c.contributions;
-            });
-        });
-
         setStats({
           members: memberSet.size,
           repos: reposData.length,
-          commits: totalCommits
+          commits: 0
         });
+
+        setLoading(false);
+
+        return reposData;
       })
-      .catch(() => {})
-      .finally(() => setLoading(false));
+      .then(async reposData => {
+        let totalCommits = 0;
+
+        for (const repo of reposData) {
+          try {
+            const res = await fetch(`https://api.github.com/repos/${ORG}/${repo.name}/contributors?per_page=100`, {
+              headers: HEADERS
+            });
+            const contribs = await res.json();
+
+            contribs
+              .filter(c => c?.type === "User" && c?.login && !c.login.includes("[bot]"))
+              .forEach(c => {
+                if (c?.contributions) totalCommits += c.contributions;
+              });
+          } catch {}
+        }
+
+        setStats(prev => ({
+          ...prev,
+          commits: totalCommits
+        }));
+      })
+      .catch(() => setLoading(false));
   }, []);
 
   useEffect(() => {

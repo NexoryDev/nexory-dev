@@ -14,11 +14,75 @@ const LANG_COLORS = {
   'C++': '#f34b7d',
 };
 
+const EMPTY_DASHBOARD = {
+  org: null,
+  repos: [],
+  members: []
+};
+
+function toSafeDashboard(data) {
+  return {
+    org: data?.org ?? null,
+    repos: Array.isArray(data?.repos) ? data.repos : [],
+    members: Array.isArray(data?.members) ? data.members : []
+  };
+}
+
+function fetchDashboard() {
+  return fetch('/api/github.php?endpoint=dashboard').then(response => {
+    if (!response.ok) {
+      throw new Error('Dashboard fetch failed');
+    }
+
+    return response.json();
+  });
+}
+
+function getRepoTotals(repos) {
+  return {
+    stars: repos.reduce((sum, repo) => sum + (repo.stargazers_count || 0), 0),
+    forks: repos.reduce((sum, repo) => sum + (repo.forks_count || 0), 0)
+  };
+}
+
+function getTopLanguage(repos) {
+  const languageCount = repos
+    .map(repo => repo.language)
+    .filter(Boolean)
+    .reduce((accumulator, language) => {
+      accumulator[language] = (accumulator[language] || 0) + 1;
+      return accumulator;
+    }, {});
+
+  return Object.entries(languageCount).sort((a, b) => b[1] - a[1])[0]?.[0] || null;
+}
+
+function relativeTime(dateStr) {
+  const diffInSeconds = (Date.now() - new Date(dateStr)) / 1000;
+  const formatter = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+
+  if (diffInSeconds < 3600) {
+    return formatter.format(-Math.floor(diffInSeconds / 60), 'minute');
+  }
+
+  if (diffInSeconds < 86400) {
+    return formatter.format(-Math.floor(diffInSeconds / 3600), 'hour');
+  }
+
+  if (diffInSeconds < 2592000) {
+    return formatter.format(-Math.floor(diffInSeconds / 86400), 'day');
+  }
+
+  return formatter.format(-Math.floor(diffInSeconds / 2592000), 'month');
+}
+
 export default function GitHub({ initialData = null, initialError = false }) {
   const { t } = useLanguage();
-  const [org, setOrg] = useState(initialData?.org ?? null);
-  const [repos, setRepos] = useState(Array.isArray(initialData?.repos) ? initialData.repos : []);
-  const [members, setMembers] = useState(Array.isArray(initialData?.members) ? initialData.members : []);
+  const initialDashboard = initialData ? toSafeDashboard(initialData) : EMPTY_DASHBOARD;
+
+  const [org, setOrg] = useState(initialDashboard.org);
+  const [repos, setRepos] = useState(initialDashboard.repos);
+  const [members, setMembers] = useState(initialDashboard.members);
   const [error, setError] = useState(initialError);
   const [loading, setLoading] = useState(!initialData && !initialError);
 
@@ -27,16 +91,14 @@ export default function GitHub({ initialData = null, initialError = false }) {
 
     let cancelled = false;
 
-    fetch('/api/github.php?endpoint=dashboard')
-      .then(res => {
-        if (!res.ok) throw new Error('Dashboard fetch failed');
-        return res.json();
-      })
+    fetchDashboard()
       .then(data => {
         if (cancelled) return;
-        setOrg(data?.org ?? null);
-        setRepos(Array.isArray(data?.repos) ? data.repos : []);
-        setMembers(Array.isArray(data?.members) ? data.members : []);
+
+        const dashboard = toSafeDashboard(data);
+        setOrg(dashboard.org);
+        setRepos(dashboard.repos);
+        setMembers(dashboard.members);
       })
       .catch(() => {
         if (!cancelled) setError(true);
@@ -50,21 +112,8 @@ export default function GitHub({ initialData = null, initialError = false }) {
     };
   }, [initialData, initialError]);
 
-  const totalStars  = repos.reduce((sum, r) => sum + r.stargazers_count, 0);
-  const totalForks  = repos.reduce((sum, r) => sum + r.forks_count, 0);
-  const langCount   = repos.map(r => r.language).filter(Boolean)
-    .reduce((acc, l) => { acc[l] = (acc[l] || 0) + 1; return acc; }, {});
-  const topLanguage = Object.entries(langCount).sort((a, b) => b[1] - a[1])[0]?.[0];
-
-
-  function relativeTime(dateStr) {
-    const diff = (Date.now() - new Date(dateStr)) / 1000;
-    const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
-    if (diff < 3600) return rtf.format(-Math.floor(diff / 60), 'minute');
-    if (diff < 86400) return rtf.format(-Math.floor(diff / 3600), 'hour');
-    if (diff < 2592000) return rtf.format(-Math.floor(diff / 86400), 'day');
-    return rtf.format(-Math.floor(diff / 2592000), 'month');
-  }
+  const totals = getRepoTotals(repos);
+  const topLanguage = getTopLanguage(repos);
 
   if (loading) return <div className="gh-page"><p>{t('github.loading')}</p></div>;
   if (error)   return <div className="gh-page"><p>{t('github.error')}</p></div>;
@@ -91,9 +140,9 @@ export default function GitHub({ initialData = null, initialError = false }) {
         )}
 
         <div className="gh-stats">
-          <span className="gh-stat"><SvgStar /> {totalStars} {t('github.stars')}</span>
-          <span className="gh-stat"><SvgFork />  {totalForks} {t('github.forks')}</span>
-          {topLanguage && <span className="gh-stat"><SvgRepo />  {topLanguage}</span>}
+          <span className="gh-stat"><SvgStar /> {totals.stars} {t('github.stars')}</span>
+          <span className="gh-stat"><SvgFork /> {totals.forks} {t('github.forks')}</span>
+          {topLanguage && <span className="gh-stat"><SvgRepo /> {topLanguage}</span>}
         </div>
 
         <section className="gh-repos">

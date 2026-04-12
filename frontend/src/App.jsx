@@ -10,6 +10,22 @@ import Contact from './pages/Contact';
 import Imprint from './pages/Imprint';
 import Privacy from './pages/Privacy';
 
+const MIN_PRELOADER_MS = 700;
+const BOOTSTRAP_TIMEOUT_MS = 4000;
+
+function fetchGitHubBootstrap() {
+  return fetch('/api/github.php?endpoint=dashboard')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('github bootstrap failed');
+      }
+
+      return response.json();
+    })
+    .then(data => ({ data, error: false }))
+    .catch(() => ({ data: null, error: true }));
+}
+
 export default function App() {
   const [ready, setReady] = useState(false);
   const [githubBootstrap, setGithubBootstrap] = useState({ data: null, error: false });
@@ -17,14 +33,8 @@ export default function App() {
   useEffect(() => {
     let active = true;
 
-    const minDelay = new Promise(resolve => setTimeout(resolve, 700));
-    const githubLoad = fetch('/api/github.php?endpoint=dashboard')
-      .then(res => {
-        if (!res.ok) throw new Error('github bootstrap failed');
-        return res.json();
-      })
-      .then(data => ({ data, error: false }))
-      .catch(() => ({ data: null, error: true }));
+    const minDelay = new Promise(resolve => setTimeout(resolve, MIN_PRELOADER_MS));
+    const githubLoad = fetchGitHubBootstrap();
 
     Promise.all([minDelay, githubLoad]).then(([, bootstrap]) => {
       if (!active) return;
@@ -35,7 +45,7 @@ export default function App() {
     const hardTimeout = setTimeout(() => {
       if (!active) return;
       setReady(true);
-    }, 4000);
+    }, BOOTSTRAP_TIMEOUT_MS);
 
     return () => {
       active = false;

@@ -4,7 +4,6 @@ export default function Imprint() {
   return (
     <main className="legal-page">
       <div className="legal-container">
-
         <header className="legal-header">
           <p className="legal-label">Legal</p>
           <h1 className="legal-title">Imprint</h1>
@@ -59,7 +58,6 @@ export default function Imprint() {
         <footer className="legal-foot">
           <p>Last updated: April 2026</p>
         </footer>
-
       </div>
     </main>
   );

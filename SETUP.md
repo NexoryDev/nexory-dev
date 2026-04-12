@@ -1,103 +1,93 @@
 # Setup Guide
 
+Diese Anleitung ist fuer lokale Entwicklung mit React-Frontend plus PHP-API gedacht.
+
 ## Voraussetzungen
 
-Folgende Programme müssen lokal installiert sein:
+- Node.js 18+ und npm
+- PHP 8.x (CLI reicht fuer lokale API)
+- Git
 
-- [Node.js 18+](https://nodejs.org) (enthält npm)
-- [Git](https://git-scm.com)
-
----
-
-## Lokale Entwicklung
-
-### 1. Repository klonen
+## 1) Repository klonen
 
 ```bash
 git clone https://github.com/NexoryDev/nexory-dev.git
 cd nexory-dev
 ```
 
-### 2. Abhängigkeiten installieren
+## 2) Frontend installieren
 
 ```bash
 cd frontend
 npm install
 ```
 
-### 3. Entwicklungsserver starten
+## 3) GitHub Token fuer API setzen
+
+Der Endpunkt /api/github.php erwartet GITHUB_TOKEN.
+
+Variante A (empfohlen lokal):
+
+Erstelle frontend/.env mit z. B.:
+
+```env
+GITHUB_TOKEN=ghp_xxx
+```
+
+Variante B:
+
+Setze eine Umgebungsvariable im System oder in der Shell.
+
+## 4) PHP-API lokal starten (Port 8080)
+
+Im Ordner frontend/public:
+
+```bash
+php -S localhost:8080
+```
+
+Warum 8080?
+
+Das React-Projekt nutzt in package.json einen Proxy auf http://localhost:8080. Dadurch laufen Aufrufe auf /api/* im Dev-Modus automatisch gegen den PHP-Server.
+
+## 5) React Dev Server starten (Port 3000)
+
+In einem zweiten Terminal, im Ordner frontend:
 
 ```bash
 npm start
 ```
 
-Die Seite ist dann unter `http://localhost:3000` erreichbar.
+Danach ist die App unter http://localhost:3000 erreichbar.
 
----
-
-## Produktions-Build erstellen
+## 6) Production Build
 
 ```bash
 cd frontend
 npm run build
 ```
 
-Danach liegt der fertige Build im Ordner `frontend/build/`.
+Build-Ausgabe liegt in frontend/build.
 
----
+## 7) Deployment (Plesk, Kurzfassung)
 
-## Deployment auf Plesk (Shared Hosting)
+1. Build-Inhalt nach httpdocs deployen
+2. Sicherstellen, dass PHP fuer /api/github.php und /api/language.php ausgefuehrt wird
+3. Falls ein Reverse Proxy genutzt wird: Weiterleitungen und Caching-Regeln fuer SPA und API sauber trennen
 
-### 1. Build als ZIP packen (PowerShell)
-
-```powershell
-Compress-Archive -Path "frontend\build\*" -DestinationPath "build.zip" -Force
-```
-
-### 2. In Plesk hochladen
-
-1. Plesk → Domain → **Files** → `httpdocs/` öffnen
-2. Alten Inhalt löschen
-3. `build.zip` hochladen
-4. Rechtsklick auf `build.zip` → **Entpacken**
-5. Sicherstellen dass `index.html` direkt in `httpdocs/` liegt (nicht in einem Unterordner)
-
-### 3. nginx-Einstellungen in Plesk
-
-Plesk → Domain → **Hosting & DNS** → **Apache & nginx-Einstellungen**:
-- **Proxy mode** → aktivieren
-
-### 4. Fertig
-
-Die Seite ist unter der konfigurierten Domain erreichbar.
-
----
-
-## Projektstruktur
-
-```
-nexory-dev/
-├── frontend/
-│   ├── public/
-│   │   ├── api/
-│   │   │   ├── contact.php     # Kontaktformular-API
-│   │   │   └── language.php    # Sprach-API
-│   │   └── .htaccess           # Apache Routing
-│   └── src/
-│       ├── components/         # Navbar, Footer, Preloader
-│       ├── pages/              # Home, GitHub, Contact, Imprint, Privacy
-│       ├── styles/             # CSS-Dateien
-│       ├── i18n/               # Übersetzungen (de.json, en.json)
-│       └── context/            # LanguageContext
-└── SETUP.md
-```
-
----
-
-## API-Endpunkte
+## Verfuegbare API-Endpunkte
 
 | Endpunkt | Methode | Beschreibung |
 |---|---|---|
-| `/api/language` | GET | Aktuelle Sprache abrufen |
-| `/api/language` | POST | Sprache setzen (`{"language": "de"}`) |
-| `/api/contact` | POST | Kontaktformular absenden |
+| /api/github.php?endpoint=dashboard | GET | Aggregierte GitHub-Daten fuer die Seite |
+| /api/language.php | GET | Aktuelle Sprache aus Session lesen |
+| /api/language.php | POST | Sprache in Session schreiben |
+
+## Haeufige Fehler
+
+- API liefert 500 Missing GITHUB_TOKEN:
+	- Token fehlt oder .env liegt am falschen Ort
+- API-Aufrufe schlagen in Dev fehl:
+	- PHP-Server laeuft nicht auf Port 8080
+- Sprache bleibt nicht erhalten:
+	- Browser blockiert Session-Cookies

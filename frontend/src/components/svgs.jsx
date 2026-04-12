@@ -1,21 +1,21 @@
 import { StarIcon, RepoForkedIcon, IssueOpenedIcon, RepoIcon } from '@primer/octicons-react';
 
+const ICON_SIZE = 16;
+
 export function SvgStar(props) {
-  return <StarIcon size={16} {...props} />;
+  return <StarIcon size={ICON_SIZE} {...props} />;
 }
 
 export function SvgFork(props) {
-  return <RepoForkedIcon size={16} {...props} />;
+  return <RepoForkedIcon size={ICON_SIZE} {...props} />;
 }
 
 export function SvgOpenIssue(props) {
-  return <IssueOpenedIcon size={16} {...props} />;
+  return <IssueOpenedIcon size={ICON_SIZE} {...props} />;
 }
 
-export function SvgIssue(props) {
-  return <IssueOpenedIcon size={16} {...props} />;
-}
+export const SvgIssue = SvgOpenIssue;
 
 export function SvgRepo(props) {
-  return <RepoIcon size={16} {...props} />;
+  return <RepoIcon size={ICON_SIZE} {...props} />;
 }

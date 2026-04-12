@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import '../styles/Footer.css';
 
+const GITHUB_PROFILE_URL = 'https://github.com/NexoryDev';
+
 export default function Footer() {
   const { t } = useLanguage();
   const year = new Date().getFullYear();
@@ -9,14 +11,11 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-container">
-
-        {/* Marke */}
         <div className="footer-brand">
           <span className="footer-logo">nexory-dev.de</span>
           <p className="footer-tagline">{t('footer.tagline')}</p>
         </div>
 
-        {/* Navigation */}
         <div className="footer-section">
           <h4 className="footer-section-title">{t('footer.nav_heading')}</h4>
           <ul className="footer-nav-list">
@@ -26,7 +25,6 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Legal */}
         <div className="footer-section">
           <h4 className="footer-section-title">{t('footer.nav_section_title')}</h4>
           <ul className="footer-nav-list">
@@ -35,18 +33,16 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Externe Links */}
         <div className="footer-section">
           <h4 className="footer-section-title">{t('footer.links_heading')}</h4>
           <ul className="footer-nav-list">
             <li>
               <a
-                href="https://github.com/NexoryDev"
+                href={GITHUB_PROFILE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-social-link"
               >
-                {/* GitHub-Icon SVG */}
                 <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                   <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
                     0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53
@@ -61,7 +57,6 @@ export default function Footer() {
             </li>
           </ul>
         </div>
-
       </div>
 
       <div className="footer-bottom">

@@ -1,17 +1,26 @@
 import { useEffect, useRef } from 'react';
 
+const START_PROGRESS = 5;
+const MAX_PROGRESS = 90;
+const TICK_MS = 120;
+
+function getNextProgress(currentProgress) {
+  return Math.min(currentProgress + Math.random() * 18 + 5, MAX_PROGRESS);
+}
+
 export default function Preloader() {
   const barRef = useRef(null);
 
   useEffect(() => {
-    let progress = 5;
+    let progress = START_PROGRESS;
 
     const interval = setInterval(() => {
-      progress = Math.min(progress + Math.random() * 18 + 5, 90);
+      progress = getNextProgress(progress);
+
       if (barRef.current) {
-        barRef.current.style.width = progress + '%';
+        barRef.current.style.width = `${progress}%`;
       }
-    }, 120);
+    }, TICK_MS);
 
     return () => clearInterval(interval);
   }, []);

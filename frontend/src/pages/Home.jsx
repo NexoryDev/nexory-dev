@@ -8,6 +8,35 @@ const CODE_SNIPPETS = snippetData.snippets;
 const SNIPPET_ORDER = snippetData.order;
 const CACHE_KEY = 'home_github_stats';
 const CACHE_TTL_MS = 1000 * 60 * 60;
+const DEFAULT_STATS = { members: 0, repos: 0, commits: 0 };
+
+function isHumanMember(member) {
+  return member?.type === 'User' && member?.login && !member.login.includes('[bot]');
+}
+
+function calculateStats(dashboard) {
+  const repos = Array.isArray(dashboard?.repos) ? dashboard.repos : [];
+  const members = Array.isArray(dashboard?.members) ? dashboard.members : [];
+  const humanMembers = members.filter(isHumanMember);
+
+  return {
+    members: new Set(humanMembers.map(member => member.login)).size,
+    repos: repos.length,
+    commits: humanMembers.reduce((sum, member) => sum + (Number(member?.commits) || 0), 0)
+  };
+}
+
+function getStatsText({ loading, error, stats, t }) {
+  if (loading) return t('home.stats_loading');
+  if (error) return t('home.stats_error');
+
+  return `${stats.members} ${t('home.stats_members')} · ${stats.repos} ${t('home.stats_repos')} · ${stats.commits} ${t('home.stats_commits')}`;
+}
+
+function getNextSnippetKey(currentKey) {
+  const currentIndex = SNIPPET_ORDER.indexOf(currentKey);
+  return SNIPPET_ORDER[(currentIndex + 1) % SNIPPET_ORDER.length];
+}
 
 function readStatsCache() {
   try {
@@ -28,95 +57,72 @@ function writeStatsCache(data) {
   try {
     localStorage.setItem(
       CACHE_KEY,
-      JSON.stringify({ 
+      JSON.stringify({
         timestamp: Date.now(),
         data
       })
     );
   } catch {
-
+    // Ignore storage errors (private mode, quota, etc.)
   }
-  }
+}
 
 export default function Home() {
   const { language, t } = useLanguage();
   const canvasRef = useRef(null);
   const outputRef = useRef(null);
 
-  const [stats, setStats] = useState({
-    members: 0,
-    repos: 0,
-    commits: 0
-  });
-
+  const [stats, setStats] = useState(DEFAULT_STATS);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [fromCache, setFromCache] = useState(false);
   const [codeKey, setCodeKey] = useState('python');
 
   useEffect(() => {
     const controller = new AbortController();
-    const signal = controller.signal;
 
-    async function loadGithubStats() {
+    async function loadGitHubStats() {
       setLoading(true);
       setError(false);
-      setFromCache(false);
 
       const cached = readStatsCache();
       if (cached) {
         setStats(cached);
-        setFromCache(true);
         setLoading(false);
       }
 
       try {
-        const dashboard = await fetch('/api/github.php?endpoint=dashboard', { signal })
-          .then(r => {
-            if (!r.ok) throw new Error('Failed to fetch dashboard');
-            return r.json();
-          });
+        const response = await fetch('/api/github.php?endpoint=dashboard', {
+          signal: controller.signal
+        });
 
-        const safeRepos = Array.isArray(dashboard?.repos) ? dashboard.repos : [];
-        const safeMembers = Array.isArray(dashboard?.members) ? dashboard.members : [];
+        if (!response.ok) {
+          throw new Error('Failed to fetch dashboard');
+        }
 
-        const memberSet = new Set();
-        safeMembers
-          .filter(m => m?.type === 'User' && m?.login && !m.login.includes('[bot]'))
-          .forEach(m => memberSet.add(m.login));
-
-        const totalCommits = safeMembers
-          .filter(m => m?.type === 'User' && m?.login && !m.login.includes('[bot]'))
-          .reduce((sum, m) => sum + (Number(m?.commits) || 0), 0);
-
-        const nextStats = {
-          members: memberSet.size,
-          repos: safeRepos.length,
-          commits: totalCommits
-        };
+        const dashboard = await response.json();
+        const nextStats = calculateStats(dashboard);
 
         setStats(nextStats);
         writeStatsCache(nextStats);
-        setFromCache(false);
-        setError(false);
-      } catch (error) {
-        if (error?.name !== "AbortError") {
-          const hasCache = !!readStatsCache();
-          if (!hasCache) setError(true);
-          else setFromCache(true);
-          }
-        } finally {
-        setLoading(false);
+      } catch (fetchError) {
+        if (fetchError?.name !== 'AbortError' && !cached) {
+          setError(true);
         }
+      } finally {
+        setLoading(false);
+      }
     }
 
-    loadGithubStats();
+    loadGitHubStats();
     return () => controller.abort();
   }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return undefined;
+
     const ctx = canvas.getContext('2d');
+    if (!ctx) return undefined;
 
     const PARTICLE_COUNT = 150;
     const CONNECTION_DIST = 200;
@@ -131,8 +137,8 @@ export default function Home() {
       particles = particles.map(p => ({
         ...p,
         x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-      }))
+        y: Math.random() * canvas.height
+      }));
     }
 
     resize();
@@ -194,8 +200,8 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const snippetCode = CODE_SNIPPETS[codeKey][language] || CODE_SNIPPETS[codeKey]['en'];
-    const { code } = { code: snippetCode };
+    const snippet = CODE_SNIPPETS[codeKey] || CODE_SNIPPETS.python;
+    const code = snippet[language] || snippet.en;
     const TYPE_SPEED = 58;
     const WAIT_S = 20;
 
@@ -216,7 +222,7 @@ export default function Home() {
           index++;
           timeoutId = setTimeout(type, TYPE_SPEED);
         } else {
-          const next = SNIPPET_ORDER[(SNIPPET_ORDER.indexOf(codeKey) + 1) % SNIPPET_ORDER.length];
+          const next = getNextSnippetKey(codeKey);
           timeoutId = setTimeout(() => setCodeKey(next), WAIT_S * 1000);
         }
       }
@@ -229,6 +235,8 @@ export default function Home() {
     return () => clearTimeout(timeoutId);
   }, [codeKey, language]);
 
+  const statsText = getStatsText({ loading, error, stats, t });
+
   return (
     <div className="home-page">
       <section className="hero">
@@ -237,17 +245,7 @@ export default function Home() {
         <div className="hero-content">
           <div className="info">
             <h1>nexory-dev</h1>
-
-            <p>
-              {loading
-              ? t('home.stats_loading')
-              : error
-              ? t('home.stats_error')
-              : fromCache
-              ? `${stats.members} ${t('home.stats_members')} · ${stats.repos} ${t('home.stats_repos')} · ${stats.commits} ${t('home.stats_commits')}`
-              : `${stats.members} ${t('home.stats_members')} · ${stats.repos} ${t('home.stats_repos')} · ${stats.commits} ${t('home.stats_commits')}`
-            }
-            </p>
+            <p>{statsText}</p>
           </div>
 
           <div className="terminal">
@@ -255,19 +253,19 @@ export default function Home() {
               <span className="dot red" />
               <span className="dot yellow" />
               <span className="dot green" />
-              <span className="terminal-title">{CODE_SNIPPETS[codeKey].title}</span>
+              <span className="terminal-title">{(CODE_SNIPPETS[codeKey] || CODE_SNIPPETS.python).title}</span>
               <div className="terminal-tabs">
                 {SNIPPET_ORDER.map(key => (
                   <button
-                  key = {key}
-                  className = {`terminal-tab${codeKey === key ? ' active' : ''}`}
-                  onClick = {() => setCodeKey(key)}
-                >
-                  {CODE_SNIPPETS[key].title.split('.')[1]}
-                </button>
-              ))}
+                    key={key}
+                    className={`terminal-tab${codeKey === key ? ' active' : ''}`}
+                    onClick={() => setCodeKey(key)}
+                  >
+                    {CODE_SNIPPETS[key].title.split('.')[1]}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
             <div className="terminal-body">
               <pre id="code-output" ref={outputRef} />

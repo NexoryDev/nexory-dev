@@ -4,7 +4,6 @@ export default function Privacy() {
   return (
     <main className="legal-page">
       <div className="legal-container">
-
         <header className="legal-header">
           <p className="legal-label">Legal</p>
           <h1 className="legal-title">Privacy Policy</h1>
@@ -58,22 +57,24 @@ export default function Privacy() {
 
           <h3>Session Cookies</h3>
           <p>
-            We use a strictly necessary session cookie to remember your language preference during
-            a browsing session. This cookie contains no personal data, is not shared with third
-            parties, and expires when you close your browser. No consent is required for this
-            cookie as it is technically essential (Art. 6 (1)(b) GDPR).
+            We use a technically necessary session cookie (for example a PHP session identifier)
+            for server-side language handling via the <code>/api/language.php</code> endpoint.
+            This cookie is required for the language session and is not used for advertising.
+            No consent banner is required for technically necessary cookies.
           </p>
 
-          <h3>Local Storage (GitHub Stats Cache)</h3>
+          <h3>Local Storage</h3>
           <p>
-            To improve loading performance, this website may temporarily store a cache of public
-            GitHub statistics (for example repository, member, and contribution counts) in your
-            browser's local storage.
+            This website stores small technical values in your browser's local storage:
           </p>
+          <ul>
+            <li><strong>language</strong> - your selected UI language (de/en)</li>
+            <li><strong>home_github_stats</strong> - temporary cache of public GitHub dashboard data</li>
+          </ul>
           <p>
-            This cache contains no contact form content, no authentication data, and no special
-            categories of personal data. The cache expires automatically after a limited period
-            (currently up to one hour).
+            The GitHub cache is stored for performance reasons and expires automatically after a
+            limited period (currently up to one hour). These entries do not contain contact form
+            content, authentication data, or special categories of personal data.
           </p>
           <p>
             Legal basis: Art. 6 (1)(f) GDPR (legitimate interest in efficient and stable page
@@ -84,14 +85,9 @@ export default function Privacy() {
         <section className="legal-section">
           <h2>4. Contact Form</h2>
           <p>
-            If you use the contact form, the data you enter (e.g. your name, e-mail address, and
-            message) is transmitted to us and processed solely for the purpose of responding to
-            your enquiry. This data is not passed on to third parties and is deleted as soon as
-            it is no longer needed and no statutory retention periods apply.
-          </p>
-          <p>
-            Legal basis: Art. 6 (1)(b) GDPR (performance of a contract or pre-contractual
-            measures) or Art. 6 (1)(f) GDPR (legitimate interest in processing enquiries).
+            A contact form is currently not active in this project version. If a contact form is
+            introduced in a future release, this section will be updated with the exact data
+            fields, processing purpose, retention period, and legal basis.
           </p>
         </section>
 
@@ -99,22 +95,17 @@ export default function Privacy() {
           <h2>5. External Services — GitHub API</h2>
           <p>
             This website displays publicly available repository information from GitHub. Depending
-            on the page and request type, data is either requested directly from the GitHub REST API
-            (<code>api.github.com</code>) or fetched via our own server-side proxy endpoint.
+            on the page and request type, data is fetched via our own server-side proxy endpoint
+            <code>/api/github.php</code>.
           </p>
           <p>
             For repository and contribution statistics, only publicly accessible repositories are
             evaluated.
           </p>
           <p>
-            If data is requested directly, your browser connects to GitHub's servers. In this case,
-            technical connection data such as IP address and browser information (User-Agent) may be
-            transmitted to GitHub in the United States.
-          </p>
-          <p>
-            If data is requested via our proxy endpoint, our server retrieves the corresponding GitHub
-            data and returns it to your browser. In this case, GitHub receives the request from our
-            server rather than directly from your browser.
+            Our server retrieves the corresponding GitHub data from <code>api.github.com</code> and
+            returns it to your browser. In this setup, GitHub receives the request from our server
+            rather than directly from your browser.
           </p>
           <p>
             The legal basis for this processing is Art. 6 (1)(f) GDPR (legitimate interest in displaying
@@ -191,8 +182,9 @@ export default function Privacy() {
           </ul>
           <p>
             Events and errors are written to a local log file (<code>logs/discord.log</code>),
-            which may contain Discord user identifiers and interaction metadata. Log files are
-            retained for operational purposes and deleted after a maximum of 30 days.
+            which may contain Discord user identifiers and interaction metadata. Based on the
+            current codebase, no automatic log deletion period is enforced in code. Log retention
+            is handled operationally by the project maintainer.
           </p>
 
           <h3>Purpose and Legal Basis</h3>
@@ -258,7 +250,6 @@ export default function Privacy() {
         <footer className="legal-foot">
           <p>Last updated: 12 April 2026</p>
         </footer>
-
       </div>
     </main>
   );

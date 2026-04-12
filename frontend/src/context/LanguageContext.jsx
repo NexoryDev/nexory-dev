@@ -5,31 +5,38 @@ import en from '../i18n/en.json';
 const translations = { de, en };
 const LanguageContext = createContext(null);
 
-export function LanguageProvider({ children }) {
-  const [language, setLanguage] = useState(() => {
-    const saved = localStorage.getItem('language');
-    if (saved === 'de' || saved === 'en') return saved;
+function getInitialLanguage() {
+  const savedLanguage = localStorage.getItem('language');
+  if (savedLanguage === 'de' || savedLanguage === 'en') {
+    return savedLanguage;
+  }
 
-    const browserLang = navigator.language?.slice(0, 2).toLowerCase();
-    return browserLang === 'de' ? 'de' : 'en';
+  const browserLanguage = navigator.language?.slice(0, 2).toLowerCase();
+  return browserLanguage === 'de' ? 'de' : 'en';
+}
+
+function sendLanguageToBackend(language) {
+  return fetch('/api/language.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ language })
+  }).catch(() => {
+    // Backend sync is best effort only.
   });
+}
+
+export function LanguageProvider({ children }) {
+  const [language, setLanguage] = useState(getInitialLanguage);
 
   useEffect(() => {
     localStorage.setItem('language', language);
     document.documentElement.lang = language;
 
-    fetch('/api/language.php', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ language }),
-    }).catch(() => {
-    });
+    sendLanguageToBackend(language);
   }, [language]);
 
   function t(key) {
-    return translations[language]?.[key]
-      ?? translations['en']?.[key]
-      ?? key;
+    return translations[language]?.[key] ?? translations.en?.[key] ?? key;
   }
 
   return (

@@ -2,36 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import '../styles/Home.css';
+import snippetData from '../data/codeSnippets.json';
 
+const CODE_SNIPPETS = snippetData.snippets;
+const SNIPPET_ORDER = snippetData.order;
 const CACHE_KEY = 'home_github_stats';
 const CACHE_TTL_MS = 1000 * 60 * 60;
-
-const CODE_MAP = {
-  de: `class Nexory:
-    def __init__(self):
-        self.name = "nexory-dev"
-        self.fokus = ["Open Source", "Web", "Automatisierung"]
-        self.stack = ["Python", "JavaScript", "MySQL"]
-
-    def beitreten(self, nutzer):
-        print(f"Willkommen bei {self.name}, {nutzer}!")
-
-if __name__ == "__main__":
-    org = Nexory()
-    org.beitreten("Du")`,
-  en: `class nexory:
-    def __init__(self):
-        self.name = "nexory-dev"
-        self.focus = ["Open Source", "Web", "Automation"]
-        self.stack = ["Python", "JavaScript", "MySQL"]
-
-    def join(self, user):
-        print(f"Welcome, {user}, to {self.name}")
-
-if __name__ == "__main__":
-    org = nexory()
-    org.join("You")`
-};
 
 function readStatsCache() {
   try {
@@ -76,6 +52,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [fromCache, setFromCache] = useState(false);
+  const [codeKey, setCodeKey] = useState('python');
 
   useEffect(() => {
     const controller = new AbortController();
@@ -217,9 +194,10 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const CODE = CODE_MAP[language] ?? CODE_MAP['de'];
+    const snippetCode = CODE_SNIPPETS[codeKey][language] || CODE_SNIPPETS[codeKey]['en'];
+    const { code } = { code: snippetCode };
     const TYPE_SPEED = 58;
-    const WAIT_MS = 20000;
+    const WAIT_S = 20;
 
     let timeoutId;
 
@@ -228,17 +206,18 @@ export default function Home() {
       if (!output) return;
 
       output.textContent = '';
-      let i = 0;
+      let index = 0;
 
       function type() {
         if (!outputRef.current) return;
 
-        if (i < CODE.length) {
-          output.textContent = CODE.slice(0, i + 1);
-          i++;
+        if (index < code.length) {
+          output.textContent = code.slice(0, index + 1);
+          index++;
           timeoutId = setTimeout(type, TYPE_SPEED);
         } else {
-          timeoutId = setTimeout(startTyping, WAIT_MS);
+          const next = SNIPPET_ORDER[(SNIPPET_ORDER.indexOf(codeKey) + 1) % SNIPPET_ORDER.length];
+          timeoutId = setTimeout(() => setCodeKey(next), WAIT_S * 1000);
         }
       }
 
@@ -248,7 +227,7 @@ export default function Home() {
     startTyping();
 
     return () => clearTimeout(timeoutId);
-  }, [language]);
+  }, [codeKey, language]);
 
   return (
     <div className="home-page">
@@ -276,8 +255,19 @@ export default function Home() {
               <span className="dot red" />
               <span className="dot yellow" />
               <span className="dot green" />
-              <span className="terminal-title">nexory.py</span>
+              <span className="terminal-title">{CODE_SNIPPETS[codeKey].title}</span>
+              <div className="terminal-tabs">
+                {SNIPPET_ORDER.map(key => (
+                  <button
+                  key = {key}
+                  className = {`terminal-tab${codeKey === key ? ' active' : ''}`}
+                  onClick = {() => setCodeKey(key)}
+                >
+                  {CODE_SNIPPETS[key].title.split('.')[1]}
+                </button>
+              ))}
             </div>
+          </div>
 
             <div className="terminal-body">
               <pre id="code-output" ref={outputRef} />

@@ -1,0 +1,20 @@
+{
+  "order": ["python", "js", "csharp"],
+  "snippets": {
+    "python": {
+      "title": "nexory.py",
+      "de": "class Nexory:\n    def __init__(self):\n        self.stack = [\"Python\",\"JS\",\"MySQL\"]\n\n    def erstellen(self, idee):\n        return f\"nexory: {idee}\"\n\norg = Nexory()\norg.erstellen(\"open source\")",
+      "en": "class Nexory:\n    def __init__(self):\n        self.stack = [\"Python\",\"JS\",\"MySQL\"]\n\n    def build(self, idea):\n        return f\"nexory: {idea}\"\n\norg = Nexory()\norg.build(\"open source\")"
+    },
+    "js": {
+      "title": "nexory.js",
+      "de": "class Nexory {\n  constructor() {\n    this.stack = [\"Python\",\"JS\",\"MySQL\"];\n  }\n  erstellen(idee) {\n    return `nexory: ${idee}`;\n  }\n}\n\nconst org = new Nexory();\norg.erstellen(\"open source\");",
+      "en": "class Nexory {\n  constructor() {\n    this.stack = [\"Python\",\"JS\",\"MySQL\"];\n  }\n  build(idea) {\n    return `nexory: ${idea}`;\n  }\n}\n\nconst org = new Nexory();\norg.build(\"open source\");"
+    },
+    "csharp": {
+      "title": "nexory.cs",
+      "de": "class Nexory {\n  string[] Stack = {\"Python\",\"JS\",\"MySQL\"};\n\n  string Erstellen(string idee) {\n    return $\"nexory: {idee}\";\n  }\n}\n\nvar org = new Nexory();\norg.Erstellen(\"open source\");",
+      "en": "class Nexory {\n  string[] Stack = {\"Python\",\"JS\",\"MySQL\"};\n\n  string Build(string idea) {\n    return $\"nexory: {idea}\";\n  }\n}\n\nvar org = new Nexory();\norg.Build(\"open source\");"
+    }
+  }
+}

@@ -22,7 +22,6 @@
   "home.infos_contact_header": "Contact",
   "home.infos_contact_text": "in progress, planned for April 15, 2026",
   "home.stats_error": "Failed to load GitHub data. Please try again later.",
-  "home.stats_cached": "from cache",
 
   "github.stars": "Stars",
   "github.forks": "Forks",

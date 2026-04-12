@@ -3,10 +3,6 @@ import { useLanguage } from '../context/LanguageContext';
 import '../styles/Github.css';
 import { SvgStar, SvgFork, SvgIssue, SvgRepo } from '../components/svgs';
 
-const ORG = 'NexoryDev';
-
-const HEADERS = { Accept: 'application/vnd.github.v3+json' };
-
 const LANG_COLORS = {
   JavaScript: '#f1e05a',
   Python: '#3572A5',
@@ -18,86 +14,41 @@ const LANG_COLORS = {
   'C++': '#f34b7d',
 };
 
-const ROLE_RANK = { admin: 1, maintain: 2, push: 3, triage: 4, pull: 5 };
-
-export default function GitHub() {
+export default function GitHub({ initialData = null, initialError = false }) {
   const { t } = useLanguage();
-  const [org, setOrg]         = useState(null);
-  const [repos, setRepos]     = useState([]);
-  const [error, setError]     = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [members, setMembers]   = useState([]);
+  const [org, setOrg] = useState(initialData?.org ?? null);
+  const [repos, setRepos] = useState(Array.isArray(initialData?.repos) ? initialData.repos : []);
+  const [members, setMembers] = useState(Array.isArray(initialData?.members) ? initialData.members : []);
+  const [error, setError] = useState(initialError);
+  const [loading, setLoading] = useState(!initialData && !initialError);
 
   useEffect(() => {
-    Promise.all([
-      fetch(`https://api.github.com/orgs/${ORG}`, { headers: HEADERS }).then(res => res.json()),
-      fetch(`/api/github.php?endpoint=repos&per_page=100&sort=updated`, { headers: HEADERS }).then(res => res.json()),
-      fetch(`/api/github.php?endpoint=members`, { headers: HEADERS }).then(res => res.json()),
-    ])
-      .then(([orgData, reposData, allMembers]) => {
-        if (orgData.message) throw new Error();
-        const safeRepos = Array.isArray(reposData)
-          ? reposData.filter(repo => repo && repo.private !== true)
-          : [];
-        const topRepos = [...safeRepos]
-          .sort((a, b) => (b?.stargazers_count || 0) - (a?.stargazers_count || 0))
-          .slice(0, 10);
-        const safeMembers = Array.isArray(allMembers) ? allMembers : [];
+    if (initialData || initialError) return;
 
-        setOrg(orgData);
-        setRepos(topRepos);
+    let cancelled = false;
 
-        return Promise.all(
-          topRepos.map(repo => Promise.all([
-            fetch(`/api/github.php?endpoint=collaborators&repo=${encodeURIComponent(repo.name)}`, { headers: HEADERS })
-              .then(r => r.json()).catch(() => []),
-            fetch(`/api/github.php?endpoint=contributors&repo=${encodeURIComponent(repo.name)}`, { headers: HEADERS })
-              .then(r => r.json()).catch(() => []),
-          ]))
-        ).then(results => {
-          const allCollaborators = results.map(r => r[0]);
-          const allContributors  = results.map(r => r[1]);
+    fetch('/api/github.php?endpoint=dashboard')
+      .then(res => {
+        if (!res.ok) throw new Error('Dashboard fetch failed');
+        return res.json();
+      })
+      .then(data => {
+        if (cancelled) return;
+        setOrg(data?.org ?? null);
+        setRepos(Array.isArray(data?.repos) ? data.repos : []);
+        setMembers(Array.isArray(data?.members) ? data.members : []);
+      })
+      .catch(() => {
+        if (!cancelled) setError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
 
-          const roleMap = {};
-          allCollaborators.flat().forEach(c => {
-            if (!c?.login) return;
-            const perms = c.permissions ?? {};
-            let role = 'pull';
-            if (perms.admin)         role = 'admin';
-            else if (perms.maintain) role = 'maintain';
-            else if (perms.push)     role = 'push';
-            else if (perms.triage)   role = 'triage';
-            if (!roleMap[c.login] || ROLE_RANK[role] < ROLE_RANK[roleMap[c.login]]) {
-              roleMap[c.login] = role;
-            }
-          });
-
-          const commitMap = {};
-          allContributors.flat().forEach(c => {
-            if (c?.login) commitMap[c.login] = (commitMap[c.login] || 0) + c.contributions;
-          });
-
-          const repoCountMap = {};
-          allCollaborators.forEach(repoCollabs => {
-            repoCollabs.forEach(c => {
-              if (c?.login) repoCountMap[c.login] = (repoCountMap[c.login] || 0) + 1;
-            });
-          });
-
-          const enriched = safeMembers.map(member => ({
-            ...member,
-            role: roleMap[member.login] ?? 'member',
-            commits: commitMap[member.login] ?? 0,
-            repoCount: repoCountMap[member.login] ?? 0,
-          }));
-
-          enriched.sort((a, b) => (ROLE_RANK[a.role] ?? 99) - (ROLE_RANK[b.role] ?? 99));
-          setMembers(enriched);
-        });
-    })
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [initialData, initialError]);
 
   const totalStars  = repos.reduce((sum, r) => sum + r.stargazers_count, 0);
   const totalForks  = repos.reduce((sum, r) => sum + r.forks_count, 0);
@@ -132,7 +83,7 @@ export default function GitHub() {
                 <span>{org.public_repos} {t('github.repos_header')}</span>
                 <span>{org.followers} Followers </span>
               </div>
-              <a href={`https://github.com/${ORG}`} target="_blank" rel="noopener noreferrer" className="gh-org-link">
+              <a href={`https://github.com/${org?.login ?? 'NexoryDev'}`} target="_blank" rel="noopener noreferrer" className="gh-org-link">
                 {t('github.visit_org')}
               </a>
             </div>

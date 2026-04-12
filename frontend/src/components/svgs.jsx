@@ -8,6 +8,10 @@ export function SvgFork(props) {
   return <RepoForkedIcon size={16} {...props} />;
 }
 
+export function SvgOpenIssue(props) {
+  return <IssueOpenedIcon size={16} {...props} />;
+}
+
 export function SvgIssue(props) {
   return <IssueOpenedIcon size={16} {...props} />;
 }

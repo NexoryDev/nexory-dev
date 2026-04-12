@@ -18,7 +18,7 @@ export function LanguageProvider({ children }) {
     localStorage.setItem('language', language);
     document.documentElement.lang = language;
 
-    fetch('/api/language', {
+    fetch('/api/language.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ language }),

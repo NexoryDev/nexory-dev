@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import '../styles/Home.css';
 
-const ORG = 'NexoryDev';
-const HEADERS = { Accept: 'application/vnd.github.v3+json' };
 const CACHE_KEY = 'home_github_stats';
 const CACHE_TTL_MS = 1000 * 60 * 60;
 
@@ -96,49 +94,29 @@ export default function Home() {
       }
 
       try {
-        const [reposData, membersData] = await Promise.all([
-          fetch("/api/github.php?endpoint=repos", { signal })
+        const dashboard = await fetch('/api/github.php?endpoint=dashboard', { signal })
           .then(r => {
-            if (!r.ok) throw new Error("Failed to fetch repos");
+            if (!r.ok) throw new Error('Failed to fetch dashboard');
             return r.json();
-          }),
-          fetch ("/api/github.php?endpoint=members", { signal })
-          .then(r => {
-            if (!r.ok) throw new Error("Failed to fetch members");
-            return r.json();
-          })
-          ]);
+          });
 
-          const safeRepos = Array.isArray(reposData)
-            ? reposData.filter(repo => repo && repo.private !== true)
-            : [];
-          const safeMembers = Array.isArray(membersData) ? membersData : [];
-          const memberSet = new Set();
-          safeMembers
-            .filter(m => m.type === "User" && m?.login && !m.login.includes("[bot]"))
-            .forEach(m => memberSet.add(m.login));
+        const safeRepos = Array.isArray(dashboard?.repos) ? dashboard.repos : [];
+        const safeMembers = Array.isArray(dashboard?.members) ? dashboard.members : [];
 
-          const contributorPromises = safeRepos.map(repo =>
-            fetch(
-            "/api/github.php?endpoint=contributors&repo=" + encodeURIComponent(repo.name),
-            { signal }
-          )
-          .then(r => (r.ok ? r.json() : []))
-          .catch(() => [])
-        );
+        const memberSet = new Set();
+        safeMembers
+          .filter(m => m?.type === 'User' && m?.login && !m.login.includes('[bot]'))
+          .forEach(m => memberSet.add(m.login));
 
-        const contributorsByRepo = await Promise.all(contributorPromises);
-
-        const totalCommits = contributorsByRepo
-        .flat()
-        .filter(c => c?.type === "User" && c?.login && !c.login.includes("[bot]"))
-        .reduce((sum, c) => sum + (Number(c?.contributions) || 0), 0);
+        const totalCommits = safeMembers
+          .filter(m => m?.type === 'User' && m?.login && !m.login.includes('[bot]'))
+          .reduce((sum, m) => sum + (Number(m?.commits) || 0), 0);
 
         const nextStats = {
           members: memberSet.size,
           repos: safeRepos.length,
           commits: totalCommits
-        }
+        };
 
         setStats(nextStats);
         writeStatsCache(nextStats);
@@ -287,7 +265,7 @@ export default function Home() {
               : error
               ? t('home.stats_error')
               : fromCache
-              ? `${stats.members} ${t('home.stats_members')} · ${stats.repos} ${t('home.stats_repos')} · ${stats.commits} ${t('home.stats_commits')} (${t('home.stats_cached')})`
+              ? `${stats.members} ${t('home.stats_members')} · ${stats.repos} ${t('home.stats_repos')} · ${stats.commits} ${t('home.stats_commits')}`
               : `${stats.members} ${t('home.stats_members')} · ${stats.repos} ${t('home.stats_repos')} · ${stats.commits} ${t('home.stats_commits')}`
             }
             </p>

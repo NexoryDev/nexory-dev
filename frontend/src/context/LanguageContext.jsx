@@ -16,13 +16,26 @@ function getInitialLanguage() {
 }
 
 function sendLanguageToBackend(language) {
+  const host = window.location.hostname;
+  const isLocal = host === 'localhost' || host === '127.0.0.1';
+
+  if (isLocal) {
+    return Promise.resolve();
+  }
+
   return fetch('/api/language.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ language })
-  }).catch(() => {
-    // Backend sync is best effort only.
-  });
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`language sync failed: ${response.status}`);
+      }
+    })
+    .catch(() => {
+      // Backend sync is best effort only.
+    });
 }
 
 export function LanguageProvider({ children }) {

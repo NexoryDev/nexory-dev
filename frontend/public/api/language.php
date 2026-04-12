@@ -1,40 +1,70 @@
 <?php
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: https://nexory-dev.de');
+
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$allowedOrigins = [
+    'https://nexory-dev.de',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+];
+
+if (in_array($origin, $allowedOrigins, true)) {
+    header('Access-Control-Allow-Origin: ' . $origin);
+}
+header('Vary: Origin');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Credentials: true');
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+
+if ($method === 'OPTIONS') {
     http_response_code(204);
     exit;
 }
 
-session_start();
+$sessionAvailable = true;
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    $sessionAvailable = @session_start();
+}
 
 $supported = ['de', 'en'];
-$default   = 'de';
+$default = 'de';
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $lang = $_SESSION['language'] ?? $default;
+if ($method === 'GET') {
+    $lang = $default;
+
+    if ($sessionAvailable && isset($_SESSION['language'])) {
+        $lang = $_SESSION['language'];
+    }
+
     if (!in_array($lang, $supported, true)) {
         $lang = $default;
     }
+
     echo json_encode(['language' => $lang]);
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $body = json_decode(file_get_contents('php://input'), true);
-    $lang = strtolower(trim($body['language'] ?? ''));
+if ($method === 'POST') {
+    $raw = file_get_contents('php://input');
+    $body = json_decode((string)$raw, true);
+    if (!is_array($body)) {
+        $body = [];
+    }
+
+    $lang = strtolower(trim((string)($body['language'] ?? '')));
 
     if (!in_array($lang, $supported, true)) {
         http_response_code(400);
-        echo json_encode(['error' => 'Unsupported language: ' . htmlspecialchars($lang, ENT_QUOTES, 'UTF-8')]);
+        echo json_encode(['error' => 'Unsupported language']);
         exit;
     }
 
-    $_SESSION['language'] = $lang;
+    if ($sessionAvailable) {
+        $_SESSION['language'] = $lang;
+    }
+
     echo json_encode(['language' => $lang]);
     exit;
 }

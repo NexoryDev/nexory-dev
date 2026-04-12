@@ -116,7 +116,7 @@ export default function Home() {
           members: memberSet.size,
           repos: safeRepos.length,
           commits: totalCommits
-        }
+        };
 
         setStats(nextStats);
         writeStatsCache(nextStats);

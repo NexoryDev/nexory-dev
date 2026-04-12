@@ -235,11 +235,23 @@ export default function Home() {
     return () => clearTimeout(timeoutId);
   }, [codeKey, language]);
 
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+      const element = document.getElementById(hash);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 0);
+      }
+    }
+  }, []);
+
   const statsText = getStatsText({ loading, error, stats, t });
 
   return (
     <div className="home-page">
-      <section className="hero">
+      <section className="hero" id="start">
         <canvas ref={canvasRef} id="code-canvas" />
 
         <div className="hero-content">

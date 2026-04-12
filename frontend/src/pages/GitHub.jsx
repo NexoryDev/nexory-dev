@@ -112,6 +112,18 @@ export default function GitHub({ initialData = null, initialError = false }) {
     };
   }, [initialData, initialError]);
 
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+      const element = document.getElementById(hash);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 0);
+      }
+    }
+  }, []);
+
   const totals = getRepoTotals(repos);
   const topLanguage = getTopLanguage(repos);
 
@@ -145,7 +157,7 @@ export default function GitHub({ initialData = null, initialError = false }) {
           {topLanguage && <span className="gh-stat"><SvgRepo /> {topLanguage}</span>}
         </div>
 
-        <section className="gh-repos">
+        <section className="gh-repos" id="repos">
           <h2 className="gh-section-title">{t('github.repos_header')}</h2>
           <div className="gh-repo-grid">
             {repos.map(repo => (
@@ -199,7 +211,7 @@ export default function GitHub({ initialData = null, initialError = false }) {
           </div>
         </section>
         {members.length > 0 && (
-          <section className="gh-members">
+          <section className="gh-members" id="members">
             <h2 className="gh-section-title">{t('github.members_header')}</h2>
             <div className="gh-members-grid">
               {members.map(member => (

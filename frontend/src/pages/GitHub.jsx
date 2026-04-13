@@ -29,7 +29,7 @@ function toSafeDashboard(data) {
 }
 
 function fetchDashboard() {
-  return fetch('/api/github.php?endpoint=dashboard').then(response => {
+  return fetch('/api/github?endpoint=dashboard').then(response => {
     if (!response.ok) {
       throw new Error('Dashboard fetch failed');
     }

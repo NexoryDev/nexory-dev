@@ -88,4 +88,4 @@ Then deploy `frontend/build/` alongside the Flask backend. Make sure the web ser
 
 ## License
 
-No license file is currently included in this repository.
+coming soon...

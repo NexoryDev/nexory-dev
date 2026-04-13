@@ -91,7 +91,7 @@ export default function Home() {
       }
 
       try {
-        const response = await fetch('/api/github.php?endpoint=dashboard', {
+        const response = await fetch('/api/github?endpoint=dashboard', {
           signal: controller.signal
         });
 

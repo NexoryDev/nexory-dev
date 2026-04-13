@@ -1,79 +1,68 @@
-# Backend Setup
+# Frontend Setup
 
-This guide walks you through running the Python/Flask backend locally.
+This guide walks you through running the React frontend locally.
 
 ## Prerequisites
 
-- **Python** 3.10 or newer — [download here](https://www.python.org/)
-- A **GitHub personal access token** with `read:org` and `repo` scopes — [create one here](https://github.com/settings/tokens)
+- **Node.js** 18 or newer — [download here](https://nodejs.org/)
+- **npm** (comes with Node.js)
+- The **backend** running on port 5000 (see `../backend/SETUP.md`)
 
 ## Getting started
 
-1. **Go into the backend folder**
+1. **Go into the frontend folder**
 
    ```bash
-   cd backend
+   cd frontend
    ```
 
-2. **Create and activate a virtual environment** (recommended)
+2. **Install dependencies**
 
    ```bash
-   python -m venv .venv
-   source .venv/bin/activate   # Windows: .venv\Scripts\activate
+   npm install
    ```
 
-3. **Install dependencies**
+3. **Start the dev server**
 
    ```bash
-   pip install -r requirements.txt
+   npm start
    ```
 
-4. **Create a `.env` file**
+   The app opens automatically at [http://localhost:3000](http://localhost:3000).  
+   API calls are proxied to `http://localhost:5000`, so make sure the backend is running first.
 
-   ```bash
-   cp .env.example .env   # or just create the file manually
-   ```
-
-   Add the following to `.env`:
-
-   ```env
-   GITHUB_TOKEN=your_github_token_here
-   SECRET_KEY=some-random-secret-string
-   ```
-
-   > `SECRET_KEY` is used to sign the session cookie. Pick any long random string.
-
-5. **Run the server**
-
-   ```bash
-   python app.py
-   ```
-
-   The API is now available at [http://localhost:5000](http://localhost:5000).
-
-## Running in production
-
-Use **Gunicorn** instead of the built-in Flask dev server:
+## Building for production
 
 ```bash
-gunicorn -w 2 -b 0.0.0.0:5000 app:app
+npm run build
 ```
 
-## API endpoints
+The optimised output lands in `frontend/build/`. Upload that folder (together with the backend) to your server.
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/github?endpoint=dashboard` | Org info, top repos, and member list (cached for 120 s) |
-| `GET` | `/api/github?endpoint=org` | Raw organisation data |
-| `GET` | `/api/github?endpoint=repos` | Public repositories |
-| `GET` | `/api/github?endpoint=members` | Organisation members |
-| `GET` | `/api/language` | Returns the current language from the session |
-| `POST` | `/api/language` | Sets the language (`{"language": "en"}`) |
+## Project layout
+
+```
+frontend/
+├─ public/
+│  ├─ .htaccess       # URL rewrite rules for Apache/Plesk
+│  └─ index.html
+└─ src/
+   ├─ components/     # Shared UI components
+   ├─ context/        # React context providers
+   ├─ data/           # Static data files
+   ├─ i18n/           # Translation strings (de / en)
+   ├─ pages/          # Page components (Home, GitHub, Contact, …)
+   └─ styles/         # Global and component CSS
+```
+
+## Switching language
+
+The app supports **German** and **English**. The active language is stored server-side via the `/api/language` endpoint and also reflected in the UI toggle.
 
 ## Troubleshooting
 
 | Problem | Fix |
 |---------|-----|
-| `no token` error | Make sure `GITHUB_TOKEN` is set in your `.env` file |
-| 502 responses from `/api/github` | Check that your token has the right scopes and hasn't expired |
-| CORS errors in the browser | Verify the frontend is running on `http://localhost:3000` |
+| API calls return 404 | Make sure the backend is running on port 5000 |
+| White screen on reload | The `.htaccess` file must rewrite all routes to `index.html` — check your web server config |
+| `npm install` fails | Delete `node_modules` and `package-lock.json`, then try again |

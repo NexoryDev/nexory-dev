@@ -6,7 +6,7 @@ Das Projekt besteht aus einem React-Frontend und kleinen PHP-API-Endpunkten fuer
 
 ## Was ist enthalten
 
-- React SPA mit Seiten fuer Home, GitHub, Kontakt und Rechtstexte
+- React SPA mit Seiten für Home, GitHub, Kontakt und Rechtstexte
 - i18n (Deutsch/Englisch) im Frontend
 - PHP-Proxy fuer GitHub API (inkl. kurzer Server-Cache)
 - PHP-Session-Endpunkt fuer Sprache

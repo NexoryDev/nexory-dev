@@ -1,68 +1,91 @@
 # nexory-dev
 
-Website-Repository für nexory-dev.de.
+Website repository for [nexory-dev.de](https://nexory-dev.de).
 
-Das Projekt besteht aus einem React-Frontend und kleinen PHP-API-Endpunkten fuer GitHub-Daten und Spracheinstellungen.
+The project consists of a React single-page app and a small Python/Flask API that proxies GitHub data and manages the language preference.
 
-## Was ist enthalten
+## What's included
 
-- React SPA mit Seiten für Home, GitHub, Kontakt und Rechtstexte
-- i18n (Deutsch/Englisch) im Frontend
-- PHP-Proxy fuer GitHub API (inkl. kurzer Server-Cache)
-- PHP-Session-Endpunkt fuer Sprache
+- React SPA with pages for Home, GitHub, Contact, and legal texts
+- Internationalisation (German / English) in the frontend
+- Flask API that proxies the GitHub REST API (with a short server-side cache)
+- Language preference stored in a server-side session
 
-## Tech-Stack
+## Tech stack
 
-- React 18 (Create React App)
-- React Router
-- PHP 8.x (API-Endpunkte in frontend/public/api)
-- GitHub REST API
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 18 (Create React App), React Router 6 |
+| Backend | Python 3, Flask 3, Gunicorn |
+| External API | GitHub REST API |
 
-## Schnellstart
+## Quick start
 
-Eine kurze, alltagstaugliche Anleitung findest du in [SETUP.md](SETUP.md).
+Detailed instructions are in the setup guides:
 
-Kurzfassung:
+- **Frontend** → [frontend/SETUP.md](frontend/SETUP.md)
+- **Backend** → [backend/SETUP.md](backend/SETUP.md)
 
-1. Repository klonen
-2. Frontend-Abhaengigkeiten installieren
-3. PHP-API lokal auf Port 8080 starten
-4. React Dev Server starten
+Short version:
 
-## Projektstruktur
+```bash
+# 1 — Start the backend
+cd backend
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+# create .env with GITHUB_TOKEN and SECRET_KEY
+python app.py
 
-```text
+# 2 — Start the frontend (new terminal)
+cd frontend
+npm install
+npm start
+```
+
+Open [http://localhost:3000](http://localhost:3000) — API calls are automatically proxied to port 5000.
+
+## Project structure
+
+```
 nexory-dev/
+├─ backend/
+│  ├─ app.py            # Flask application (GitHub proxy + language API)
+│  ├─ requirements.txt
+│  └─ SETUP.md
 ├─ frontend/
 │  ├─ public/
-│  │  ├─ api/
-│  │  │  ├─ github.php
-│  │  │  └─ language.php
+│  │  ├─ .htaccess
 │  │  └─ index.html
 │  ├─ src/
 │  │  ├─ components/
 │  │  ├─ context/
+│  │  ├─ data/
 │  │  ├─ i18n/
 │  │  ├─ pages/
 │  │  └─ styles/
-│  └─ package.json
-├─ README.md
-└─ SETUP.md
+│  ├─ package.json
+│  └─ SETUP.md
+└─ README.md
 ```
 
-## API-Ueberblick
+## API overview
 
-- GET /api/github.php?endpoint=dashboard
-	- liefert Organisations-, Repo- und Memberdaten fuer die GitHub-Seite
-- GET /api/language.php
-	- liefert aktuelle Sprache aus der Session
-- POST /api/language.php
-	- speichert Sprache in der Session
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/github?endpoint=dashboard` | Org info, top repos, and enriched member list |
+| `GET` | `/api/language` | Returns the current language from the session |
+| `POST` | `/api/language` | Sets the language (`{"language": "en"}` or `"de"`) |
 
-## Deployment-Hinweis
+## Deployment
 
-Fuer Produktion liegt ein Build unter frontend/build. Falls in Plesk deployed wird, muessen die API-Dateien unter einem durch PHP ausfuehrbaren Pfad liegen (z. B. /api), damit Endpunkte wie /api/github.php funktionieren.
+Build the frontend first:
 
-## Lizenz
+```bash
+cd frontend && npm run build
+```
 
-Aktuell ist keine Lizenzdatei im Repository hinterlegt.
+Then deploy `frontend/build/` alongside the Flask backend. Make sure the web server passes `/api/*` requests to Gunicorn and rewrites all other paths to `index.html` (the `.htaccess` in `public/` handles this for Apache/Plesk).
+
+## License
+
+No license file is currently included in this repository.

@@ -63,7 +63,6 @@ function writeStatsCache(data) {
       })
     );
   } catch {
-    // Ignore storage errors (private mode, quota, etc.)
   }
 }
 
@@ -119,10 +118,10 @@ export default function Home() {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return undefined;
+    if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return undefined;
+    if (!ctx) return;
 
     const PARTICLE_COUNT = 150;
     const CONNECTION_DIST = 200;
@@ -160,6 +159,7 @@ export default function Home() {
       particles.forEach(p => {
         p.x += p.vx;
         p.y += p.vy;
+
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
       });
@@ -202,6 +202,7 @@ export default function Home() {
   useEffect(() => {
     const snippet = CODE_SNIPPETS[codeKey] || CODE_SNIPPETS.python;
     const code = snippet[language] || snippet.en;
+
     const TYPE_SPEED = 58;
     const WAIT_S = 20;
 
@@ -211,14 +212,20 @@ export default function Home() {
       const output = outputRef.current;
       if (!output) return;
 
-      output.textContent = '';
+      output.innerHTML = '';
       let index = 0;
 
       function type() {
         if (!outputRef.current) return;
 
         if (index < code.length) {
-          output.textContent = code.slice(0, index + 1);
+          const partial = code.slice(0, index + 1);
+          const lines = partial.split('\n');
+
+          output.innerHTML = lines
+            .map(line => `<span class="code-line">${line}</span>`)
+            .join('');
+
           index++;
           timeoutId = setTimeout(type, TYPE_SPEED);
         } else {
@@ -237,14 +244,14 @@ export default function Home() {
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
-    if (hash) {
-      const element = document.getElementById(hash);
-      if (element) {
-        setTimeout(() => {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }, 0);
-      }
-    }
+    if (!hash) return;
+
+    const element = document.getElementById(hash);
+    if (!element) return;
+
+    setTimeout(() => {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }, 0);
   }, []);
 
   const statsText = getStatsText({ loading, error, stats, t });
@@ -265,7 +272,10 @@ export default function Home() {
               <span className="dot red" />
               <span className="dot yellow" />
               <span className="dot green" />
-              <span className="terminal-title">{(CODE_SNIPPETS[codeKey] || CODE_SNIPPETS.python).title}</span>
+              <span className="terminal-title">
+                {(CODE_SNIPPETS[codeKey] || CODE_SNIPPETS.python).title}
+              </span>
+
               <div className="terminal-tabs">
                 {SNIPPET_ORDER.map(key => (
                   <button
@@ -287,19 +297,56 @@ export default function Home() {
         </div>
       </section>
 
-      <section>
-        <div className="home-infos" id="infos">
-          <h2>{t('home.infos_header')}</h2>
+      <section className="home-infos" id="infos">
+        <h2>{t('home.infos_header')}</h2>
 
-          <Link to="/github" className="home-infos-contact">
+        <div className="trust-badges">
+          <span>{t('home.trust_open')}</span>
+          <span>{t('home.trust_active')}</span>
+          <span>{t('home.trust_fast')}</span>
+        </div>
+
+        <div className="info-cards">
+          <Link to="/github" className="info-card">
             <h3>{t('home.infos_github_header')}</h3>
             <p>{t('home.infos_github_text')}</p>
           </Link>
 
-          <Link to="/contact" className="home-infos-contact">
+          <Link to="/contact" className="info-card">
             <h3>{t('home.infos_contact_header')}</h3>
             <p>{t('home.infos_contact_text')}</p>
           </Link>
+        </div>
+
+        <div className="tech-stack">
+          <h3>{t('home.tech_header')}</h3>
+          <div className="tech-icons">
+            <span>🐍 Python</span>
+            <span>⚡ JavaScript</span>
+            <span>🟦 TypeScript</span>
+            <span>🗄️ MySQL</span>
+          </div>
+        </div>
+
+        <div className="how-it-works">
+          <h3>{t('home.how_header')}</h3>
+
+          <div className="steps">
+            <div className="step">
+              <span>1</span>
+              <p>{t('home.how_step1')}</p>
+            </div>
+
+            <div className="step">
+              <span>2</span>
+              <p>{t('home.how_step2')}</p>
+            </div>
+
+            <div className="step">
+              <span>3</span>
+              <p>{t('home.how_step3')}</p>
+            </div>
+          </div>
         </div>
       </section>
     </div>

@@ -14,7 +14,7 @@ const MIN_PRELOADER_MS = 700;
 const BOOTSTRAP_TIMEOUT_MS = 4000;
 
 function fetchGitHubBootstrap() {
-  return fetch('/api/github.php?endpoint=dashboard')
+  return fetch('/api/github?endpoint=dashboard')
     .then(response => {
       if (!response.ok) {
         throw new Error('github bootstrap failed');

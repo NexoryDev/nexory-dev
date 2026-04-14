@@ -223,8 +223,11 @@ export default function Home() {
           const lines = partial.split('\n');
 
           output.innerHTML = lines
-            .map(line => `<span class="code-line">${line}</span>`)
-            .join('');
+          .map((line, i) => {
+            const isLast = i === lines.length - 1;
+            return `<span class="code-line">${line}${isLast ? '<span class="cursor"></span>' : ''}</span>`;
+          })
+          .join('');
 
           index++;
           timeoutId = setTimeout(type, TYPE_SPEED);
@@ -291,7 +294,6 @@ export default function Home() {
 
             <div className="terminal-body">
               <pre id="code-output" ref={outputRef} />
-              <span className="cursor" />
             </div>
           </div>
         </div>

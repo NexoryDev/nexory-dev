@@ -3,18 +3,18 @@
   "snippets": {
     "python": {
       "title": "nexory.py",
-      "de": "class Nexory:\n    def __init__(self):\n        self.stack = [\"Python\",\"JS\",\"MySQL\"]\n\n    def erstellen(self, idee):\n        return f\"nexory: {idee}\"\n\norg = Nexory()\norg.erstellen(\"open source\")",
-      "en": "class Nexory:\n    def __init__(self):\n        self.stack = [\"Python\",\"JS\",\"MySQL\"]\n\n    def build(self, idea):\n        return f\"nexory: {idea}\"\n\norg = Nexory()\norg.build(\"open source\")"
+      "de": "class Nexory:\n    def __init__(self):\n        self.stack = [\"Python\",\"JS\",\"MySQL\"]\n\n    def erstellen(self, projekt):\n        return f\"nexory: {projekt}\"\n\norg = Nexory()\norg.erstellen(\"dein projekt\")",
+      "en": "class Nexory:\n    def __init__(self):\n        self.stack = [\"Python\",\"JS\",\"MySQL\"]\n\n    def build(self, project):\n        return f\"nexory: {project}\"\n\norg = Nexory()\norg.build(\"your project\")"
     },
     "js": {
       "title": "nexory.js",
-      "de": "class Nexory {\n  constructor() {\n    this.stack = [\"Python\",\"JS\",\"MySQL\"];\n  }\n  erstellen(idee) {\n    return `nexory: ${idee}`;\n  }\n}\n\nconst org = new Nexory();\norg.erstellen(\"open source\");",
-      "en": "class Nexory {\n  constructor() {\n    this.stack = [\"Python\",\"JS\",\"MySQL\"];\n  }\n  build(idea) {\n    return `nexory: ${idea}`;\n  }\n}\n\nconst org = new Nexory();\norg.build(\"open source\");"
+      "de": "class Nexory {\n  constructor() {\n    this.stack = [\"Python\",\"JS\",\"MySQL\"];\n  }\n  erstellen(projekt) {\n    return `nexory: ${projekt}`;\n  }\n}\n\nconst org = new Nexory();\norg.erstellen(\"dein projekt\");",
+      "en": "class Nexory {\n  constructor() {\n    this.stack = [\"Python\",\"JS\",\"MySQL\"];\n  }\n  build(project) {\n    return `nexory: ${project}`;\n  }\n}\n\nconst org = new Nexory();\norg.build(\"your project\");"
     },
     "csharp": {
       "title": "nexory.cs",
-      "de": "class Nexory {\n  string[] Stack = {\"Python\",\"JS\",\"MySQL\"};\n\n  string Erstellen(string idee) {\n    return $\"nexory: {idee}\";\n  }\n}\n\nvar org = new Nexory();\norg.Erstellen(\"open source\");",
-      "en": "class Nexory {\n  string[] Stack = {\"Python\",\"JS\",\"MySQL\"};\n\n  string Build(string idea) {\n    return $\"nexory: {idea}\";\n  }\n}\n\nvar org = new Nexory();\norg.Build(\"open source\");"
+      "de": "class Nexory {\n  string[] Stack = {\"Python\",\"JS\",\"MySQL\"};\n\n  string Erstellen(string projekt) {\n    return $\"nexory: {projekt}\";\n  }\n}\n\nvar org = new Nexory();\norg.Erstellen(\"dein projekt\");",
+      "en": "class Nexory {\n  string[] Stack = {\"Python\",\"JS\",\"MySQL\"};\n\n  string Build(string project) {\n    return $\"nexory: {project}\";\n  }\n}\n\nvar org = new Nexory();\norg.Build(\"your project\");"
     }
   }
 }

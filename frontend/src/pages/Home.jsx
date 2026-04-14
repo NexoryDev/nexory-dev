@@ -325,8 +325,9 @@ export default function Home() {
           <div className="tech-icons">
             <span>🐍 Python</span>
             <span>⚡ JavaScript</span>
-            <span>🟦 TypeScript</span>
+            <span>🟦 React</span>
             <span>🗄️ MySQL</span>
+            <span>...</span>
           </div>
         </div>
 

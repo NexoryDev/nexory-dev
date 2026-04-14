@@ -175,7 +175,7 @@
   line-height: 1.65;
   margin: 0;
   font-family: monospace;
-  white-space: pre;
+  white-space: pre-wrap;
   counter-reset: line;
   flex: 1;
 }
@@ -197,9 +197,11 @@
 .cursor {
   display: inline-block;
   width: 2px;
-  height: 0.9em;
+  height: 1em;
   background: #58a6ff;
+  margin-left: 2px;
   animation: blink 1s step-end infinite;
+  vertical-align: text-bottom;
 }
 
 .home-infos {

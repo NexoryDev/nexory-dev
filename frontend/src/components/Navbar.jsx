@@ -38,7 +38,7 @@ export default function Navbar() {
     <nav className={`navebar${scrolled ? ' scrolled' : ''}`}>
       <div className="logo-container">
         <Link to="/home">
-          <img src="/logo.png" alt="Logo" className="logo" />
+          <img src="/favicon.ico" alt="Logo" className="logo" />
         </Link>
       </div>
 

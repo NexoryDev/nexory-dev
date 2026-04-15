@@ -4,5 +4,4 @@ logs/
 __pycache__/
 node_modules/
 build/
-backend/
 nexory-backend.service

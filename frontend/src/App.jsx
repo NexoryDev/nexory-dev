@@ -71,6 +71,7 @@ export default function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/imprint" element={<Imprint />} />
             <Route path="/privacy" element={<Privacy />} />
+            <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>
 
           <Footer />

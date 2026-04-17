@@ -9,6 +9,7 @@ import GitHub from './pages/GitHub';
 import Contact from './pages/Contact';
 import Imprint from './pages/Imprint';
 import Privacy from './pages/Privacy';
+import NotFound from './pages/NotFound';
 
 const MIN_PRELOADER_MS = 700;
 const BOOTSTRAP_TIMEOUT_MS = 4000;
@@ -71,7 +72,7 @@ export default function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/imprint" element={<Imprint />} />
             <Route path="/privacy" element={<Privacy />} />
-            <Route path="*" element={<Navigate to="/home" replace />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
 
           <Footer />

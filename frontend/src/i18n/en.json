@@ -50,5 +50,11 @@
   "github.role_pull": "Reader",
   "github.role_member": "Member",
   "github.commits": "Commits",
-  "github.repos": "Repos"
+  "github.repos": "Repos",
+
+  "notfound.title": "Page not found",
+  "notfound.message": "The requested page is currently unavailable or may have been moved.",
+  "notfound.hint": "Please check the address or use one of the options below to continue.",
+  "notfound.home": "Back to homepage",
+  "notfound.github": "View GitHub projects"
 }

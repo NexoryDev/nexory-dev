@@ -4,17 +4,109 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0d1117" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
-    <title>nexory-dev.de</title>
+    <title>404 – Seite nicht gefunden</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background:
+          radial-gradient(circle at top, rgba(88, 166, 255, 0.18), transparent 32%),
+          linear-gradient(180deg, #0d1117 0%, #111827 100%);
+        color: #c9d1d9;
+        font-family: "Fira Code", monospace;
+      }
+
+      .card {
+        width: min(760px, 100%);
+        padding: 36px 26px;
+        border-radius: 22px;
+        border: 1px solid rgba(88, 166, 255, 0.2);
+        background: rgba(22, 27, 34, 0.88);
+        text-align: center;
+        box-shadow: 0 22px 70px rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(12px);
+      }
+
+      .badge {
+        font-size: clamp(3rem, 10vw, 5rem);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, #7ee8fa, #58a6ff, #a78bfa, #c084fc);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      h1 {
+        margin: 0 0 10px;
+        color: #e6edf3;
+        font-size: clamp(1.8rem, 4vw, 2.5rem);
+      }
+
+      p {
+        margin: 0 auto;
+        max-width: 560px;
+        color: #8b949e;
+        line-height: 1.7;
+      }
+
+      .actions {
+        margin-top: 24px;
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        text-decoration: none;
+        padding: 12px 18px;
+        border-radius: 999px;
+        font-weight: 600;
+        transition: transform 0.2s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn.primary {
+        background: linear-gradient(135deg, #58a6ff, #a78bfa);
+        color: #0d1117;
+      }
+
+      .btn.secondary {
+        border: 1px solid #30363d;
+        color: #c9d1d9;
+        background: rgba(13, 17, 23, 0.72);
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div class="card">
+      <div class="badge">404</div>
+      <h1>Seite nicht gefunden</h1>
+      <p>
+        Die angeforderte Seite existiert nicht oder der Link ist veraltet. Nutze die folgenden Wege, um schnell zurückzufinden.
+      </p>
+
+      <div class="actions">
+        <a class="btn primary" href="/home">Zur Startseite</a>
+        <a class="btn secondary" href="/github">Zu GitHub</a>
+      </div>
+    </div>
   </body>
 </html>

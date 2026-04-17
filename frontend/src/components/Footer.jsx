@@ -19,7 +19,7 @@ export default function Footer() {
         <div className="footer-section">
           <h4 className="footer-section-title">{t('footer.nav_heading')}</h4>
           <ul className="footer-nav-list">
-            <li><Link to="/home">{t('nav.home')}</Link></li>
+            <li><Link to="/">{t('nav.home')}</Link></li>
             <li><Link to="/github">{t('nav.github')}</Link></li>
             <li><Link to="/contact">{t('nav.contact')}</Link></li>
           </ul>

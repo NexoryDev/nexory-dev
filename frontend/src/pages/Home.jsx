@@ -258,6 +258,34 @@ export default function Home() {
   }, []);
 
   const statsText = getStatsText({ loading, error, stats, t });
+  const serviceCards = [
+    {
+      to: '/github',
+      title: t('home.service_github_header'),
+      text: t('home.service_github_text'),
+      cta: t('home.service_github_cta')
+    },
+    {
+      to: '/contact',
+      title: t('home.service_web_header'),
+      text: t('home.service_web_text'),
+      cta: t('home.service_web_cta')
+    },
+    {
+      to: '/contact',
+      title: t('home.service_support_header'),
+      text: t('home.service_support_text'),
+      cta: t('home.service_support_cta')
+    }
+  ];
+
+  const technologyRows = [
+    { label: 'Python', usage: t('home.tech_python_usage'), className: 'python' },
+    { label: 'JavaScript', usage: t('home.tech_javascript_usage'), className: 'javascript' },
+    { label: 'React', usage: t('home.tech_react_usage'), className: 'react' },
+    { label: 'APIs', usage: t('home.tech_api_usage'), className: 'api' },
+    { label: 'MySQL', usage: t('home.tech_mysql_usage'), className: 'mysql' }
+  ];
 
   return (
     <div className="home-page">
@@ -300,7 +328,11 @@ export default function Home() {
       </section>
 
       <section className="home-infos" id="infos">
-        <h2>{t('home.infos_header')}</h2>
+        <div className="section-heading">
+          <span className="section-eyebrow">{t('home.infos_eyebrow')}</span>
+          <h2>{t('home.infos_header')}</h2>
+          <p className="section-lead">{t('home.infos_intro')}</p>
+        </div>
 
         <div className="trust-badges">
           <span>{t('home.trust_open')}</span>
@@ -309,45 +341,39 @@ export default function Home() {
         </div>
 
         <div className="info-cards">
-          <Link to="/github" className="info-card">
-            <h3>{t('home.infos_github_header')}</h3>
-            <p>{t('home.infos_github_text')}</p>
-          </Link>
-
-          <Link to="/contact" className="info-card">
-            <h3>{t('home.infos_contact_header')}</h3>
-            <p>{t('home.infos_contact_text')}</p>
-          </Link>
+          {serviceCards.map(card => (
+            <Link key={card.title} to={card.to} className="info-card">
+              <h3>{card.title}</h3>
+              <p>{card.text}</p>
+              <span className="info-card-link">{card.cta}</span>
+            </Link>
+          ))}
         </div>
 
-        <div className="tech-stack">
-          <h3>{t('home.tech_header')}</h3>
-          <div className="tech-icons">
-            <span>🐍 Python</span>
-            <span>⚡ JavaScript</span>
-            <span>🟦 React</span>
-            <span>🗄️ MySQL</span>
-            <span>...</span>
-          </div>
-        </div>
+        <div className="section-split">
+          <div className="tech-stack">
+            <h3>{t('home.tech_header')}</h3>
+            <p className="section-box-text">{t('home.tech_intro')}</p>
 
-        <div className="how-it-works">
-          <h3>{t('home.how_header')}</h3>
-
-          <div className="steps">
-            <div className="step">
-              <span>1</span>
-              <p>{t('home.how_step1')}</p>
-            </div>
-
-            <div className="step">
-              <span>2</span>
-              <p>{t('home.how_step2')}</p>
-            </div>
-
-            <div className="step">
-              <span>3</span>
-              <p>{t('home.how_step3')}</p>
+            <div className="tech-table-wrap">
+              <table className="tech-table">
+                <thead>
+                  <tr>
+                    <th>{t('home.tech_col_technology')}</th>
+                    <th>{t('home.tech_col_usage')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {technologyRows.map(row => (
+                    <tr key={row.label}>
+                      <td>
+                        <span className={`tech-badge ${row.className}`}>{row.label}</span>
+                      </td>
+                      <td>{row.usage}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

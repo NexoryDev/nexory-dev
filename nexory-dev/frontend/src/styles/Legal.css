@@ -1,0 +1,184 @@
+/* Legal Page Layout */
+
+.legal-page {
+  min-height: calc(100vh - 64px);
+  padding: 5rem 1.5rem 4rem;
+}
+
+.legal-container {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+/* Header */
+
+.legal-header {
+  margin-bottom: 3rem;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 2rem;
+}
+
+.legal-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-accent);
+  margin: 0 0 0.75rem;
+}
+
+.legal-title {
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin: 0 0 0.6rem;
+  background: linear-gradient(
+    135deg,
+    var(--color-grad-1) 0%,
+    var(--color-grad-2) 35%,
+    var(--color-grad-3) 70%,
+    var(--color-grad-4) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.legal-subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* Sections */
+
+.legal-section {
+  margin-bottom: 2.5rem;
+}
+
+.legal-section h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.legal-section h3 {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  margin: 1.25rem 0 0.5rem;
+}
+
+.legal-section p,
+.legal-section li {
+  font-size: 0.85rem;
+  line-height: 1.75;
+  color: var(--color-text-muted);
+  margin: 0 0 0.75rem;
+}
+
+.legal-section ul {
+  padding-left: 1.25rem;
+  margin: 0 0 0.75rem;
+}
+
+.legal-section a {
+  color: var(--color-accent);
+}
+
+.legal-foot {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border-subtle);
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+/* Contact Form */
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 540px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.form-group input,
+.form-group textarea {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--color-text);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.875rem;
+  transition: border-color 0.2s ease;
+  outline: none;
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--color-accent);
+}
+
+.form-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-accent);
+  color: #0d1117;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  align-self: flex-start;
+}
+
+.form-submit:hover {
+  opacity: 0.85;
+}
+
+.form-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.form-status {
+  font-size: 0.85rem;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin: 0;
+}
+
+.form-status.success {
+  background: rgba(40, 167, 69, 0.1);
+  border: 1px solid rgba(40, 167, 69, 0.3);
+  color: #28c940;
+}
+
+.form-status.error {
+  background: rgba(255, 95, 87, 0.1);
+  border: 1px solid rgba(255, 95, 87, 0.3);
+  color: var(--color-dot-red);
+}

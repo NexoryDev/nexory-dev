@@ -1,0 +1,67 @@
+name: Automatic Pull Request
+on:
+  push:
+    branches-ignore:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-pr:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Create or update Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.AUTO_PR_TOKEN != '' && secrets.AUTO_PR_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BRANCH="${{ github.ref_name }}"
+          BASE_BRANCH="main"
+          TITLE="Automatic PR from ${BRANCH}"
+          BODY_FILE=".github/PULL_REQUEST_TEMPLATE/auto-pr.md"
+
+          git fetch origin "${BASE_BRANCH}" "${BRANCH}"
+          AHEAD_COUNT="$(git rev-list --count "origin/${BASE_BRANCH}..origin/${BRANCH}")"
+
+          if [ "${AHEAD_COUNT}" = "0" ]; then
+            echo "::notice::Auto-PR skipped: branch ${BRANCH} has no commits ahead of ${BASE_BRANCH}."
+            exit 0
+          fi
+
+          run_gh_pr_command() {
+            local err_file
+            err_file="$(mktemp)"
+
+            if "$@" 2>"${err_file}"; then
+              rm -f "${err_file}"
+              return 0
+            fi
+
+            if grep -q "GitHub Actions is not permitted to create or approve pull requests" "${err_file}"; then
+              echo "::warning::Auto-PR skipped: GITHUB_TOKEN darf in diesem Repository keine PR erstellen. Setze ein Secret AUTO_PR_TOKEN (PAT mit repo/pull_request Rechten) oder aktiviere in Repo Settings > Actions > General die Option fuer PR creation."
+              cat "${err_file}"
+              rm -f "${err_file}"
+              exit 0
+            fi
+
+            cat "${err_file}"
+            rm -f "${err_file}"
+            return 1
+          }
+
+          EXISTING_PR_NUMBER="$(gh pr list --head "${BRANCH}" --base "${BASE_BRANCH}" --state open --json number --jq '.[0].number // empty')"
+
+          if [ -n "${EXISTING_PR_NUMBER}" ]; then
+            echo "Updating existing PR #${EXISTING_PR_NUMBER}"
+            run_gh_pr_command gh pr edit "${EXISTING_PR_NUMBER}" --title "${TITLE}" --body-file "${BODY_FILE}"
+          else
+            echo "Creating new PR for branch ${BRANCH}"
+            run_gh_pr_command gh pr create --base "${BASE_BRANCH}" --head "${BRANCH}" --title "${TITLE}" --body-file "${BODY_FILE}"
+          fi

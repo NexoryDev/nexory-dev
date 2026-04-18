@@ -333,11 +333,6 @@ export default function Home() {
           <h2>{t('home.infos_header')}</h2>
           <p className="section-lead">{t('home.infos_intro')}</p>
         </div>
-        <div className="section-heading">
-          <span className="section-eyebrow">{t('home.infos_eyebrow')}</span>
-          <h2>{t('home.infos_header')}</h2>
-          <p className="section-lead">{t('home.infos_intro')}</p>
-        </div>
 
         <div className="trust-badges">
           <span>{t('home.trust_open')}</span>
@@ -346,13 +341,6 @@ export default function Home() {
         </div>
 
         <div className="info-cards">
-          {serviceCards.map(card => (
-            <Link key={card.title} to={card.to} className="info-card">
-              <h3>{card.title}</h3>
-              <p>{card.text}</p>
-              <span className="info-card-link">{card.cta}</span>
-            </Link>
-          ))}
           {serviceCards.map(card => (
             <Link key={card.title} to={card.to} className="info-card">
               <h3>{card.title}</h3>

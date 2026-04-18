@@ -69,7 +69,7 @@
   "github.repos": "Repos",
 
   "notfound.title": "Seite nicht gefunden",
-  "notfound.message": "Die angeforderte Seite ist derzeit nicht verfügbar oder wurde verschoben.",
+  "notfound.message": "Diese Seite ist derzeit nicht verfügbar oder wurde verschoben.",
   "notfound.hint": "Bitte prüfen Sie die Adresse oder nutzen Sie einen der folgenden Wege, um fortzufahren.",
   "notfound.home": "Zur Startseite",
   "notfound.github": "GitHub-Projekte ansehen"

@@ -280,11 +280,11 @@ export default function Home() {
   ];
 
   const technologyRows = [
-    { label: 'Python', usage: t('home.tech_python_usage'), className: 'python' },
-    { label: 'JavaScript', usage: t('home.tech_javascript_usage'), className: 'javascript' },
-    { label: 'React', usage: t('home.tech_react_usage'), className: 'react' },
-    { label: 'APIs', usage: t('home.tech_api_usage'), className: 'api' },
-    { label: 'MySQL', usage: t('home.tech_mysql_usage'), className: 'mysql' }
+    { label: 'Python', usage: t('home.tech_python_usage'), className: 'python', docs: 'https://docs.python.org/' },
+    { label: 'JavaScript', usage: t('home.tech_javascript_usage'), className: 'javascript', docs: 'https://developer.mozilla.org/docs/Web/JavaScript' },
+    { label: 'React', usage: t('home.tech_react_usage'), className: 'react', docs: 'https://react.dev/' },
+    { label: 'APIs', usage: t('home.tech_api_usage'), className: 'api', docs: '' },
+    { label: 'MySQL', usage: t('home.tech_mysql_usage'), className: 'mysql', docs: 'https://dev.mysql.com/doc/' }
   ];
 
   return (
@@ -361,6 +361,7 @@ export default function Home() {
                   <tr>
                     <th>{t('home.tech_col_technology')}</th>
                     <th>{t('home.tech_col_usage')}</th>
+                    <th>{t('home.tech_col_docs')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -370,6 +371,15 @@ export default function Home() {
                         <span className={`tech-badge ${row.className}`}>{row.label}</span>
                       </td>
                       <td>{row.usage}</td>
+                      <td>
+                        {row.docs ? (
+                          <a href={row.docs} target="_blank" rel="noopener noreferrer">
+                            {t('home.tech_docs_link')}
+                          </a>
+                        ) : (
+                          <span style={{ color: '#888' }}>{t('home.tech_docs_none')}</span>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

@@ -1,0 +1,355 @@
+@keyframes gh-bg-drift {
+    from { background-position: 0 0; }
+    to   { background-position: 0 600px; }
+}
+
+.gh-page {
+    position: relative;
+    overflow: hidden;
+    min-height: calc(100vh - 64px);
+    padding: 5rem 1.5rem 4rem;
+}
+
+.gh-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.055;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='600'%3E%3Cline x1='40' y1='0' x2='40' y2='600' stroke='%2358a6ff' stroke-width='1.5'/%3E%3Cline x1='140' y1='0' x2='140' y2='600' stroke='%2358a6ff' stroke-width='1.5'/%3E%3Cline x1='240' y1='80' x2='240' y2='600' stroke='%2358a6ff' stroke-width='1.5'/%3E%3Ccircle cx='40' cy='40' r='5' fill='%2358a6ff'/%3E%3Ccircle cx='40' cy='130' r='5' fill='%2358a6ff'/%3E%3Ccircle cx='40' cy='250' r='5' fill='%2358a6ff'/%3E%3Ccircle cx='40' cy='410' r='5' fill='%2358a6ff'/%3E%3Ccircle cx='40' cy='530' r='5' fill='%2358a6ff'/%3E%3Ccircle cx='140' cy='80' r='5' fill='%2358a6ff'/%3E%3Ccircle cx='140' cy='190' r='5' fill='%2358a6ff'/%3E%3Ccircle cx='140' cy='320' r='5' fill='%2358a6ff'/%3E%3Ccircle cx='140' cy='470' r='5' fill='%2358a6ff'/%3E%3Ccircle cx='240' cy='80' r='5' fill='%233fb950'/%3E%3Ccircle cx='240' cy='200' r='5' fill='%233fb950'/%3E%3Ccircle cx='240' cy='350' r='5' fill='%233fb950'/%3E%3Ccircle cx='240' cy='490' r='5' fill='%233fb950'/%3E%3Cpath d='M40 130 Q90 130 140 80' stroke='%2358a6ff' stroke-width='1.5' fill='none'/%3E%3Cpath d='M140 320 Q190 320 240 350' stroke='%2358a6ff' stroke-width='1.5' fill='none'/%3E%3Cpath d='M140 470 Q190 470 240 490' stroke='%2358a6ff' stroke-width='1.5' fill='none'/%3E%3Cpath d='M240 200 Q190 200 140 190' stroke='%233fb950' stroke-width='1.5' fill='none'/%3E%3Cpath d='M40 410 Q90 410 140 470' stroke='%2358a6ff' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-size: 300px 600px;
+    background-repeat: repeat;
+    animation: gh-bg-drift 30s linear infinite;
+}
+
+.gh-container {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* Github Org */
+
+.gh-org-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.gh-org-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 2px solid var(--color-border);
+}
+
+.gh-org-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+
+.gh-org-desc {
+    color: var(--color-text-muted);
+    margin: 0.25rem 0 0;
+}
+
+.gh-org-link {
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    text-decoration: none;
+    margin-top: 0.5rem;
+    display: inline-block;
+}
+
+.gh-org-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-top: 0.25rem;
+}
+
+.gh-section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 1rem;
+}
+
+/* Github Repo */
+
+.gh-repo-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gh-repo-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-accent);
+}
+
+.gh-repo-external {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+
+}
+.gh-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.gh-topic {
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.25);
+    border-radius: 999px;
+    padding: 2px 10px;
+    font-size: 0.72rem;
+    color: var(--color-accent);
+}
+
+.gh-updated {
+    margin-left: auto;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.gh-stats {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+}
+
+.gh-stat  {
+    background: var(--color-bg-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-size: 0.85rem;
+}
+
+.gh-repo-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    max-width: 760px;
+    gap: 1.5rem;
+}
+
+.gh-repo-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+    width: 100%;
+}
+
+.gh-stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.gh-stat-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    font-weight: 600;
+}
+
+.gh-repo-card {
+    background: var(--color-bg-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.gh-repo-card:hover {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 12px rgba(88,166,255,0.1);
+}
+
+.gh-repo-name  {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--color-accent);
+}
+
+.gh-repo-desc  {
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    margin: 0;
+    flex-grow: 1;
+}
+
+.gh-repo-footer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin-top: auto;
+}
+
+.gh-lang-badge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.gh-lang-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.gh-stat,
+.gh-stat-item > span:last-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.gh-stat svg,
+.gh-stat-item svg {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+
+/* Github Members */
+
+.gh-members {
+    margin-top: 3rem;
+}
+
+.gh-members-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 760px;
+    gap: 1rem;
+}
+
+.gh-member-card {
+    background: var(--color-bg-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: border-color 0.2s;
+    min-width: 220px;
+}
+
+.gh-member-card:hover {
+    border-color: var(--color-accent);
+}
+
+.gh-member-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--color-border);
+    flex-shrink: 0;
+}
+
+.gh-member-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.gh-member-login {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.gh-role-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-radius: 999px;
+    padding: 2px 8px;
+    width: fit-content;
+}
+
+.gh-role-badge--admin {
+    background: rgba(255, 166, 0, 0.15);
+    color: #ffa600;
+    border: 1px solid rgba(255, 166, 0, 0.3);
+}
+
+.gh-role-badge--maintain {
+    background: rgba(63, 185, 80, 0.15);
+    color: #3fb950;
+    border: 1px solid rgba(63, 185, 80, 0.3);
+}
+
+.gh-role-badge--push {
+    background: rgba(139, 148, 158, 0.15);
+    color: #8b949e;
+    border: 1px solid rgba(139, 148, 158, 0.3);
+}
+
+.gh-role-badge--triage {
+    background: rgba(188, 140, 255, 0.15);
+    color: #bc8cff;
+    border: 1px solid rgba(188, 140, 255, 0.3);
+}
+
+.gh-role-badge--pull {
+    background: rgba(88, 166, 255, 0.07);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+}
+
+.gh-role-badge--member {
+    background: rgba(88, 166, 255, 0.1);
+    color: var(--color-accent);
+    border: 1px solid rgba(88, 166, 255, 0.25);
+}
+
+.gh-member-commits {
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+    .gh-page {
+        padding: 7rem 1rem 2rem;
+    }
+    .gh-repo-grid {
+        grid-template-columns: 1fr;
+    }
+    .gh-members-grid {
+        grid-template-columns: 1fr;
+    }
+}

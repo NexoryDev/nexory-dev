@@ -1,0 +1,10 @@
+.env
+.venv/
+venv/
+env/
+logs/
+.vscode/
+__pycache__/
+node_modules/
+build/
+nexory-backend.service

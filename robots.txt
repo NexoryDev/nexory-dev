@@ -1,0 +1,6 @@
+User-agent: *
+
+Allow: /
+
+Disallow: /logs/
+Disallow: /public/database/

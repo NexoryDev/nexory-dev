@@ -21,6 +21,9 @@ export default function Privacy() {
             This website is operated as a personal, non-commercial open-source project. We collect
             only the minimum data necessary to operate the site.
           </p>
+          <p>
+            <strong>Hosting:</strong> This website is hosted on a KVM server at ProHosting24 (prohosting24.de) in Germany. ProHosting24 processes technical connection data (such as IP address, timestamp, requested URL) as a data processor in accordance with Art. 28 GDPR. A data processing agreement has been concluded.
+          </p>
         </section>
 
         <section className="legal-section">
@@ -248,7 +251,7 @@ export default function Privacy() {
         </section>
 
         <footer className="legal-foot">
-          <p>Last updated: 12 April 2026</p>
+          <p>Last updated: 19 April 2026</p>
         </footer>
       </div>
     </main>

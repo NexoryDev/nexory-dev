@@ -54,8 +54,7 @@
 
 .hero + section {
   position: relative;
-  margin-top: -8px;
-  padding-top: 52px;
+  margin-top: -8px;  padding-top: 52px;
   background: rgba(13,17,23,1);
   z-index: 3;
 }
@@ -201,7 +200,6 @@
   gap: 1.4rem;
   border: 1px solid rgba(88,166,255,0.15);
   border-radius: 20px;
-  border-radius: 20px;
   background: rgba(22,27,34,0.6);
   backdrop-filter: blur(8px);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
@@ -304,7 +302,6 @@
   border-radius: 14px;
   background: linear-gradient(180deg, rgba(13,17,23,0.82), rgba(13,17,23,0.65));
   border-radius: 14px;
-  background: linear-gradient(180deg, rgba(13,17,23,0.82), rgba(13,17,23,0.65));
   border: 1px solid rgba(255,255,255,0.06);
   transition: 0.25s ease;
   transition: 0.25s ease;
@@ -527,8 +524,81 @@
   font-size: 1.1rem;
 }
 
+/* Ratings Section */
+
+.ratings-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 48px 0 0 0;
+}
+.rating-card {
+  background: linear-gradient(180deg, rgba(13,17,23,0.82), rgba(13,17,23,0.65));
+  border-radius: 16px;
+  border: 1px solid rgba(88,166,255,0.13);
+  box-shadow: 0 8px 32px rgba(88,166,255,0.08);
+  padding: 2.2rem 2.2rem 1.6rem 2.2rem;
+  min-width: 260px;
+  max-width: 420px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+}
+.rating-stars {
+  color: #ffd700;
+  font-size: 1.35rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.2rem;
+}
+.typewriter-text {
+  color: #fff;
+  font-size: 1.08rem;
+  min-height: 2.2em;
+  text-align: center;
+  line-height: 1.6;
+  word-break: break-word;
+}
+/* .typewriter-cursor entfernt, da kein Cursor mehr */
+
+.rating-author {
+  color: #7ee8fa;
+  font-size: 0.98rem;
+  margin-top: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+/* Navigationspunkte für Ratings außerhalb des Kastens */
+.rating-dots.rating-dots-outside {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+.rating-dots {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.rating-dots .dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 2px solid #58a6ff;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  padding: 0;
+}
+.rating-dots .dot.active {
+  background: #58a6ff;
+  border-color: #7ee8fa;
+}
+
 @keyframes blink {
-  50% { opacity: 0; }
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 
 @keyframes shimmer {
@@ -604,5 +674,12 @@
   .tech-table-wrap {
     scrollbar-color: #58a6ff #181c22;
     scrollbar-width: thin;
+  }
+
+  /* Ratings Section */
+  .rating-card {
+    padding: 1.2rem 0.7rem 1.1rem 0.7rem;
+    min-width: 0;
+    max-width: 98vw;
   }
 }

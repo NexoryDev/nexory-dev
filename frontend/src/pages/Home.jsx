@@ -1,4 +1,43 @@
 import { useEffect, useRef, useState } from 'react';
+import ratingsData from '../data/ratings.json';
+// RatingsSection Komponente
+function RatingsSection({ language }) {
+  const ratings = ratingsData.filter(r => r.lang === language).slice(0, 6);
+  const [current, setCurrent] = useState(0);
+  const intervalRef = useRef();
+
+  useEffect(() => {
+    if (ratings.length < 2) return;
+    intervalRef.current = setTimeout(() => {
+      setCurrent((c) => (c + 1) % ratings.length);
+    }, 4000);
+    return () => clearTimeout(intervalRef.current);
+  }, [current, ratings.length]);
+
+  if (!ratings.length) return null;
+  const r = ratings[current];
+  return (
+    <div className="ratings-section">
+      <div className="rating-card">
+        <div className="rating-stars">{'★'.repeat(r.stars)}{'☆'.repeat(5 - r.stars)}</div>
+        <div className="typewriter-text">
+          {r.text}
+        </div>
+        <div className="rating-author">{r.name}</div>
+      </div>
+      <div className="rating-dots rating-dots-outside">
+        {ratings.map((_, idx) => (
+          <button
+            key={idx}
+            className={"dot" + (idx === current ? " active" : "")}
+            aria-label={`Bewertung ${idx + 1}`}
+            onClick={() => setCurrent(idx)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import '../styles/Home.css';
@@ -349,7 +388,6 @@ export default function Home() {
             </Link>
           ))}
         </div>
-
         <div className="section-split">
           <div className="tech-stack">
             <h3>{t('home.tech_header')}</h3>
@@ -387,6 +425,9 @@ export default function Home() {
             </div>
           </div>
         </div>
+      </section>
+      <section>
+        <RatingsSection language={language} />
       </section>
     </div>
   );

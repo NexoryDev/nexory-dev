@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "lang": "de",
+    "name": "Max Mustermann",
+    "text": "Super Service, alles lief reibungslos und transparent!",
+    "stars": 5
+  },
+  {
+    "id": 2,
+    "lang": "de",
+    "name": "Anna Beispiel",
+    "text": "Sehr freundlicher Kontakt und schnelle Abwicklung.",
+    "stars": 5
+  },
+  {
+    "id": 3,
+    "lang": "en",
+    "name": "John Doe",
+    "text": "Great service, everything was smooth and transparent!",
+    "stars": 5
+  },
+  {
+    "id": 4,
+    "lang": "en",
+    "name": "Jane Example",
+    "text": "Very friendly contact and fast processing.",
+    "stars": 5
+  }
+]

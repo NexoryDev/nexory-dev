@@ -260,7 +260,7 @@ export default function Home() {
   const statsText = getStatsText({ loading, error, stats, t });
   const serviceCards = [
     {
-      to: '/github',
+      to: '/github#repos',
       title: t('home.service_github_header'),
       text: t('home.service_github_text'),
       cta: t('home.service_github_cta')

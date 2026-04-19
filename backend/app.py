@@ -115,7 +115,7 @@ def github():
         if not ok:
             return jsonify(data), 502
 
-        return jsonify([r for r in data if not r.get("private")]), 200
+        return jsonify([r for r in data if not r.get("private") and r.get("name") != ".github"]), 200
 
     if ep == "members":
         ok, data = gh(f"/orgs/{GITHUB_ORG}/members?per_page=100", token)
@@ -146,7 +146,7 @@ def dashboard(token):
     if not ok:
         return jsonify(repos), 502
 
-    repos = [r for r in repos if not r.get("private")]
+    repos = [r for r in repos if not r.get("private") and r.get("name") != ".github"]
     repos.sort(key=lambda r: r.get("stargazers_count", 0), reverse=True)
     top = repos[:10]
 

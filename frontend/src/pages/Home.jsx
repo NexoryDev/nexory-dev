@@ -266,13 +266,13 @@ export default function Home() {
       cta: t('home.service_github_cta')
     },
     {
-      to: '/contact',
+      to: '/contact#request',
       title: t('home.service_web_header'),
       text: t('home.service_web_text'),
       cta: t('home.service_web_cta')
     },
     {
-      to: '/contact',
+      to: '/contact#support',
       title: t('home.service_support_header'),
       text: t('home.service_support_text'),
       cta: t('home.service_support_cta')

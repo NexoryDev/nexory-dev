@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './context/LanguageContext';
+import ScrollToTop from './components/ScrollToTop';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Preloader from './components/Preloader';
@@ -59,6 +60,7 @@ export default function App() {
       {!ready && <Preloader />}
 
       <BrowserRouter>
+      <ScrollToTop />
         <div id="page" style={{ opacity: ready ? 1 : 0, transition: 'opacity 0.4s ease' }}>
           <Navbar />
 

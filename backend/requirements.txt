@@ -4,3 +4,10 @@ flask-cors>=5.0,<6
 requests>=2.32,<3
 python-dotenv>=1.0,<2
 gunicorn>=23.0,<24
+
+# Auth / Security
+flask-bcrypt>=1.0,<2
+itsdangerous>=2.2,<3
+flask-limiter>=3.8,<4
+flask-wtf>=1.2,<2
+flask-dance>=7.0,<8

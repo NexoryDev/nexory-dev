@@ -244,18 +244,14 @@
   }
 
   .navebar-toggle.active span:nth-child(3) {
-    opacity: 0;
-  }
-
-  .navebar-toggle.active span:nth-child(4) {
-    transform: rotate(-45deg) translate(6px, -6px);
+    transform: rotate(-45deg) translate(5px, -5px);
   }
 
   .navebar-menu {
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: 64px;
     left: 0;
-    right: 0;
+    width: 100%;
 
     display: flex;
     flex-direction: column;
@@ -268,18 +264,24 @@
 
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.35s ease;
+
+    transition: max-height 0.35s ease, padding 0.35s ease;
 
     z-index: 1500;
   }
 
   .navebar-menu.active {
     max-height: 420px;
+    padding: 10px 0;
   }
 
   .navebar-menu li a {
     width: 100%;
     text-align: center;
     padding: 16px 0;
+  }
+
+  body {
+    overflow-x: hidden;
   }
 }

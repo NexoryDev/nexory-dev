@@ -60,19 +60,28 @@ export default function Navbar() {
         </li>
       </ul>
 
-      <div className="language-switch" aria-label={t('nav.language_switcher')}>
-        <button
-          className={language === 'de' ? 'active' : ''}
-          onClick={() => setLanguage('de')}
-        >
-          DE
-        </button>
-        <button
-          className={language === 'en' ? 'active' : ''}
-          onClick={() => setLanguage('en')}
-        >
-          EN
-        </button>
+      <div className="right-controls">
+        <div className="language-switch" aria-label={t('nav.language_switcher')}>
+          <button
+            className={language === 'de' ? 'active' : ''}
+            onClick={() => setLanguage('de')}
+          >
+            DE
+          </button>
+          <button
+            className={language === 'en' ? 'active' : ''}
+            onClick={() => setLanguage('en')}
+          >
+            EN
+          </button>
+        </div>
+        <div className="login">
+          <button
+            onClick={() => login()}
+            >
+          Login
+          </button>
+        </div>
       </div>
 
       <div

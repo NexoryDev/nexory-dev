@@ -11,3 +11,8 @@ itsdangerous>=2.2,<3
 flask-limiter>=3.8,<4
 flask-wtf>=1.2,<2
 flask-dance>=7.0,<8
+
+# Database (MariaDB/MySQL)
+pymysql>=1.1,<2
+cryptography>=42.0
+redis>=5.0

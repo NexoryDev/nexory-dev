@@ -11,6 +11,7 @@ import Contact from './pages/Contact';
 import Imprint from './pages/Imprint';
 import Privacy from './pages/Privacy';
 import NotFound from './pages/NotFound';
+import LoginTest from "./pages/LoginTest";
 
 const MIN_PRELOADER_MS = 700;
 const BOOTSTRAP_TIMEOUT_MS = 4000;
@@ -74,6 +75,7 @@ export default function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/imprint" element={<Imprint />} />
             <Route path="/privacy" element={<Privacy />} />
+            <Route path="/logintest" element={<LoginTest />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
 

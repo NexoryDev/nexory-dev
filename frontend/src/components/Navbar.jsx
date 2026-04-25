@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import '../styles/Navbar.css';
+import LoginTest from "../pages/LoginTest";
 
 export default function Navbar() {
   const { language, setLanguage, t } = useLanguage();
   const location = useLocation();
+  const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -75,11 +77,10 @@ export default function Navbar() {
             EN
           </button>
         </div>
+
         <div className="login">
-          <button
-            onClick={() => login()}
-            >
-          Login
+          <button onClick={() => navigate("/logintest")}>
+            Login
           </button>
         </div>
       </div>

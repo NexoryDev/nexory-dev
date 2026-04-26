@@ -1,17 +1,15 @@
 flask>=3.1,<4
 flask-cors>=5.0,<6
-requests>=2.32,<3
 python-dotenv>=1.0,<2
 gunicorn>=23.0,<24
 
 flask-bcrypt>=1.0,<2
-itsdangerous>=2.2,<3
 flask-limiter>=3.8,<4
 flask-wtf>=1.2,<2
-flask-dance>=7.0,<8
 
 pymysql>=1.1,<2
 cryptography>=42.0
 
 PyJWT>=2.9,<3
+
 redis>=5.0,<6

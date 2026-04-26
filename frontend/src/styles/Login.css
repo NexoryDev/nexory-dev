@@ -1,0 +1,144 @@
+.login-hero {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(ellipse at center, rgba(13,17,23,0.7), rgba(13,17,23,1)), #0d1117;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem;
+  background: rgba(22,27,34,0.85);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login-box h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  background: linear-gradient(135deg, #58a6ff, #a78bfa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.login-box input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(13,17,23,0.9);
+  color: white;
+}
+
+.login-box input:focus {
+  outline: none;
+  border-color: #58a6ff;
+}
+
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-toggle:hover {
+  color: rgba(255,255,255,0.9);
+}
+
+.login-box button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #58a6ff, #7b9fff);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.login-box button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(88,166,255,0.25);
+}
+
+.login-box button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.switch {
+  display: flex;
+  justify-content: center;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: rgba(88,166,255,0.85);
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0;
+  transition: 0.2s;
+}
+
+.link-btn:hover {
+  color: #58a6ff;
+  text-decoration: underline;
+}
+
+.verify {
+  background: linear-gradient(135deg, #28c941, #7ee8fa);
+}
+
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: white;
+  font-size: 0.85rem;
+  background: rgba(22,27,34,0.9);
+  border: 1px solid rgba(255,255,255,0.1);
+  animation: slideIn 0.25s ease;
+}
+
+.toast.success { border-color: #28c941; }
+.toast.error { border-color: #ff5f57; }
+.toast.info { border-color: #58a6ff; }
+
+@keyframes slideIn {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}

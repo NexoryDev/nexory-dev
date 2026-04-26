@@ -82,5 +82,9 @@
   "login.login_header": "Anmelden",
   "login.register_header": "Account erstellen",
   "login.login_btn": "Bereits registriert?",
-  "login.register_btn": "Noch keinen Account?"
+  "login.register_btn": "Noch keinen Account?",
+  "login.login_failed": "anmelden fehlgeschlagen",
+  "invalid_password": "falsches passwort",
+  "invalid_email": "email nicht gefunden",
+  "login.remember_me": "Angemeldet bleiben"
 }

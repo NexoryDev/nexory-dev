@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from "../context/LanguageContext";
+import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 
 export default function Login() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const navigate = useNavigate();
+
   const API = "http://localhost:5000";
 
   const [mode, setMode] = useState("login");
@@ -13,48 +16,119 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [verifyToken, setVerifyToken] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [toasts, setToasts] = useState([]);
+  const [rememberMe, setRememberMe] = useState(false);
 
-  function toast(text, type = "info") {
-    const id = Date.now();
-    setToasts((t) => [...t, { id, text, type }]);
-    setTimeout(() => {
-      setToasts((t) => t.filter((x) => x.id !== id));
-    }, 2800);
+  const [errors, setErrors] = useState({});
+  const [formError, setFormError] = useState("");
+
+  const [accessToken, setAccessToken] = useState(null);
+
+  function getDeviceId() {
+    let id = localStorage.getItem("device_id");
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem("device_id", id);
+    }
+    return id;
   }
 
-  async function csrf() {
-    const res = await fetch(`${API}/api/csrf`, {
-      credentials: "include",
-    });
-    const data = await res.json();
-    return data.csrf_token;
+  async function api(path, body, retry = true) {
+    try {
+      const res = await fetch(`${API}${path}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Language": language,
+          ...(accessToken && { Authorization: `Bearer ${accessToken}` })
+        },
+        body: JSON.stringify(body)
+      });
+
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        data = {};
+      }
+
+      if (res.status === 401 && retry) {
+        const refreshed = await refreshToken();
+        if (refreshed) {
+          return api(path, body, false);
+        }
+      }
+
+      return data;
+    } catch {
+      return { error: t("login.network_error") };
+    }
   }
 
-  async function api(path, body) {
-    const token = await csrf();
+  async function refreshToken() {
+    try {
+      const res = await fetch(`${API}/api/auth/refresh`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Language": language
+        }
+      });
 
-    const res = await fetch(`${API}${path}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": token,
-      },
-      credentials: "include",
-      body: JSON.stringify(body),
-    });
+      if (!res.ok) {
+        setAccessToken(null);
+        return false;
+      }
 
-    return res.json();
+      const data = await res.json();
+
+      if (data.access_token) {
+        setAccessToken(data.access_token);
+        return true;
+      }
+
+      setAccessToken(null);
+      return false;
+    } catch {
+      setAccessToken(null);
+      return false;
+    }
+  }
+
+  function validate() {
+    const newErrors = {};
+
+    if (!email.includes("@")) newErrors.email = t("login.invalid_email");
+    if (!password || password.length < 6)
+      newErrors.password = t("login.invalid_password");
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
   }
 
   async function login() {
     setLoading(true);
-    const res = await api("/api/auth/login", { email, password });
+    setFormError("");
 
-    if (res.status === "logged in") {
-      toast("Login erfolgreich", "success");
+    if (!validate()) {
+      setLoading(false);
+      return;
+    }
+
+    const res = await api("/api/auth/login", {
+      email,
+      password,
+      remember_me: rememberMe,
+      device_id: getDeviceId()
+    });
+
+    if (res.access_token) {
+      setAccessToken(res.access_token);
+      navigate("/profile");
     } else {
-      toast(res.error || "Login fehlgeschlagen", "error");
+      setFormError(res.error || t("login.login_failed"));
     }
 
     setLoading(false);
@@ -62,48 +136,76 @@ export default function Login() {
 
   async function register() {
     setLoading(true);
-    const res = await api("/api/auth/register", { email, password });
+    setFormError("");
 
-    if (res.verify) {
-      setVerifyToken(res.verify);
-      toast("Account erstellt", "success");
-    } else {
-      toast(res.error || "Fehler bei Registrierung", "error");
+    const res = await api("/api/auth/register", {
+      email,
+      password
+    });
+
+    if (res.status) {
+      setVerifyToken(res.verify || null);
     }
+
+    setFormError(res.error || res.status || t("login.register_failed"));
 
     setLoading(false);
   }
 
   async function verify() {
     setLoading(true);
-    const res = await fetch(`${API}/api/auth/verify/${verifyToken}`);
-    const data = await res.json();
+    setFormError("");
 
-    if (data.status === "verified") {
-      toast("Account bestätigt", "success");
-      setVerifyToken(null);
-    } else {
-      toast("Verifizierung fehlgeschlagen", "error");
+    try {
+      const res = await fetch(`${API}/api/auth/verify/${verifyToken}`, {
+        credentials: "include",
+        headers: {
+          "X-Language": language
+        }
+      });
+
+      const data = await res.json();
+
+      if (data.status) {
+        setVerifyToken(null);
+        setFormError(t("login.verified"));
+      } else {
+        setFormError(t("login.verify_failed"));
+      }
+    } catch {
+      setFormError(t("login.network_error"));
     }
 
     setLoading(false);
   }
 
+  useEffect(() => {
+    refreshToken();
+  }, []);
+
   return (
     <div className="login-hero">
       <div className="login-box">
-        <h1>{mode === "login" ? t('login.login_header') : t('login.register_header')}</h1>
+        <h1>
+          {mode === "login"
+            ? t("login.login_header")
+            : t("login.register_header")}
+        </h1>
+
+        {formError && <div className="form-error">{formError}</div>}
 
         <input
-          placeholder={t('login.mail')}
+          className={errors.email ? "input-error" : ""}
+          placeholder={t("login.mail")}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
 
         <div className="password-wrapper">
           <input
+            className={errors.password ? "input-error" : ""}
             type={showPassword ? "text" : "password"}
-            placeholder={t('login.password')}
+            placeholder={t("login.password")}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -117,41 +219,44 @@ export default function Login() {
           </button>
         </div>
 
+        {mode === "login" && (
+          <label>
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+            />
+            {t("login.remember_me")}
+          </label>
+        )}
+
         {mode === "login" ? (
           <button onClick={login} disabled={loading}>
-            {loading ? "..." : t('login.login')}
+            {loading ? "..." : t("login.login")}
           </button>
         ) : (
           <button onClick={register} disabled={loading}>
-            {loading ? "..." : t('login.register')}
+            {loading ? "..." : t("login.register")}
           </button>
         )}
 
         {verifyToken && (
           <button className="verify" onClick={verify}>
-            {t('login.verify')}
+            {t("login.verify")}
           </button>
         )}
 
         <div className="switch">
           {mode === "login" ? (
             <button className="link-btn" onClick={() => setMode("register")}>
-              {t('login.register_btn')}
+              {t("login.register_btn")}
             </button>
           ) : (
             <button className="link-btn" onClick={() => setMode("login")}>
-              {t('login.login_btn')}
+              {t("login.login_btn")}
             </button>
           )}
         </div>
-      </div>
-
-      <div className="toast-container">
-        {toasts.map((t) => (
-          <div key={t.id} className={`toast ${t.type}`}>
-            {t.text}
-          </div>
-        ))}
       </div>
     </div>
   );

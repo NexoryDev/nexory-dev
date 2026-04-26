@@ -20,6 +20,7 @@ This guide walks you through running the React frontend locally.
 
    ```bash
    npm install
+   npm install lucide-react
    ```
 
 3. **Start the dev server**

@@ -1,4 +1,6 @@
 SECRET_KEY=
+JWT_SECRET=
+ENV=development
 
 # GitHub API
 GITHUB_TOKEN=

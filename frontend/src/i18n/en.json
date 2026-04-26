@@ -83,5 +83,9 @@
   "login.login_header": "Sign in",
   "login.register_header": "Create account",
   "login.login_btn": "Already registered?",
-  "login.register_btn": "Don't have an account yet?"
+  "login.register_btn": "Don't have an account yet?",
+  "login.login_failed": "login went wrong",
+  "invalid_email": "email not found",
+  "invalid_password": "wrong password",
+  "login.remember_me": "Stay logged in"
 }

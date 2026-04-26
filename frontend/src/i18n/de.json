@@ -5,6 +5,7 @@
   "nav.policy": "Datenschutz",
   "nav.imprint": "Impressum",
   "nav.language_switcher": "Sprachauswahl",
+  "nav.login": "Anmelden",
 
   "footer.nav_section_title": "Rechtliches",
   "footer.tagline": "Open-Source-Projekte · Python, JavaScript, PHP und mehr",
@@ -72,5 +73,14 @@
   "notfound.message": "Diese Seite ist derzeit nicht verfügbar oder wurde verschoben.",
   "notfound.hint": "Bitte prüfen Sie die Adresse oder nutzen Sie einen der folgenden Wege, um fortzufahren.",
   "notfound.home": "Zur Startseite",
-  "notfound.github": "GitHub-Projekte ansehen"
+  "notfound.github": "GitHub-Projekte ansehen",
+
+  "login.login": "Anmelden",
+  "login.register": "Registrieren",
+  "login.mail": "Email",
+  "login.password": "Passwort",
+  "login.login_header": "Anmelden",
+  "login.register_header": "Account erstellen",
+  "login.login_btn": "Bereits registriert?",
+  "login.register_btn": "Noch keinen Account?"
 }

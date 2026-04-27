@@ -87,5 +87,11 @@
   "login.login_failed": "login went wrong",
   "invalid_email": "email not found",
   "invalid_password": "wrong password",
-  "login.remember_me": "Stay logged in"
+  "login.remember_me": "Stay logged in",
+  "login.network_error": "Backed error",
+  "login.email_not_verified": "Email not verified",
+  "login.check_email": "Check your mails",
+  "login.register_failed": "Register went wrong",
+  "login.verify_failed": "Verify went wrong",
+  "login.verified": "Successfull verified"
 }

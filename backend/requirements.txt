@@ -5,11 +5,12 @@ gunicorn>=23.0,<24
 
 flask-bcrypt>=1.0,<2
 flask-limiter>=3.8,<4
-flask-wtf>=1.2,<2
 
 pymysql>=1.1,<2
 cryptography>=42.0
-
 PyJWT>=2.9,<3
 
 redis>=5.0,<6
+
+flask-migrate>=4.0,<5
+loguru>=0.7,<1

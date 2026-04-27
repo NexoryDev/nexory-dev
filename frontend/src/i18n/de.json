@@ -86,5 +86,11 @@
   "login.login_failed": "anmelden fehlgeschlagen",
   "invalid_password": "falsches passwort",
   "invalid_email": "email nicht gefunden",
-  "login.remember_me": "Angemeldet bleiben"
+  "login.remember_me": "Angemeldet bleiben",
+  "login.network_error": "Backend Fehler",
+  "login.email_not_verified": "Email nicht verifiziert",
+  "login.check_email": "Überprüfe dein Email-Postfach",
+  "login.register_failed": "Registrierung fehlgeschlagen",
+  "login.verify_failed": "Verifizierung fehlgeschlagen",
+  "login.verified": "Erfolgreich verifiziert"
 }

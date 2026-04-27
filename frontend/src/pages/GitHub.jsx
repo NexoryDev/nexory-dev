@@ -3,6 +3,8 @@ import { useLanguage } from '../context/LanguageContext';
 import '../styles/Github.css';
 import { SvgStar, SvgFork, SvgIssue, SvgRepo } from '../components/svgs';
 
+const API = "http://localhost:5000";
+
 const LANG_COLORS = {
   JavaScript: '#f1e05a',
   Python: '#3572A5',
@@ -29,11 +31,16 @@ function toSafeDashboard(data) {
 }
 
 function fetchDashboard() {
-  return fetch('/api/github?endpoint=dashboard').then(response => {
+  return fetch(`${API}/api/github?endpoint=dashboard`, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }).then(response => {
     if (!response.ok) {
       throw new Error('Dashboard fetch failed');
     }
-
     return response.json();
   });
 }
@@ -54,7 +61,8 @@ function getTopLanguage(repos) {
       return accumulator;
     }, {});
 
-  return Object.entries(languageCount).sort((a, b) => b[1] - a[1])[0]?.[0] || null;
+  return Object.entries(languageCount)
+    .sort((a, b) => b[1] - a[1])[0]?.[0] || null;
 }
 
 function relativeTime(dateStr, locale = 'en') {
@@ -112,12 +120,11 @@ export default function GitHub({ initialData = null, initialError = false }) {
     };
   }, [initialData, initialError]);
 
-
   const totals = getRepoTotals(repos);
   const topLanguage = getTopLanguage(repos);
 
   if (loading) return <div className="gh-page"><p>{t('github.loading')}</p></div>;
-  if (error)   return <div className="gh-page"><p>{t('github.error')}</p></div>;
+  if (error) return <div className="gh-page"><p>{t('github.error')}</p></div>;
 
   return (
     <div className="gh-page">
@@ -133,7 +140,12 @@ export default function GitHub({ initialData = null, initialError = false }) {
                 <span>{org.public_repos} {t('github.repos_header')}</span>
                 <span>{org.followers} Followers </span>
               </div>
-              <a href={`https://github.com/${org?.login ?? 'NexoryDev'}`} target="_blank" rel="noopener noreferrer" className="gh-org-link">
+              <a
+                href={`https://github.com/${org?.login ?? 'NexoryDev'}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="gh-org-link"
+              >
                 {t('github.visit_org')}
               </a>
             </div>
@@ -177,18 +189,22 @@ export default function GitHub({ initialData = null, initialError = false }) {
                       </span>
                     </div>
                   )}
+
                   <div className="gh-stat-item">
                     <span className="gh-stat-label">{t('github.stars')}</span>
                     <span><SvgStar size={14} /> {repo.stargazers_count}</span>
                   </div>
+
                   <div className="gh-stat-item">
                     <span className="gh-stat-label">{t('github.forks')}</span>
                     <span><SvgFork size={14} /> {repo.forks_count}</span>
                   </div>
+
                   <div className="gh-stat-item">
                     <span className="gh-stat-label">{t('github.issues')}</span>
                     <span><SvgIssue size={14} /> {repo.open_issues_count}</span>
                   </div>
+
                   <div className="gh-stat-item">
                     <span className="gh-stat-label">{t('github.updated')}</span>
                     <span>{relativeTime(repo.updated_at, language)}</span>
@@ -199,32 +215,39 @@ export default function GitHub({ initialData = null, initialError = false }) {
             ))}
           </div>
         </section>
+
         {members.length > 0 && (
           <section className="gh-members" id="members">
             <h2 className="gh-section-title">{t('github.members_header')}</h2>
             <div className="gh-members-grid">
               {members.map(member => (
                 <a key={member.id} href={member.html_url} target="_blank" rel="noopener noreferrer" className="gh-member-card">
+
                   <img src={member.avatar_url} alt={member.login} className="gh-member-avatar" />
+
                   <div className="gh-member-info">
                     <span className="gh-member-login">{member.login}</span>
                     <span className={`gh-role-badge gh-role-badge--${member.role}`}>
                       {t(`github.role_${member.role}`)}
                     </span>
                   </div>
+
                   <div className="gh-member-commits">
                     <span className="gh-stat-label">{t('github.commits')}</span>
                     <span>{member.commits > 0 ? member.commits : '-'}</span>
                   </div>
+
                   <div className="gh-member-commits">
                     <span className="gh-stat-label">{t('github.repos')}</span>
                     <span>{member.repoCount > 0 ? member.repoCount : '–'}</span>
                   </div>
+
                 </a>
               ))}
             </div>
           </section>
         )}
+
       </div>
     </div>
   );

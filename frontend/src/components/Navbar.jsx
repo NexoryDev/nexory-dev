@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import '../styles/Navbar.css';
+import Login from "../pages/Login";
 
 export default function Navbar() {
   const { language, setLanguage, t } = useLanguage();
   const location = useLocation();
+  const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -60,19 +62,27 @@ export default function Navbar() {
         </li>
       </ul>
 
-      <div className="language-switch" aria-label={t('nav.language_switcher')}>
-        <button
-          className={language === 'de' ? 'active' : ''}
-          onClick={() => setLanguage('de')}
-        >
-          DE
-        </button>
-        <button
-          className={language === 'en' ? 'active' : ''}
-          onClick={() => setLanguage('en')}
-        >
-          EN
-        </button>
+      <div className="right-controls">
+        <div className="language-switch" aria-label={t('nav.language_switcher')}>
+          <button
+            className={language === 'de' ? 'active' : ''}
+            onClick={() => setLanguage('de')}
+          >
+            DE
+          </button>
+          <button
+            className={language === 'en' ? 'active' : ''}
+            onClick={() => setLanguage('en')}
+          >
+            EN
+          </button>
+        </div>
+
+        <div className="login">
+          <button onClick={() => navigate("/login")}>
+            {t('nav.login')}
+          </button>
+        </div>
       </div>
 
       <div

@@ -5,6 +5,7 @@
   "nav.policy": "Privacy Policy",
   "nav.imprint": "Imprint",
   "nav.language_switcher": "Language Switcher",
+  "nav.login": "Login",
 
   "footer.nav_section_title": "Legal",
   "footer.tagline": "Open source projects · Python, JavaScript, PHP and more",
@@ -73,5 +74,24 @@
   "notfound.message": "The requested page is currently unavailable or may have been moved.",
   "notfound.hint": "Please check the address or use one of the options below to continue.",
   "notfound.home": "Back to homepage",
-  "notfound.github": "View GitHub projects"
+  "notfound.github": "View GitHub projects",
+
+  "login.login": "Sign in",
+  "login.register": "Register",
+  "login.mail": "Email",
+  "login.password": "Password",
+  "login.login_header": "Sign in",
+  "login.register_header": "Create account",
+  "login.login_btn": "Already registered?",
+  "login.register_btn": "Don't have an account yet?",
+  "login.login_failed": "login went wrong",
+  "invalid_email": "email not found",
+  "invalid_password": "wrong password",
+  "login.remember_me": "Stay logged in",
+  "login.network_error": "Backed error",
+  "login.email_not_verified": "Email not verified",
+  "login.check_email": "Check your mails",
+  "login.register_failed": "Register went wrong",
+  "login.verify_failed": "Verify went wrong",
+  "login.verified": "Successfull verified"
 }

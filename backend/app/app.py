@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask
 from flask_cors import CORS
 
 from app.config import Config
@@ -26,11 +26,6 @@ def create_app():
         ],
         methods=["GET", "POST", "OPTIONS"]
     )
-
-    @app.before_request
-    def handle_options():
-        if request.method == "OPTIONS":
-            return "", 200
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(github_bp, url_prefix="/api")

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
 import { useNavigate, useLocation } from "react-router-dom";
-import "../styles/login.css";
+import "../styles/Login.css";
 
 export default function Login() {
   const { t, language } = useLanguage();

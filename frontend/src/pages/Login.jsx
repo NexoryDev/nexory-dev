@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
-import { useNavigate } from "react-router-dom";
-import "../styles/Login.css";
+import { useNavigate, useLocation } from "react-router-dom";
+import "../styles/login.css";
 
 export default function Login() {
   const { t, language } = useLanguage();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const API = "http://localhost:5000";
 
@@ -20,6 +21,7 @@ export default function Login() {
 
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState("");
+  const [formSuccess, setFormSuccess] = useState("");
 
   const [accessToken, setAccessToken] = useState(null);
 
@@ -45,18 +47,11 @@ export default function Login() {
         body: JSON.stringify(body)
       });
 
-      let data;
-      try {
-        data = await res.json();
-      } catch {
-        data = {};
-      }
+      const data = await res.json().catch(() => ({}));
 
       if (res.status === 401 && retry) {
         const refreshed = await refreshToken();
-        if (refreshed) {
-          return api(path, body, false);
-        }
+        if (refreshed) return api(path, body, false);
       }
 
       return data;
@@ -76,12 +71,7 @@ export default function Login() {
         }
       });
 
-      if (!res.ok) {
-        setAccessToken(null);
-        return false;
-      }
-
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       if (data.access_token) {
         setAccessToken(data.access_token);
@@ -104,13 +94,13 @@ export default function Login() {
       newErrors.password = t("login.invalid_password");
 
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
   }
 
   async function login() {
     setLoading(true);
     setFormError("");
+    setFormSuccess("");
 
     if (!validate()) {
       setLoading(false);
@@ -127,6 +117,8 @@ export default function Login() {
     if (res.access_token) {
       setAccessToken(res.access_token);
       navigate("/profile");
+    } else if (res.error === "email_not_verified") {
+      setFormError(t("login.email_not_verified"));
     } else {
       setFormError(res.error || t("login.login_failed"));
     }
@@ -137,38 +129,44 @@ export default function Login() {
   async function register() {
     setLoading(true);
     setFormError("");
+    setFormSuccess("");
 
     const res = await api("/api/auth/register", {
       email,
       password
     });
 
-    if (res.status) {
-      setVerifyToken(res.verify || null);
+    if (res.status === "registered") {
+      setFormSuccess(t("login.check_email"));
+      setMode("login");
+    } else {
+      setFormError(res.error || t("login.register_failed"));
     }
-
-    setFormError(res.error || res.status || t("login.register_failed"));
 
     setLoading(false);
   }
 
-  async function verify() {
+  async function verify(tokenFromUrl) {
     setLoading(true);
     setFormError("");
 
+    const token = tokenFromUrl || verifyToken;
+
+    if (!token) {
+      setFormError(t("login.verify_failed"));
+      setLoading(false);
+      return;
+    }
+
     try {
-      const res = await fetch(`${API}/api/auth/verify/${verifyToken}`, {
-        credentials: "include",
-        headers: {
-          "X-Language": language
-        }
-      });
+      const res = await fetch(`${API}/api/auth/verify/${token}`);
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
-      if (data.status) {
+      if (data.status === "verified") {
         setVerifyToken(null);
-        setFormError(t("login.verified"));
+        setFormSuccess(t("login.verified"));
+        setMode("login");
       } else {
         setFormError(t("login.verify_failed"));
       }
@@ -180,6 +178,12 @@ export default function Login() {
   }
 
   useEffect(() => {
+    const params = location.pathname.split("/verify/");
+    if (params[1]) {
+      setVerifyToken(params[1]);
+      verify(params[1]);
+    }
+
     refreshToken();
   }, []);
 
@@ -193,6 +197,7 @@ export default function Login() {
         </h1>
 
         {formError && <div className="form-error">{formError}</div>}
+        {formSuccess && <div className="form-success">{formSuccess}</div>}
 
         <input
           className={errors.email ? "input-error" : ""}
@@ -237,12 +242,6 @@ export default function Login() {
         ) : (
           <button onClick={register} disabled={loading}>
             {loading ? "..." : t("login.register")}
-          </button>
-        )}
-
-        {verifyToken && (
-          <button className="verify" onClick={verify}>
-            {t("login.verify")}
           </button>
         )}
 

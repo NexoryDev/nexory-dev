@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import '../styles/Navbar.css';
-import LoginTest from "../pages/LoginTest";
+import Login from "../pages/Login";
 
 export default function Navbar() {
   const { language, setLanguage, t } = useLanguage();
@@ -79,8 +79,8 @@ export default function Navbar() {
         </div>
 
         <div className="login">
-          <button onClick={() => navigate("/logintest")}>
-            Login
+          <button onClick={() => navigate("/login")}>
+            {t('nav.login')}
           </button>
         </div>
       </div>

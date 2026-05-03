@@ -93,8 +93,33 @@ def github():
             if ok:
                 for c in collabs:
                     login = c.get("login")
-                    if login:
-                        repo_counts[login] = repo_counts.get(login, 0) + 1
+                    perms = c.get("permissions", {})
+
+                    if not login:
+                        continue
+
+                    if perms.get("admin"):
+                        role = "owner"
+                    elif perms.get("maintain"):
+                        role = "maintainer"
+                    elif perms.get("push"):
+                        role = "contributor"
+                    else:
+                        role = "viewer"
+
+                    current = roles.get(login)
+
+                    priority = {
+                        "owner": 4,
+                        "maintainer": 3,
+                        "contributor": 2,
+                        "viewer": 1
+                    }
+
+                    if not current or priority[role] > priority.get(current, 0):
+                        roles[login] = role
+
+                    repo_counts[login] = repo_counts.get(login, 0) + 1
 
         enriched = []
 
@@ -105,6 +130,7 @@ def github():
 
             m["commits"] = commits.get(login, 0)
             m["repoCount"] = repo_counts.get(login, 0)
+            m["role"] = roles.get(login)
             enriched.append(m)
 
         payload = {

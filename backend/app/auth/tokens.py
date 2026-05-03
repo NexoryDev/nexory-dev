@@ -3,6 +3,8 @@ import uuid
 from datetime import datetime, timedelta
 from app.config import Config
 
+ACCESS_TOKEN_LIFETIME = timedelta(days=7)
+
 
 def create_access_token(user_id):
     now = datetime.utcnow()
@@ -12,9 +14,18 @@ def create_access_token(user_id):
         "type": "access",
         "jti": str(uuid.uuid4()),
         "iat": now,
-        "exp": now + timedelta(minutes=Config.ACCESS_TOKEN_MINUTES)
-    }, Config.JWT_SECRET, algorithm="HS256")
+        "exp": now + ACCESS_TOKEN_LIFETIME
+    }, Config.JWT_SECRET_KEY, algorithm="HS256")
+
+
+def decode_access_token(token):
+    payload = jwt.decode(token, Config.JWT_SECRET_KEY, algorithms=["HS256"])
+
+    if payload.get("type") != "access":
+        raise jwt.InvalidTokenError("invalid_token_type")
+
+    return payload
 
 
 def decode_token(token):
-    return jwt.decode(token, Config.JWT_SECRET, algorithms=["HS256"])
+    return jwt.decode(token, Config.JWT_SECRET_KEY, algorithms=["HS256"])

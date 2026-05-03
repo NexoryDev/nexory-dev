@@ -13,11 +13,11 @@ import Imprint from './pages/Imprint';
 import Privacy from './pages/Privacy';
 import NotFound from './pages/NotFound';
 import Login from "./pages/Login";
-import Me from "./pages/account/me";
-import Settings from "./pages/account/settings";
-import Products from "./pages/account/Products";
+import Me from "./pages/profile/Me";
+import Settings from "./pages/profile/Settings";
+import Products from "./pages/profile/Products";
 import ProtectedRoute from "./auth/ProtectedRoute";
-import AccountLayout from "./pages/account/AccountLayout";
+import AccountLayout from "./pages/profile/AccountLayout";
 
 const MIN_PRELOADER_MS = 700;
 const BOOTSTRAP_TIMEOUT_MS = 4000;

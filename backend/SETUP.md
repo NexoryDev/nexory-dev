@@ -1,79 +1,173 @@
 # Backend Setup
 
-This guide walks you through running the Python/Flask backend locally.
+## Requirements
 
-## Prerequisites
+* Python 3.11+
+* pip
+* (optional) Docker
 
-- **Python** 3.10 or newer — [download here](https://www.python.org/)
-- A **GitHub personal access token** with `read:org` and `repo` scopes — [create one here](https://github.com/settings/tokens)
+---
 
-## Getting started
+## Local Setup
 
-1. **Go into the backend folder**
+### 1. Clone repository
 
-   ```bash
-   cd backend
-   ```
+```bash
+git clone <your-repo-url>
+cd <your-project-folder>
+```
 
-2. **Create and activate a virtual environment** (recommended)
+---
 
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate   # Windows: .venv\Scripts\activate
-   ```
+### 2. Create virtual environment (recommended)
 
-3. **Install dependencies**
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+Windows:
 
-4. **Create a `.env` file**
+```bash
+.venv\Scripts\activate
+```
 
-   ```bash
-   cp .env.example .env   # or just create the file manually
-   ```
+---
 
-   Add the following to `.env`:
+### 3. Install dependencies
 
-   ```env
-   GITHUB_TOKEN=your_github_token_here
-   SECRET_KEY=some-random-secret-string
-   ```
+```bash
+pip install -r requirements.txt
+```
 
-   > `SECRET_KEY` is used to sign the session cookie. Pick any long random string.
+---
 
-5. **Run the server**
+### 4. Set up the database
 
-   ```bash
-   python app.py
-   ```
+```bash
+mysql -u root -p < schema.sql
+```
 
-   The API is now available at [http://localhost:5000](http://localhost:5000).
+This creates the `nexory` database and all required tables.
 
-## Running in production
+---
 
-Use **Gunicorn** instead of the built-in Flask dev server:
+### 5. Create environment file
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env`:
+
+```env
+SECRET_KEY=your-secret-key-min-32-chars
+JWT_SECRET=your-jwt-secret-min-32-chars
+
+ENV=development
+
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your-password
+DB_NAME=nexory
+
+MAIL_HOST=smtp.example.com
+MAIL_PORT=587
+MAIL_USER=noreply@example.com
+MAIL_PASSWORD=your-mail-password
+MAIL_FROM=noreply@example.com
+MAIL_TLS=true
+
+FRONTEND_URL=http://localhost:3000
+
+GITHUB_TOKEN=your-github-personal-access-token
+```
+
+---
+
+### 6. Run development server
+
+```bash
+python run.py
+```
+
+Server runs at:
+
+```
+http://localhost:5000
+```
+
+---
+
+## Production Setup
+
+### Run with Gunicorn
 
 ```bash
 gunicorn -w 2 -b 0.0.0.0:5000 app:app
 ```
 
-## API endpoints
+---
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/github?endpoint=dashboard` | Org info, top repos, and member list (cached for 120 s) |
-| `GET` | `/api/github?endpoint=org` | Raw organisation data |
-| `GET` | `/api/github?endpoint=repos` | Public repositories |
-| `GET` | `/api/github?endpoint=members` | Organisation members |
-| `GET` | `/api/language` | Returns the current language from the session |
-| `POST` | `/api/language` | Sets the language (`{"language": "en"}`) |
+## Docker Setup (recommended)
+
+### Build image
+
+```bash
+docker build -t flask-backend .
+```
+
+---
+
+### Run container
+
+```bash
+docker run -p 5000:5000 --env-file .env flask-backend
+```
+
+---
+
+## API Endpoints
+
+| Method | Endpoint                       | Description              |
+| ------ | ------------------------------ | ------------------------ |
+| POST   | /api/auth/register             | Register (sends email)   |
+| GET    | /api/auth/verify/:token        | Verify email             |
+| POST   | /api/auth/login                | Login                    |
+| POST   | /api/auth/refresh              | Refresh tokens           |
+| POST   | /api/auth/logout               | Logout                   |
+| POST   | /api/auth/password/request     | Request password reset   |
+| POST   | /api/auth/password/reset/:token| Reset password           |
+| GET    | /api/auth/me                   | Get current user         |
+
+---
+
+## Security Notes
+
+* Access tokens expire after 15 minutes
+* Refresh tokens are rotated on every use
+* Refresh tokens should be stored in httpOnly cookies (recommended)
+* Passwords are hashed using bcrypt
+* Rate limiting should be enabled in production (Redis recommended)
+* Do not use default secrets in production
+
+---
 
 ## Troubleshooting
 
-| Problem | Fix |
-|---------|-----|
-| `no token` error | Make sure `GITHUB_TOKEN` is set in your `.env` file |
-| 502 responses from `/api/github` | Check that your token has the right scopes and hasn't expired |
-| CORS errors in the browser | Verify the frontend is running on `http://localhost:3000` |
+| Problem              | Solution                             |
+| -------------------- | ------------------------------------ |
+| Cannot connect to DB | Check DB_HOST, DB_USER, DB_PASSWORD  |
+| 401 Unauthorized     | Token expired or invalid             |
+| CORS errors          | Verify frontend origin configuration |
+| Module not found     | Run pip install -r requirements.txt  |
+
+---
+
+## Recommended Next Steps
+
+* Use Redis for rate limiting and session tracking
+* Add HTTPS (via reverse proxy like Nginx)
+* Implement email verification
+* Add 2FA (TOTP)
+* Set up logging and monitoring

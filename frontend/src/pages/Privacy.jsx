@@ -60,24 +60,35 @@ export default function Privacy() {
 
           <h3>Session Cookies</h3>
           <p>
-            We use a technically necessary session cookie for server-side language handling
-            via the <code>/api/language</code> endpoint (Python backend).
-            This cookie is required for the language session and is not used for advertising.
-            No consent banner is required for technically necessary cookies.
+            We use technically necessary cookies to operate the website:
+          </p>
+          <ul>
+            <li>
+              <strong>refresh_token</strong> — an httpOnly, Secure, SameSite cookie used to
+              maintain your login session. It is never accessible to JavaScript and is only
+              transmitted over HTTPS. This cookie is set only when you log in and is deleted
+              on logout or expiry (maximum 7 days with &ldquo;Remember me&rdquo;, 24 hours otherwise).
+            </li>
+          </ul>
+          <p>
+            No consent banner is required for technically necessary cookies (Art. 5 (3) ePrivacy
+            Directive / § 25 (2) TDDDG).
           </p>
 
           <h3>Local Storage</h3>
           <p>
-            This website stores small technical values in your browser's local storage:
+            This website stores small technical values in your browser's local storage or session
+            storage:
           </p>
           <ul>
-            <li><strong>language</strong> - your selected UI language (de/en)</li>
-            <li><strong>home_github_stats</strong> - temporary cache of public GitHub dashboard data</li>
+            <li><strong>language</strong> — your selected UI language (de/en)</li>
+            <li><strong>home_github_stats</strong> — temporary cache of public GitHub dashboard data (expires after ~1 hour)</li>
+            <li><strong>access_token</strong> — a short-lived JWT (15 minutes) used to authenticate API requests. Stored in local storage only when you enable &ldquo;Remember me&rdquo;; otherwise stored in session storage and cleared when the tab is closed.</li>
+            <li><strong>remember_me</strong> — a flag ("1" or absent) indicating whether the &ldquo;Remember me&rdquo; option was selected at login. Stored in local storage.</li>
           </ul>
           <p>
-            The GitHub cache is stored for performance reasons and expires automatically after a
-            limited period (currently up to one hour). These entries do not contain contact form
-            content, authentication data, or special categories of personal data.
+            None of these entries contain passwords, payment data, or special categories of
+            personal data under Art. 9 GDPR.
           </p>
           <p>
             Legal basis: Art. 6 (1)(f) GDPR (legitimate interest in efficient and stable page
@@ -86,7 +97,43 @@ export default function Privacy() {
         </section>
 
         <section className="legal-section">
-          <h2>4. Contact Form</h2>
+          <h2>4. User Accounts</h2>
+          <p>
+            This website offers optional user registration. When you create an account, the
+            following personal data is collected and stored in our database:
+          </p>
+          <ul>
+            <li><strong>E-mail address</strong> — used for account identification, email verification, and password resets.</li>
+            <li><strong>Password</strong> — stored exclusively as a bcrypt hash (one-way). The plain-text password is never stored or logged.</li>
+            <li><strong>Username and avatar URL</strong> — optional display name and profile picture URL, set by you in your account settings.</li>
+            <li><strong>Account metadata</strong> — account creation timestamp, verification status, role.</li>
+          </ul>
+          <p>
+            Additionally, for login session management the following data is stored temporarily:
+          </p>
+          <ul>
+            <li><strong>Refresh tokens</strong> — a cryptographic token hash, your IP address at login time, your browser User-Agent, and an expiry timestamp. Revoked or expired tokens are deleted automatically.</li>
+          </ul>
+          <p>
+            <strong>Legal basis:</strong> Art. 6 (1)(b) GDPR (performance of the service you
+            requested by creating an account). Email address and password are required to operate
+            an account; all other fields are optional.
+          </p>
+          <p>
+            <strong>Retention:</strong> Your account data is retained until you delete your
+            account via the account settings. On deletion, all associated data (refresh tokens,
+            pending email verifications, password-reset tokens) is permanently removed.
+          </p>
+          <p>
+            <strong>Email delivery:</strong> Transactional emails (account verification,
+            password reset) are sent via Resend (resend.com), a third-party email service
+            provider. Only your email address and the email content are transmitted for this
+            purpose. Resend acts as a data processor under Art. 28 GDPR.
+          </p>
+        </section>
+
+        <section className="legal-section">
+          <h2>5. Contact Form</h2>
           <p>
             A contact form is currently not active in this project version. If a contact form is
             introduced in a future release, this section will be updated with the exact data
@@ -95,7 +142,7 @@ export default function Privacy() {
         </section>
 
         <section className="legal-section">
-          <h2>5. External Services — GitHub API</h2>
+          <h2>6. External Services — GitHub API</h2>
           <p>
             This website displays publicly available repository information from GitHub. Depending
             on the page and request type, data is fetched via our own server-side proxy endpoint
@@ -136,7 +183,7 @@ export default function Privacy() {
         </section>
 
         <section className="legal-section">
-          <h2>6. Discord Bot — Nexory</h2>
+          <h2>7. Discord Bot — Nexory</h2>
           <p>
             NexoryDev operates a Discord bot named <strong>Nexory</strong>, built with{' '}
             <code>discord.py</code> and a MySQL database. The bot is publicly available on GitHub at{' '}
@@ -223,7 +270,7 @@ export default function Privacy() {
         </section>
 
         <section className="legal-section">
-          <h2>7. Your Rights</h2>
+          <h2>8. Your Rights</h2>
           <p>Under the GDPR you have the following rights regarding your personal data:</p>
           <ul>
             <li><strong>Right of access</strong> (Art. 15 GDPR)</li>
@@ -251,7 +298,7 @@ export default function Privacy() {
         </section>
 
         <footer className="legal-foot">
-          <p>Last updated: 19 April 2026</p>
+          <p>Last updated: 3 May 2026</p>
         </footer>
       </div>
     </main>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../styles/me.css";
+import "../../styles/Me.css";
 import { apiFetch } from "../../api/apiClient";
 import { useLanguage } from "../../context/LanguageContext";
 

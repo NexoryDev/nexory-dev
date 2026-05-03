@@ -171,14 +171,6 @@ export default function GitHub({ initialData = null, initialError = false }) {
 
                 {repo.description && <p className="gh-repo-desc">{repo.description}</p>}
 
-                {repo.topics?.length > 0 && (
-                  <div className="gh-topics">
-                    {repo.topics.slice(0, 4).map(topic => (
-                      <span key={topic} className="gh-topic">{topic}</span>
-                    ))}
-                  </div>
-                )}
-
                 <div className="gh-repo-stats">
                   {repo.language && (
                     <div className="gh-stat-item">
@@ -220,30 +212,51 @@ export default function GitHub({ initialData = null, initialError = false }) {
           <section className="gh-members" id="members">
             <h2 className="gh-section-title">{t('github.members_header')}</h2>
             <div className="gh-members-grid">
-              {members.map(member => (
-                <a key={member.id} href={member.html_url} target="_blank" rel="noopener noreferrer" className="gh-member-card">
+              {members.map(member => {
 
-                  <img src={member.avatar_url} alt={member.login} className="gh-member-avatar" />
+                const rawRole = (member.role || 'viewer').toLowerCase();
 
-                  <div className="gh-member-info">
-                    <span className="gh-member-login">{member.login}</span>
-                    <span className={`gh-role-badge gh-role-badge--${member.role}`}>
-                      {t(`github.role_${member.role}`)}
-                    </span>
-                  </div>
+                const roleMap = {
+                  owner: 'admin',
+                  admin: 'admin',
+                  maintainer: 'maintain',
+                  contributor: 'member',
+                  viewer: 'pull'
+                };
 
-                  <div className="gh-member-commits">
-                    <span className="gh-stat-label">{t('github.commits')}</span>
-                    <span>{member.commits > 0 ? member.commits : '-'}</span>
-                  </div>
+                const roleKey = roleMap[rawRole] || 'pull';
 
-                  <div className="gh-member-commits">
-                    <span className="gh-stat-label">{t('github.repos')}</span>
-                    <span>{member.repoCount > 0 ? member.repoCount : '–'}</span>
-                  </div>
+                const roleText = t(`github.role_${roleKey}`);
+                const roleDisplay =
+                  roleText && !roleText.includes('github.role_')
+                    ? roleText
+                    : roleKey.toUpperCase();
 
-                </a>
-              ))}
+                return (
+                  <a key={member.id} href={member.html_url} target="_blank" rel="noopener noreferrer" className="gh-member-card">
+
+                    <img src={member.avatar_url} alt={member.login} className="gh-member-avatar" />
+
+                    <div className="gh-member-info">
+                      <span className="gh-member-login">{member.login}</span>
+                      <span className={`gh-role-badge gh-role-badge--${roleKey}`}>
+                        {roleDisplay}
+                      </span>
+                    </div>
+
+                    <div className="gh-member-commits">
+                      <span className="gh-stat-label">{t('github.commits')}</span>
+                      <span>{member.commits > 0 ? member.commits : '-'}</span>
+                    </div>
+
+                    <div className="gh-member-commits">
+                      <span className="gh-stat-label">{t('github.repos')}</span>
+                      <span>{member.repoCount > 0 ? member.repoCount : '–'}</span>
+                    </div>
+
+                  </a>
+                );
+              })}
             </div>
           </section>
         )}

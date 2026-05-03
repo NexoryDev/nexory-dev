@@ -1,434 +1,209 @@
-import { useEffect, useRef, useState } from 'react';
-import ratingsData from '../data/ratings.json';
-
-function RatingsSection({ language }) {
-  const ratings = ratingsData.filter(r => r.lang === language).slice(0, 6);
-  const [current, setCurrent] = useState(0);
-  const intervalRef = useRef();
-
-  useEffect(() => {
-    if (ratings.length < 2) return;
-    intervalRef.current = setTimeout(() => {
-      setCurrent((c) => (c + 1) % ratings.length);
-    }, 4000);
-    return () => clearTimeout(intervalRef.current);
-  }, [current, ratings.length]);
-
-  if (!ratings.length) return null;
-  const r = ratings[current];
-  return (
-    <div className="ratings-section">
-      <div className="rating-card">
-        <div className="rating-stars">{'★'.repeat(r.stars)}{'☆'.repeat(5 - r.stars)}</div>
-        <div className="typewriter-text">
-          {r.text}
-        </div>
-        <div className="rating-author">{r.name}</div>
-      </div>
-      <div className="rating-dots rating-dots-outside">
-        {ratings.map((_, idx) => (
-          <button
-            key={idx}
-            className={"dot" + (idx === current ? " active" : "")}
-            aria-label={`Bewertung ${idx + 1}`}
-            onClick={() => setCurrent(idx)}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Star, GitFork } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import '../styles/Home.css';
-import snippetData from '../data/codeSnippets.json';
+import '../styles/Github.css';
 
-const CODE_SNIPPETS = snippetData.snippets;
-const SNIPPET_ORDER = snippetData.order;
-const CACHE_KEY = 'home_github_stats';
-const CACHE_TTL_MS = 1000 * 60 * 60;
-const DEFAULT_STATS = { members: 0, repos: 0, commits: 0 };
+const LANG_COLORS = {
+  JavaScript: '#f1e05a',
+  TypeScript: '#3178c6',
+  Python: '#3572A5',
+  HTML: '#e34c26',
+  CSS: '#563d7c',
+  Java: '#b07219',
+  'C#': '#178600',
+  'C++': '#f34b7d',
+  Go: '#00ADD8',
+  Rust: '#dea584',
+  Shell: '#89e051',
+};
 
-function isHumanMember(member) {
-  return member?.type === 'User' && member?.login && !member.login.includes('[bot]');
+const ROLE_CSS = {
+  owner: 'admin',
+  maintainer: 'maintain',
+  contributor: 'push',
+  viewer: 'pull',
+};
+
+function relativeTime(dateStr) {
+  if (!dateStr) return '';
+  const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+  if (diff < 60) return `${diff}s ago`;
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  if (diff < 30 * 86400) return `${Math.floor(diff / 86400)}d ago`;
+  if (diff < 365 * 86400) return `${Math.floor(diff / (30 * 86400))}mo ago`;
+  return `${Math.floor(diff / (365 * 86400))}y ago`;
 }
 
-function calculateStats(dashboard) {
-  const repos = Array.isArray(dashboard?.repos) ? dashboard.repos : [];
-  const members = Array.isArray(dashboard?.members) ? dashboard.members : [];
-  const humanMembers = members.filter(isHumanMember);
-
-  return {
-    members: new Set(humanMembers.map(member => member.login)).size,
-    repos: repos.length,
-    commits: humanMembers.reduce((sum, member) => sum + (Number(member?.commits) || 0), 0)
-  };
-}
-
-function getStatsText({ loading, error, stats, t }) {
-  if (loading) return t('home.stats_loading');
-  if (error) return t('home.stats_error');
-
-  return `${stats.members} ${t('home.stats_members')} · ${stats.repos} ${t('home.stats_repos')} · ${stats.commits} ${t('home.stats_commits')}`;
-}
-
-function getNextSnippetKey(currentKey) {
-  const currentIndex = SNIPPET_ORDER.indexOf(currentKey);
-  return SNIPPET_ORDER[(currentIndex + 1) % SNIPPET_ORDER.length];
-}
-
-function readStatsCache() {
-  try {
-    const raw = localStorage.getItem(CACHE_KEY);
-    if (!raw) return null;
-
-    const cache = JSON.parse(raw);
-    if (!cache.timestamp || !cache?.data) return null;
-
-    const uptodate = Date.now() - cache.timestamp < CACHE_TTL_MS;
-    return uptodate ? cache.data : null;
-  } catch {
-    return null;
-  }
-}
-
-function writeStatsCache(data) {
-  try {
-    localStorage.setItem(
-      CACHE_KEY,
-      JSON.stringify({
-        timestamp: Date.now(),
-        data
-      })
-    );
-  } catch {
-  }
-}
-
-export default function Home() {
-  const { language, t } = useLanguage();
-  const canvasRef = useRef(null);
-  const outputRef = useRef(null);
-
-  const [stats, setStats] = useState(DEFAULT_STATS);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [codeKey, setCodeKey] = useState('python');
+export default function GitHub({ initialData, initialError }) {
+  const { t } = useLanguage();
+  const [data, setData] = useState(initialData ?? null);
+  const [error, setError] = useState(!!initialError);
+  const [loading, setLoading] = useState(!initialData && !initialError);
 
   useEffect(() => {
+    if (initialData || initialError) return;
     const controller = new AbortController();
-
-    async function loadGitHubStats() {
-      setLoading(true);
-      setError(false);
-
-      const cached = readStatsCache();
-      if (cached) {
-        setStats(cached);
-        setLoading(false);
-      }
-
-      try {
-        const response = await fetch('/api/github?endpoint=dashboard', {
-          signal: controller.signal
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch dashboard');
-        }
-
-        const dashboard = await response.json();
-        const nextStats = calculateStats(dashboard);
-
-        setStats(nextStats);
-        writeStatsCache(nextStats);
-      } catch (fetchError) {
-        if (fetchError?.name !== 'AbortError' && !cached) {
-          setError(true);
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadGitHubStats();
+    fetch('/api/github?endpoint=dashboard', { signal: controller.signal })
+      .then(res => { if (!res.ok) throw new Error(); return res.json(); })
+      .then(d => setData(d))
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
     return () => controller.abort();
-  }, []);
+  }, [initialData, initialError]);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+  const org = data?.org ?? null;
+  const repos = Array.isArray(data?.repos) ? data.repos : [];
+  const members = Array.isArray(data?.members)
+    ? data.members.filter(m => m?.type === 'User' && m?.login && !m.login.includes('[bot]'))
+    : [];
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const PARTICLE_COUNT = 150;
-    const CONNECTION_DIST = 200;
-    const SPEED = 0.4;
-
-    let particles = [];
-    let animationId;
-
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      particles = particles.map(p => ({
-        ...p,
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height
-      }));
-    }
-
-    resize();
-    window.addEventListener('resize', resize);
-
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * SPEED,
-        vy: (Math.random() - 0.5) * SPEED,
-        r: Math.random() * 1.8 + 1.2,
-      });
-    }
-
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-      });
-
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < CONNECTION_DIST) {
-            const alpha = 1 - dist / CONNECTION_DIST;
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(88, 166, 255, ${alpha * 0.6})`;
-            ctx.stroke();
-          }
-        }
-      }
-
-      particles.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(167, 139, 250, 0.95)';
-        ctx.fill();
-      });
-
-      animationId = requestAnimationFrame(draw);
-    }
-
-    draw();
-
-    return () => {
-      window.removeEventListener('resize', resize);
-      cancelAnimationFrame(animationId);
-    };
-  }, []);
-
-  useEffect(() => {
-    const snippet = CODE_SNIPPETS[codeKey] || CODE_SNIPPETS.python;
-    const code = snippet[language] || snippet.en;
-
-    const TYPE_SPEED = 58;
-    const WAIT_S = 20;
-
-    let timeoutId;
-
-    function startTyping() {
-      const output = outputRef.current;
-      if (!output) return;
-
-      output.innerHTML = '';
-      let index = 0;
-
-      function type() {
-        if (!outputRef.current) return;
-
-        if (index < code.length) {
-          const partial = code.slice(0, index + 1);
-          const lines = partial.split('\n');
-
-          output.innerHTML = lines
-          .map((line, i) => {
-            const isLast = i === lines.length - 1;
-            return `<span class="code-line">${line}${isLast ? '<span class="cursor"></span>' : ''}</span>`;
-          })
-          .join('');
-
-          index++;
-          timeoutId = setTimeout(type, TYPE_SPEED);
-        } else {
-          const next = getNextSnippetKey(codeKey);
-          timeoutId = setTimeout(() => setCodeKey(next), WAIT_S * 1000);
-        }
-      }
-
-      type();
-    }
-
-    startTyping();
-
-    return () => clearTimeout(timeoutId);
-  }, [codeKey, language]);
-
-  useEffect(() => {
-    const hash = window.location.hash.slice(1);
-    if (!hash) return;
-
-    const element = document.getElementById(hash);
-    if (!element) return;
-
-    setTimeout(() => {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }, 0);
-  }, []);
-
-  const statsText = getStatsText({ loading, error, stats, t });
-  const serviceCards = [
-    {
-      to: '/github#repos',
-      title: t('home.service_github_header'),
-      text: t('home.service_github_text'),
-      cta: t('home.service_github_cta')
-    },
-    {
-      to: '/contact#request',
-      title: t('home.service_web_header'),
-      text: t('home.service_web_text'),
-      cta: t('home.service_web_cta')
-    },
-    {
-      to: '/contact#support',
-      title: t('home.service_support_header'),
-      text: t('home.service_support_text'),
-      cta: t('home.service_support_cta')
-    }
-  ];
-
-  const technologyRows = [
-    { label: 'Python', usage: t('home.tech_python_usage'), className: 'python', docs: 'https://docs.python.org/' },
-    { label: 'JavaScript', usage: t('home.tech_javascript_usage'), className: 'javascript', docs: 'https://developer.mozilla.org/docs/Web/JavaScript' },
-    { label: 'React', usage: t('home.tech_react_usage'), className: 'react', docs: 'https://react.dev/' },
-    { label: 'APIs', usage: t('home.tech_api_usage'), className: 'api', docs: '' },
-    { label: 'MySQL', usage: t('home.tech_mysql_usage'), className: 'mysql', docs: 'https://dev.mysql.com/doc/' }
-  ];
+  const totalStars = repos.reduce((s, r) => s + (r.stargazers_count || 0), 0);
+  const totalForks = repos.reduce((s, r) => s + (r.forks_count || 0), 0);
+  const totalCommits = members.reduce((s, m) => s + (Number(m.commits) || 0), 0);
 
   return (
-    <div className="home-page">
-      <section className="hero" id="start">
-        <canvas ref={canvasRef} id="code-canvas" />
+    <div className="gh-page">
+      <div className="gh-container">
+        {loading && (
+          <p style={{ color: 'var(--color-text-muted)' }}>{t('github.loading')}</p>
+        )}
+        {error && !loading && (
+          <p style={{ color: 'var(--color-text-muted)' }}>{t('github.error')}</p>
+        )}
 
-        <div className="hero-content">
-          <div className="info">
-            <h1>nexory-dev</h1>
-            <p>{statsText}</p>
-          </div>
-
-          <div className="terminal">
-            <div className="terminal-header">
-              <span className="dot red" />
-              <span className="dot yellow" />
-              <span className="dot green" />
-              <span className="terminal-title">
-                {(CODE_SNIPPETS[codeKey] || CODE_SNIPPETS.python).title}
-              </span>
-
-              <div className="terminal-tabs">
-                {SNIPPET_ORDER.map(key => (
-                  <button
-                    key={key}
-                    className={`terminal-tab${codeKey === key ? ' active' : ''}`}
-                    onClick={() => setCodeKey(key)}
-                  >
-                    {CODE_SNIPPETS[key].title.split('.')[1]}
-                  </button>
-                ))}
+        {org && (
+          <div className="gh-org-header">
+            {org.avatar_url && (
+              <img className="gh-org-avatar" src={org.avatar_url} alt={org.login} loading="lazy" />
+            )}
+            <div>
+              <h1 className="gh-org-name">{org.name || org.login}</h1>
+              {org.description && <p className="gh-org-desc">{org.description}</p>}
+              <div className="gh-org-meta">
+                <span>{repos.length} {t('github.repos')}</span>
+                <span>{members.length} {t('github.members_header').toLowerCase()}</span>
               </div>
-            </div>
-
-            <div className="terminal-body">
-              <pre id="code-output" ref={outputRef} />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="home-infos" id="infos">
-        <div className="section-heading">
-          <span className="section-eyebrow">{t('home.infos_eyebrow')}</span>
-          <h2>{t('home.infos_header')}</h2>
-          <p className="section-lead">{t('home.infos_intro')}</p>
-        </div>
-
-        <div className="trust-badges">
-          <span>{t('home.trust_open')}</span>
-          <span>{t('home.trust_active')}</span>
-          <span>{t('home.trust_fast')}</span>
-        </div>
-
-        <div className="info-cards">
-          {serviceCards.map(card => (
-            <Link key={card.title} to={card.to} className="info-card">
-              <h3>{card.title}</h3>
-              <p>{card.text}</p>
-              <span className="info-card-link">{card.cta}</span>
-            </Link>
-          ))}
-        </div>
-        <div className="section-split">
-          <div className="tech-stack">
-            <h3>{t('home.tech_header')}</h3>
-            <p className="section-box-text">{t('home.tech_intro')}</p>
-
-            <div className="tech-table-wrap">
-              <table className="tech-table">
-                <thead>
-                  <tr>
-                    <th>{t('home.tech_col_technology')}</th>
-                    <th>{t('home.tech_col_usage')}</th>
-                    <th>{t('home.tech_col_docs')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {technologyRows.map(row => (
-                    <tr key={row.label}>
-                      <td>
-                        <span className={`tech-badge ${row.className}`}>{row.label}</span>
-                      </td>
-                      <td>{row.usage}</td>
-                      <td>
-                        {row.docs ? (
-                          <a href={row.docs} target="_blank" rel="noopener noreferrer">
-                            {t('home.tech_docs_link')}
-                          </a>
-                        ) : (
-                          <span style={{ color: '#888' }}>{t('home.tech_docs_none')}</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              {org.html_url && (
+                <a className="gh-org-link" href={org.html_url} target="_blank" rel="noopener noreferrer">
+                  {t('github.visit_org')}
+                </a>
+              )}
             </div>
           </div>
-        </div>
-      </section>
-      <section>
-        <RatingsSection language={language} />
-      </section>
+        )}
+
+        {(repos.length > 0 || members.length > 0) && (
+          <div className="gh-stats">
+            <span className="gh-stat">
+              <Star size={13} />
+              {totalStars} Stars
+            </span>
+            <span className="gh-stat">
+              <GitFork size={13} />
+              {totalForks} Forks
+            </span>
+            <span className="gh-stat">
+              {totalCommits} {t('github.commits')}
+            </span>
+          </div>
+        )}
+
+        {repos.length > 0 && (
+          <section id="repos">
+            <h2 className="gh-section-title">{t('github.repos_header')}</h2>
+            <div className="gh-repo-grid">
+              {repos.map(repo => (
+                <a
+                  key={repo.name}
+                  className="gh-repo-card"
+                  href={repo.html_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div className="gh-repo-top">
+                    <span className="gh-repo-name">{repo.name}</span>
+                    <span className="gh-repo-external">↗</span>
+                  </div>
+                  {repo.description && (
+                    <p className="gh-repo-desc">{repo.description}</p>
+                  )}
+                  {repo.topics?.length > 0 && (
+                    <div className="gh-topics">
+                      {repo.topics.map(topic => (
+                        <span key={topic} className="gh-topic">{topic}</span>
+                      ))}
+                    </div>
+                  )}
+                  <div className="gh-repo-footer">
+                    {repo.language && (
+                      <span className="gh-lang-badge">
+                        <span
+                          className="gh-lang-dot"
+                          style={{ background: LANG_COLORS[repo.language] || '#8b949e' }}
+                        />
+                        {repo.language}
+                      </span>
+                    )}
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <Star size={12} />
+                      {repo.stargazers_count || 0}
+                    </span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <GitFork size={12} />
+                      {repo.forks_count || 0}
+                    </span>
+                    {repo.updated_at && (
+                      <span className="gh-updated">{relativeTime(repo.updated_at)}</span>
+                    )}
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {members.length > 0 && (
+          <section className="gh-members" id="members">
+            <h2 className="gh-section-title">{t('github.members_header')}</h2>
+            <div className="gh-members-grid">
+              {members.map(member => {
+                const cssRole = ROLE_CSS[member.role] || 'member';
+                return (
+                  <a
+                    key={member.login}
+                    className="gh-member-card"
+                    href={member.html_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      className="gh-member-avatar"
+                      src={member.avatar_url}
+                      alt={member.login}
+                      loading="lazy"
+                    />
+                    <div className="gh-member-info">
+                      <span className="gh-member-login">{member.login}</span>
+                      <span className={`gh-role-badge gh-role-badge--${cssRole}`}>
+                        {t(`github.role_${cssRole}`)}
+                      </span>
+                    </div>
+                    {member.commits > 0 && (
+                      <div className="gh-member-commits">
+                        <span style={{ fontWeight: 600 }}>{member.commits}</span>
+                        <span style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem' }}>
+                          {t('github.commits')}
+                        </span>
+                      </div>
+                    )}
+                  </a>
+                );
+              })}
+            </div>
+          </section>
+        )}
+      </div>
     </div>
   );
 }

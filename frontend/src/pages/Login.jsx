@@ -56,7 +56,17 @@ export default function Login() {
     const newErrors = {};
 
     if (!email.includes("@")) newErrors.email = t("login.invalid_email");
-    if (!password || password.length < 6)
+    if (!password) newErrors.password = t("login.invalid_password");
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
+
+  function validateRegister() {
+    const newErrors = {};
+
+    if (!email.includes("@")) newErrors.email = t("login.invalid_email");
+    if (!password || password.length < 8)
       newErrors.password = t("login.invalid_password");
 
     setErrors(newErrors);
@@ -95,6 +105,11 @@ export default function Login() {
     setFormError("");
     setFormSuccess("");
 
+    if (!validateRegister()) {
+      setLoading(false);
+      return;
+    }
+
     const res = await api("/api/auth/register", {
       email,
       password,
@@ -104,7 +119,10 @@ export default function Login() {
       setFormSuccess(t("login.check_email"));
       setMode("login");
     } else {
-      setFormError(res.error || t("login.register_failed"));
+      const msg = res.error === "email_exists"
+        ? t("login.email_exists")
+        : t("login.register_failed");
+      setFormError(msg);
     }
 
     setLoading(false);

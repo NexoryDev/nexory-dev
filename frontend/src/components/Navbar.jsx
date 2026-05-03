@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import '../styles/Navbar.css';
-import Login from "../pages/Login";
 
 export default function Navbar() {
   const { language, setLanguage, t } = useLanguage();
@@ -34,6 +33,10 @@ export default function Navbar() {
       event.preventDefault();
       toggleMenu();
     }
+  }
+
+  if (location.pathname.startsWith('/me')) {
+    return null;
   }
 
   return (

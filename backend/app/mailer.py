@@ -10,7 +10,7 @@ def send_mail(to, subject, content):
     msg["From"] = Config.MAIL_FROM
     msg["To"] = to
 
-    server = smtplib.SMTP(Config.MAIL_HOST, Config.MAIL_PORT)
+    server = smtplib.SMTP(Config.MAIL_HOST, Config.MAIL_PORT, timeout=10)
     server.ehlo()
 
     if Config.MAIL_TLS:

@@ -1,4 +1,5 @@
 import smtplib
+import ssl
 from email.mime.text import MIMEText
 from app.config import Config
 
@@ -13,7 +14,7 @@ def send_mail(to, subject, content):
     server.ehlo()
 
     if Config.MAIL_TLS:
-        server.starttls()
+        server.starttls(context=ssl.create_default_context())
         server.ehlo()
 
     server.login(Config.MAIL_USER, Config.MAIL_PASSWORD)

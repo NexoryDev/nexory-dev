@@ -42,7 +42,17 @@ pip install -r requirements.txt
 
 ---
 
-### 4. Create environment file
+### 4. Set up the database
+
+```bash
+mysql -u root -p < schema.sql
+```
+
+This creates the `nexory` database and all required tables.
+
+---
+
+### 5. Create environment file
 
 ```bash
 cp .env.example .env
@@ -51,18 +61,31 @@ cp .env.example .env
 Edit `.env`:
 
 ```env
-SECRET_KEY=your-secret-key
-JWT_SECRET=your-jwt-secret
+SECRET_KEY=your-secret-key-min-32-chars
+JWT_SECRET=your-jwt-secret-min-32-chars
+
+ENV=development
 
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=your-password
-DB_NAME=your-db
+DB_NAME=nexory
+
+MAIL_HOST=smtp.example.com
+MAIL_PORT=587
+MAIL_USER=noreply@example.com
+MAIL_PASSWORD=your-mail-password
+MAIL_FROM=noreply@example.com
+MAIL_TLS=true
+
+FRONTEND_URL=http://localhost:3000
+
+GITHUB_TOKEN=your-github-personal-access-token
 ```
 
 ---
 
-### 5. Run development server
+### 6. Run development server
 
 ```bash
 python run.py
@@ -106,11 +129,16 @@ docker run -p 5000:5000 --env-file .env flask-backend
 
 ## API Endpoints
 
-| Method | Endpoint           | Description    |
-| ------ | ------------------ | -------------- |
-| POST   | /api/auth/login    | Login user     |
-| POST   | /api/auth/refresh  | Refresh tokens |
-| POST   | /api/auth/register | Register user  |
+| Method | Endpoint                       | Description              |
+| ------ | ------------------------------ | ------------------------ |
+| POST   | /api/auth/register             | Register (sends email)   |
+| GET    | /api/auth/verify/:token        | Verify email             |
+| POST   | /api/auth/login                | Login                    |
+| POST   | /api/auth/refresh              | Refresh tokens           |
+| POST   | /api/auth/logout               | Logout                   |
+| POST   | /api/auth/password/request     | Request password reset   |
+| POST   | /api/auth/password/reset/:token| Reset password           |
+| GET    | /api/auth/me                   | Get current user         |
 
 ---
 

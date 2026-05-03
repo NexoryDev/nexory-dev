@@ -1,7 +1,37 @@
 import { createContext, useContext, useEffect, useState, useRef } from "react";
 
 const AuthContext = createContext(null);
-const API = "http://localhost:5000";
+
+const TOKEN_KEY = "access_token";
+const REMEMBER_KEY = "remember_me";
+
+function getStorage() {
+  return localStorage.getItem(REMEMBER_KEY) === "1"
+    ? localStorage
+    : sessionStorage;
+}
+
+function saveToken(token, rememberMe) {
+  if (rememberMe) {
+    localStorage.setItem(REMEMBER_KEY, "1");
+    localStorage.setItem(TOKEN_KEY, token);
+    sessionStorage.removeItem(TOKEN_KEY);
+  } else {
+    localStorage.removeItem(REMEMBER_KEY);
+    localStorage.removeItem(TOKEN_KEY);
+    sessionStorage.setItem(TOKEN_KEY, token);
+  }
+}
+
+function loadToken() {
+  return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY);
+}
+
+function removeToken() {
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(REMEMBER_KEY);
+  sessionStorage.removeItem(TOKEN_KEY);
+}
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -11,21 +41,21 @@ export function AuthProvider({ children }) {
   const refreshInProgress = useRef(false);
   const initialized = useRef(false);
 
-  const setToken = async (token) => {
+  const setToken = async (token, rememberMe = false) => {
+    saveToken(token, rememberMe);
     setAccessToken(token);
-    localStorage.setItem("access_token", token);
     await loadUser(token);
   };
 
   const clearAuth = () => {
     setAccessToken(null);
     setUser(null);
-    localStorage.removeItem("access_token");
+    removeToken();
   };
 
   const loadUser = async (token) => {
     try {
-      const res = await fetch(`${API}/api/auth/me`, {
+      const res = await fetch(`/api/auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -46,7 +76,7 @@ export function AuthProvider({ children }) {
     refreshInProgress.current = true;
 
     try {
-      const res = await fetch(`${API}/api/auth/refresh`, {
+      const res = await fetch(`/api/auth/refresh`, {
         method: "POST",
         credentials: "include",
       });
@@ -54,7 +84,8 @@ export function AuthProvider({ children }) {
       const data = await res.json().catch(() => ({}));
 
       if (data.access_token) {
-        localStorage.setItem("access_token", data.access_token);
+        const rememberMe = localStorage.getItem(REMEMBER_KEY) === "1";
+        saveToken(data.access_token, rememberMe);
         setAccessToken(data.access_token);
         await loadUser(data.access_token);
         return data.access_token;
@@ -76,7 +107,7 @@ export function AuthProvider({ children }) {
 
     setLoading(true);
 
-    const token = localStorage.getItem("access_token");
+    const token = loadToken();
 
     if (token) {
       setAccessToken(token);

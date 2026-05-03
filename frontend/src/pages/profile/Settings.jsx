@@ -4,8 +4,6 @@ import { useAuth } from "../../auth/AuthProvider";
 import { useLanguage } from "../../context/LanguageContext";
 import "../../styles/Me.css";
 
-const API = "http://localhost:5000";
-
 const Settings = () => {
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
@@ -16,6 +14,13 @@ const Settings = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
   const [error, setError] = useState("");
+
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordSuccess, setPasswordSuccess] = useState("");
+
   const navigate = useNavigate();
   const { clearAuth } = useAuth();
   const { t } = useLanguage();
@@ -37,7 +42,7 @@ const Settings = () => {
     setError("");
 
     try {
-      const res = await fetch(`${API}/api/profile/me`, {
+      const res = await fetch("/api/profile/me", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -67,6 +72,55 @@ const Settings = () => {
     loadUser();
   }, []);
 
+  const changePassword = async () => {
+    setPasswordError("");
+    setPasswordSuccess("");
+
+    if (newPassword.length < 6) {
+      setPasswordError(t("reset.weak_password"));
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError(t("reset.passwords_dont_match"));
+      return;
+    }
+
+    const token = getAccessToken();
+    if (!token) return navigate("/login");
+
+    setChangingPassword(true);
+
+    try {
+      const res = await fetch("/api/profile/me/password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ password: newPassword })
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setPasswordError(data.error === "weak_password" ? t("reset.weak_password") : t("account.settings.errors.save_failed"));
+        return;
+      }
+
+      setPasswordSuccess(t("account.settings.security.success"));
+      setNewPassword("");
+      setConfirmPassword("");
+
+      // All other sessions got revoked — keep current session alive by refreshing token
+      clearAuth();
+      navigate("/login");
+    } catch {
+      setPasswordError(t("account.settings.errors.save_failed"));
+    } finally {
+      setChangingPassword(false);
+    }
+  };
+
   const save = async () => {
     const token = getAccessToken();
     if (!token) return navigate("/login");
@@ -75,7 +129,7 @@ const Settings = () => {
     setError("");
 
     try {
-      const res = await fetch(`${API}/api/profile/me/update`, {
+      const res = await fetch("/api/profile/me/update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -102,7 +156,7 @@ const Settings = () => {
 
   const logout = async () => {
     try {
-      await fetch(`${API}/api/auth/logout`, {
+      await fetch("/api/auth/logout", {
         method: "POST",
         credentials: "include"
       });
@@ -122,7 +176,7 @@ const Settings = () => {
     setError("");
 
     try {
-      const res = await fetch(`${API}/api/profile/me/delete`, {
+      const res = await fetch("/api/profile/me/delete", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`
@@ -135,7 +189,7 @@ const Settings = () => {
         return;
       }
 
-      await fetch(`${API}/api/auth/logout`, {
+      await fetch("/api/auth/logout", {
         method: "POST",
         credentials: "include"
       });
@@ -203,10 +257,29 @@ const Settings = () => {
             <h3 className="settings-title">{t("account.settings.security.title")}</h3>
             <p className="settings-help">{t("account.settings.security.help")}</p>
 
-            <input type="password" placeholder={t("account.settings.security.new_password_placeholder")} />
-            <input type="password" placeholder={t("account.settings.security.confirm_password_placeholder")} />
+            {passwordError ? <p className="settings-error">{passwordError}</p> : null}
+            {passwordSuccess ? <p className="settings-success">{passwordSuccess}</p> : null}
 
-            <button className="settings-password-btn">{t("account.settings.actions.change_password")}</button>
+            <input
+              type="password"
+              placeholder={t("account.settings.security.new_password_placeholder")}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder={t("account.settings.security.confirm_password_placeholder")}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+
+            <button
+              className="settings-password-btn"
+              onClick={changePassword}
+              disabled={changingPassword || saving || deleting}
+            >
+              {changingPassword ? "..." : t("account.settings.actions.change_password")}
+            </button>
           </section>
 
           <section className="settings-section danger-zone">

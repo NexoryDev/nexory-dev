@@ -1,5 +1,6 @@
 from app.db.connection import get_db
 from app.auth.tokens import create_access_token
+from app.security.password import hash_password
 
 
 def get_user_by_id(user_id):
@@ -28,6 +29,9 @@ def update_user(user_id, data):
 
     if avatar is not None:
         avatar = avatar.strip()
+        if avatar and not avatar.startswith(("http://", "https://")):
+            db.close()
+            return False
         fields.append("avatar=%s")
         values.append(avatar if avatar != "" else None)
 
@@ -39,10 +43,15 @@ def update_user(user_id, data):
 
     query = f"UPDATE users SET {', '.join(fields)} WHERE id=%s"
 
-    cursor.execute(query, values)
-    db.commit()
-    db.close()
-    return True
+    try:
+        cursor.execute(query, values)
+        db.commit()
+        return True
+    except Exception:
+        db.rollback()
+        return False
+    finally:
+        db.close()
 
 
 def serialize_user(user):
@@ -89,6 +98,28 @@ def delete_user_account(user_id):
 
         db.commit()
         return cursor.rowcount > 0
+    except Exception:
+        db.rollback()
+        return False
+    finally:
+        db.close()
+
+
+def change_password(user_id, new_password):
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        cursor.execute(
+            "UPDATE users SET password_hash=%s WHERE id=%s",
+            (hash_password(new_password), user_id)
+        )
+        cursor.execute(
+            "UPDATE refresh_tokens SET revoked=1 WHERE user_id=%s",
+            (user_id,)
+        )
+        db.commit()
+        return True
     except Exception:
         db.rollback()
         return False

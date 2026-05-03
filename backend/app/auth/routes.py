@@ -60,7 +60,7 @@ def register():
     email = data.get("email", "").lower().strip()
     password = data.get("password")
 
-    if not email or not password:
+    if not email or not password or len(password) < 8:
         return jsonify({"error": "missing_fields"}), 400
 
     result, error = register_user(email, password)
@@ -73,10 +73,10 @@ def register():
 
 @auth_bp.route("/verify/<token>", methods=["GET"])
 def verify(token):
-    ok = verify_email(token)
+    result = verify_email(token)
 
-    if not ok:
-        return jsonify({"error": "invalid_or_expired"}), 400
+    if result != "ok":
+        return jsonify({"error": result}), 400
 
     return jsonify({"status": "verified"})
 
@@ -85,19 +85,23 @@ def verify(token):
 def login():
     data = request.get_json() or {}
 
+    remember_me = bool(data.get("remember_me", False))
+
     result, error = login_user(
         data.get("email"),
         data.get("password"),
         request.remote_addr,
         request.headers.get("User-Agent"),
-        data.get("device_id")
+        data.get("device_id"),
+        remember_me
     )
 
     if error:
         return jsonify({"error": error}), 401
 
     res = make_response(jsonify({
-        "access_token": result["access_token"]
+        "access_token": result["access_token"],
+        "remember_me": result["remember_me"]
     }))
 
     set_refresh_cookie(res, result["refresh_token"])

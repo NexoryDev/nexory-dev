@@ -22,7 +22,7 @@ def gh(path, token):
         )
 
         if res.status_code >= 400:
-            return False, {"error": res.text}
+            return False, {"error": "github_api_error"}
 
         return True, res.json()
 

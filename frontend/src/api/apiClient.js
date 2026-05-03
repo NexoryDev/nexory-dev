@@ -1,9 +1,17 @@
-import { useAuth } from "../auth/AuthProvider";
-
-const API = "http://localhost:5000";
+// Relative base – nginx proxies /api/ to backend, no hardcoded host needed
+const API = "";
 
 let isRefreshing = false;
 let pendingQueue = [];
+
+function getToken() {
+  return localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
+}
+
+function saveToken(token) {
+  const storage = localStorage.getItem("remember_me") === "1" ? localStorage : sessionStorage;
+  storage.setItem("access_token", token);
+}
 
 async function refreshToken() {
   const res = await fetch(`${API}/api/auth/refresh`, {
@@ -15,7 +23,7 @@ async function refreshToken() {
 
   if (!data.access_token) return null;
 
-  localStorage.setItem("access_token", data.access_token);
+  saveToken(data.access_token);
 
   window.dispatchEvent(new StorageEvent("storage", {
     key: "token_update",
@@ -26,7 +34,7 @@ async function refreshToken() {
 }
 
 export async function apiFetch(path, options = {}) {
-  let token = localStorage.getItem("access_token");
+  let token = getToken();
 
   const request = async (t) =>
     fetch(`${API}${path}`, {

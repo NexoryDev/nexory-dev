@@ -13,14 +13,18 @@ def get_user(email):
     db = get_db()
     cur = db.cursor()
     cur.execute("SELECT * FROM users WHERE email=%s", (email,))
-    return cur.fetchone()
+    result = cur.fetchone()
+    db.close()
+    return result
 
 
 def get_user_by_id(user_id):
     db = get_db()
     cur = db.cursor()
     cur.execute("SELECT id, email, verified FROM users WHERE id=%s", (user_id,))
-    return cur.fetchone()
+    result = cur.fetchone()
+    db.close()
+    return result
 
 
 def get_current_user(token):
@@ -44,10 +48,6 @@ def get_current_user(token):
     }
 
 
-def commit(db):
-    db.commit()
-
-
 def register_user(email, password):
     db = get_db()
     cur = db.cursor()
@@ -56,29 +56,39 @@ def register_user(email, password):
 
     cur.execute("SELECT id FROM users WHERE email=%s", (email,))
     if cur.fetchone():
+        db.close()
         return None, "email_exists"
 
     user_id = str(uuid.uuid4())
     pw_hash = hash_password(password)
 
-    cur.execute(
-        "INSERT INTO users (id,email,password_hash,verified) VALUES (%s,%s,%s,%s)",
-        (user_id, email, pw_hash, 0)
-    )
-
     raw_token = str(uuid.uuid4())
     token_hash = hash_token(raw_token)
 
-    cur.execute(
-        "INSERT INTO email_verifications (user_id, token_hash, expires_at, created_at) VALUES (%s,%s,%s,NOW())",
-        (user_id, token_hash, datetime.utcnow() + timedelta(hours=24))
-    )
+    try:
+        cur.execute(
+            "INSERT INTO users (id,email,password_hash,verified) VALUES (%s,%s,%s,%s)",
+            (user_id, email, pw_hash, 0)
+        )
+        cur.execute(
+            "INSERT INTO email_verifications (user_id, token_hash, expires_at, created_at) VALUES (%s,%s,%s,NOW())",
+            (user_id, token_hash, datetime.utcnow() + timedelta(hours=24))
+        )
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print("[register] DB error")
+        return None, "db_error"
+    finally:
+        db.close()
 
-    commit(db)
+    verify_link = f"{Config.FRONTEND_URL}/verify/{raw_token}"
 
-    verify_link = f"{Config.FRONTEND_URL}/api/auth/verify/{raw_token}"
-
-    send_mail(email, "Verify your account", verify_link)
+    try:
+        send_mail(email, "Verify your account", verify_link)
+        print("[register] mail sent")
+    except Exception as e:
+        print(f"[register] mail error: {type(e).__name__}")
 
     return {"id": user_id}, None
 
@@ -93,22 +103,32 @@ def verify_email(token):
     row = cur.fetchone()
 
     if not row:
-        return False
+        db.close()
+        return "not_found"
 
     if row["expires_at"] < datetime.utcnow():
-        return False
+        db.close()
+        return "expired"
 
     cur.execute("UPDATE users SET verified=1 WHERE id=%s", (row["user_id"],))
     cur.execute("DELETE FROM email_verifications WHERE user_id=%s", (row["user_id"],))
 
-    commit(db)
-    return True
+    db.commit()
+    db.close()
+    return "ok"
 
 
-def login_user(email, password, ip, user_agent, device_id):
+# Dummy hash used to prevent timing-based email enumeration
+_DUMMY_HASH = "$2b$12$invalidhashfortimingXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+
+
+def login_user(email, password, ip, user_agent, device_id, remember_me=False):
     user = get_user(email)
 
-    if not user or not verify_password(password, user["password_hash"]):
+    check_hash = user["password_hash"] if user else _DUMMY_HASH
+    password_ok = verify_password(password, check_hash)
+
+    if not user or not password_ok:
         return None, "invalid_credentials"
 
     if int(user["verified"]) != 1:
@@ -117,14 +137,16 @@ def login_user(email, password, ip, user_agent, device_id):
     access = create_access_token(user["id"])
     refresh = generate_refresh_token()
 
+    ttl = timedelta(days=7) if remember_me else timedelta(hours=24)
+
     db = get_db()
     cur = db.cursor()
 
     cur.execute(
         """
         INSERT INTO refresh_tokens
-        (id,user_id,token_hash,family_id,device_id,ip_address,user_agent,expires_at,revoked)
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,0)
+        (id,user_id,token_hash,family_id,device_id,ip_address,user_agent,expires_at,revoked,remember_me)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,0,%s)
         """,
         (
             str(uuid.uuid4()),
@@ -134,15 +156,18 @@ def login_user(email, password, ip, user_agent, device_id):
             device_id,
             ip,
             user_agent,
-            datetime.utcnow() + timedelta(days=7)
+            datetime.utcnow() + ttl,
+            1 if remember_me else 0
         )
     )
 
-    commit(db)
+    db.commit()
+    db.close()
 
     return {
         "access_token": access,
-        "refresh_token": refresh
+        "refresh_token": refresh,
+        "remember_me": remember_me
     }, None
 
 
@@ -156,20 +181,24 @@ def refresh_tokens(refresh_token):
     row = cur.fetchone()
 
     if not row:
+        db.close()
         return None, "invalid_token"
 
     if row["expires_at"] < datetime.utcnow():
+        db.close()
         return None, "expired"
 
     cur.execute("UPDATE refresh_tokens SET revoked=1 WHERE token_hash=%s", (token_hash,))
 
     new_refresh = generate_refresh_token()
+    remember_me = bool(row.get("remember_me", 1))
+    ttl = timedelta(days=7) if remember_me else timedelta(hours=24)
 
     cur.execute(
         """
         INSERT INTO refresh_tokens
-        (id,user_id,token_hash,family_id,device_id,ip_address,user_agent,expires_at,revoked)
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,0)
+        (id,user_id,token_hash,family_id,device_id,ip_address,user_agent,expires_at,revoked,remember_me)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,0,%s)
         """,
         (
             str(uuid.uuid4()),
@@ -179,11 +208,13 @@ def refresh_tokens(refresh_token):
             row["device_id"],
             row["ip_address"],
             row["user_agent"],
-            datetime.utcnow() + timedelta(days=7)
+            datetime.utcnow() + ttl,
+            1 if remember_me else 0
         )
     )
 
-    commit(db)
+    db.commit()
+    db.close()
 
     return {
         "access_token": create_access_token(row["user_id"]),
@@ -195,7 +226,8 @@ def logout_user(refresh_token):
     db = get_db()
     cur = db.cursor()
     cur.execute("UPDATE refresh_tokens SET revoked=1 WHERE token_hash=%s", (hash_token(refresh_token),))
-    commit(db)
+    db.commit()
+    db.close()
 
 
 def request_password_reset(email):
@@ -206,38 +238,53 @@ def request_password_reset(email):
     db = get_db()
     cur = db.cursor()
 
-    token = str(uuid.uuid4())
+    raw_token = str(uuid.uuid4())
+    token_hash = hash_token(raw_token)
 
-    cur.execute(
-        "INSERT INTO password_resets (user_id, token, expires_at) VALUES (%s,%s,%s)",
-        (user["id"], token, datetime.utcnow() + timedelta(hours=1))
-    )
+    try:
+        cur.execute(
+            "INSERT INTO password_resets (user_id, token, expires_at) VALUES (%s,%s,%s)",
+            (user["id"], token_hash, datetime.utcnow() + timedelta(hours=1))
+        )
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print("[password_reset] DB error")
+        return
+    finally:
+        db.close()
 
-    commit(db)
-
-    link = f"{Config.FRONTEND_URL}/reset/{token}"
-    send_mail(email, "Reset password", link)
+    link = f"{Config.FRONTEND_URL}/reset/{raw_token}"
+    try:
+        send_mail(email, "Reset password", link)
+        print("[password_reset] mail sent")
+    except Exception as e:
+        print(f"[password_reset] mail error: {type(e).__name__}")
 
 
 def reset_password(token, new_password):
     db = get_db()
     cur = db.cursor()
 
-    cur.execute("SELECT user_id, expires_at FROM password_resets WHERE token=%s", (token.strip(),))
+    token_hash = hash_token(token.strip())
+    cur.execute("SELECT user_id, expires_at FROM password_resets WHERE token=%s", (token_hash,))
     row = cur.fetchone()
 
     if not row:
+        db.close()
         return {"status": "invalid"}
 
     if row["expires_at"] < datetime.utcnow():
+        db.close()
         return {"status": "expired"}
 
     cur.execute(
         "UPDATE users SET password_hash=%s WHERE id=%s",
         (hash_password(new_password), row["user_id"])
     )
-
+    cur.execute("UPDATE refresh_tokens SET revoked=1 WHERE user_id=%s", (row["user_id"],))
     cur.execute("DELETE FROM password_resets WHERE user_id=%s", (row["user_id"],))
 
-    commit(db)
+    db.commit()
+    db.close()
     return {"status": "success"}

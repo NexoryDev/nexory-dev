@@ -6,7 +6,8 @@ from app.profile.service import (
     serialize_user,
     update_user,
     get_user_and_refresh_token,
-    delete_user_account
+    delete_user_account,
+    change_password
 )
 
 profile_bp = Blueprint("profile", __name__)
@@ -87,3 +88,30 @@ def delete_me():
         return jsonify({"error": "delete_failed"}), 400
 
     return jsonify({"status": "deleted"})
+
+
+@profile_bp.route("/me/password", methods=["POST", "OPTIONS"])
+def update_password():
+    if request.method == "OPTIONS":
+        return "", 204
+
+    user_id = extract_user_id()
+
+    if not user_id:
+        return jsonify({"error": "invalid_token"}), 401
+
+    if not request.is_json:
+        return jsonify({"error": "invalid_content_type"}), 415
+
+    data = request.get_json()
+    password = data.get("password", "")
+
+    if not password or len(password) < 6:
+        return jsonify({"error": "weak_password"}), 400
+
+    success = change_password(user_id, password)
+
+    if not success:
+        return jsonify({"error": "update_failed"}), 400
+
+    return jsonify({"status": "updated"})

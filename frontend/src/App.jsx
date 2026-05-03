@@ -18,6 +18,8 @@ import Settings from "./pages/profile/Settings";
 import Products from "./pages/profile/Products";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import AccountLayout from "./pages/profile/AccountLayout";
+import VerifyEmail from "./pages/VerifyEmail";
+import ResetPassword from "./pages/ResetPassword";
 
 const MIN_PRELOADER_MS = 700;
 const BOOTSTRAP_TIMEOUT_MS = 4000;
@@ -83,6 +85,8 @@ function AppContent() {
           <Route path="/imprint" element={<Imprint />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/verify/:token" element={<VerifyEmail />} />
+          <Route path="/reset/:token" element={<ResetPassword />} />
 
           <Route
             path="/me"

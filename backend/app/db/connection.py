@@ -9,5 +9,5 @@ def get_db():
         password=Config.DB_PASSWORD,
         database=Config.DB_NAME,
         cursorclass=pymysql.cursors.DictCursor,
-        autocommit=True
+        autocommit=False
     )

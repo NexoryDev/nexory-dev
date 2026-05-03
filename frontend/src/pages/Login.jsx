@@ -11,13 +11,10 @@ export default function Login() {
   const location = useLocation();
   const { setToken } = useAuth();
 
-  const API = "http://localhost:5000";
-
   const [mode, setMode] = useState("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [verifyToken, setVerifyToken] = useState(null);
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
@@ -39,7 +36,7 @@ export default function Login() {
 
   async function api(path, body) {
     try {
-      const res = await fetch(`${API}${path}`, {
+      const res = await fetch(path, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -84,7 +81,7 @@ export default function Login() {
     });
 
     if (res.access_token) {
-      await setToken(res.access_token);
+      await setToken(res.access_token, rememberMe);
       navigate("/me", { replace: true });
     } else {
       setFormError(res.error || t("login.login_failed"));
@@ -123,7 +120,7 @@ export default function Login() {
     });
 
     if (res.status === "ok") {
-      setFormSuccess("Reset email sent");
+      setFormSuccess(t("login.reset_email_sent"));
       setResetStep(false);
       setMode("login");
     } else {
@@ -134,16 +131,15 @@ export default function Login() {
   }
 
   async function verify(tokenFromUrl) {
-    const token = tokenFromUrl || verifyToken;
+    const token = tokenFromUrl;
 
     if (!token) return;
 
     try {
-      const res = await fetch(`${API}/api/auth/verify/${token}`);
+      const res = await fetch(`/api/auth/verify/${token}`);
       const data = await res.json().catch(() => ({}));
 
       if (data.status === "verified") {
-        setVerifyToken(null);
         setFormSuccess(t("login.verified"));
         setMode("login");
       } else {
@@ -157,7 +153,6 @@ export default function Login() {
   useEffect(() => {
     const params = location.pathname.split("/verify/");
     if (params[1]) {
-      setVerifyToken(params[1]);
       verify(params[1]);
     }
   }, []);
@@ -168,7 +163,7 @@ export default function Login() {
 
         <h1>
           {resetStep
-            ? "Reset Password"
+            ? t("login.forgot_password_header")
             : mode === "login"
               ? t("login.login_header")
               : t("login.register_header")}
@@ -230,7 +225,7 @@ export default function Login() {
                 className="link-btn"
                 onClick={() => setResetStep(true)}
               >
-                Forgot Password
+                {t("login.forgot_password")}
               </button>
             )}
 
@@ -249,20 +244,20 @@ export default function Login() {
         ) : (
           <>
             <input
-              placeholder="Email"
+              placeholder={t("login.mail")}
               value={resetEmail}
               onChange={(e) => setResetEmail(e.target.value)}
             />
 
             <button onClick={requestReset} disabled={loading}>
-              {loading ? "..." : "Send reset link"}
+              {loading ? "..." : t("login.send_reset")}
             </button>
 
             <button
               className="link-btn"
               onClick={() => setResetStep(false)}
             >
-              Back
+              {t("login.back")}
             </button>
           </>
         )}

@@ -6,7 +6,8 @@ from app.auth.service import (
     register_user,
     verify_email,
     request_password_reset,
-    reset_password
+    reset_password,
+    get_current_user
 )
 from app.config import Config
 
@@ -36,6 +37,22 @@ def clear_refresh_cookie(response):
     )
 
 
+@auth_bp.route("/me", methods=["GET"])
+def me():
+    auth_header = request.headers.get("Authorization")
+
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return jsonify({"error": "missing_token"}), 401
+
+    token = auth_header.split(" ")[1]
+    user = get_current_user(token)
+
+    if not user:
+        return jsonify({"error": "invalid_token"}), 401
+
+    return jsonify(user)
+
+
 @auth_bp.route("/register", methods=["POST"])
 def register():
     data = request.get_json() or {}
@@ -56,9 +73,6 @@ def register():
 
 @auth_bp.route("/verify/<token>", methods=["GET"])
 def verify(token):
-    if not token:
-        return jsonify({"error": "no token"}), 400
-
     ok = verify_email(token)
 
     if not ok:
@@ -139,12 +153,12 @@ def password_reset(token):
     data = request.get_json() or {}
     password = data.get("password")
 
-    if not password:
-        return jsonify({"error": "missing_password"}), 400
+    if not password or len(password) < 6:
+        return jsonify({"error": "weak_password"}), 400
 
-    ok = reset_password(token, password)
+    result = reset_password(token, password)
 
-    if not ok:
-        return jsonify({"error": "invalid_or_expired"}), 400
+    if result.get("status") != "success":
+        return jsonify({"error": result.get("status")}), 400
 
     return jsonify({"status": "password_updated"})

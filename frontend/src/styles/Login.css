@@ -33,10 +33,24 @@
   color: #ff5f57;
   font-size: 0.85rem;
   text-align: center;
-  margin-top: 6px;
+  background: rgba(255, 95, 87, 0.08);
+  border: 1px solid rgba(255, 95, 87, 0.25);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.form-success {
+  color: #3fb950;
+  font-size: 0.85rem;
+  text-align: center;
+  background: rgba(63, 185, 80, 0.08);
+  border: 1px solid rgba(63, 185, 80, 0.25);
+  border-radius: 8px;
+  padding: 8px 12px;
 }
 
 .login-box input {
+  width: 100%;
   padding: 10px;
   border-radius: 8px;
   border: 1px solid rgba(255,255,255,0.1);
@@ -97,6 +111,22 @@
 .login-box button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  user-select: none;
+}
+
+.remember input[type="checkbox"] {
+  width: auto;
+  accent-color: #58a6ff;
+  cursor: pointer;
 }
 
 .switch {

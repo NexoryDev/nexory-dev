@@ -26,12 +26,13 @@ const Settings = () => {
   const { t } = useLanguage();
 
   const getAccessToken = () => {
-    return localStorage.getItem("access_token");
+    return localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
   };
 
   const saveNewAccessToken = (accessToken) => {
     if (!accessToken) return;
-    localStorage.setItem("access_token", accessToken);
+    const storage = localStorage.getItem("remember_me") === "1" ? localStorage : sessionStorage;
+    storage.setItem("access_token", accessToken);
   };
 
   const loadUser = async () => {

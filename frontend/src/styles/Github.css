@@ -140,9 +140,9 @@
 
 .gh-repo-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    max-width: 760px;
-    gap: 1.5rem;
+    grid-template-columns: 1fr 1fr;
+    max-width: 900px;
+    gap: 1rem;
 }
 
 .gh-repo-stats {
@@ -172,20 +172,39 @@
 .gh-repo-card {
     background: var(--color-bg-surface-2);
     border: 1px solid var(--color-border);
-    border-radius: 12px;
-    padding: 1.75rem;
+    border-radius: 14px;
+    padding: 1.5rem;
     text-decoration: none;
     color: inherit;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
     align-items: flex-start;
+    position: relative;
+    overflow: hidden;
+}
+
+.gh-repo-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #58a6ff, #a78bfa);
+    opacity: 0;
+    transition: opacity 0.25s;
+}
+
+.gh-repo-card:hover::before {
+    opacity: 1;
 }
 
 .gh-repo-card:hover {
-    border-color: var(--color-accent);
-    box-shadow: 0 0 12px rgba(88,166,255,0.1);
+    border-color: rgba(88,166,255,0.35);
+    box-shadow: 0 8px 32px rgba(88,166,255,0.1), 0 2px 8px rgba(0,0,0,0.4);
+    transform: translateY(-2px);
 }
 
 .gh-repo-name  {

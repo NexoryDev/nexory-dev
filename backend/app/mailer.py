@@ -1,25 +1,30 @@
-import smtplib
-import ssl
-from email.mime.text import MIMEText
+import urllib.request
+import urllib.error
+import json
 from email.utils import parseaddr
 from app.config import Config
 
 
 def send_mail(to, subject, content):
-    msg = MIMEText(content, "plain", "utf-8")
-    msg["Subject"] = subject
-    msg["From"] = Config.MAIL_FROM
-    msg["To"] = to
+    _, from_addr = parseaddr(Config.MAIL_FROM)
 
-    _, envelope_from = parseaddr(Config.MAIL_FROM)
+    payload = json.dumps({
+        "from": Config.MAIL_FROM.strip('"'),
+        "to": [to],
+        "subject": subject,
+        "text": content,
+    }).encode("utf-8")
 
-    server = smtplib.SMTP(Config.MAIL_HOST, Config.MAIL_PORT, timeout=10)
-    server.ehlo()
+    req = urllib.request.Request(
+        "https://api.resend.com/emails",
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {Config.MAIL_PASSWORD}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
 
-    if Config.MAIL_TLS:
-        server.starttls(context=ssl.create_default_context())
-        server.ehlo()
-
-    server.login(Config.MAIL_USER, Config.MAIL_PASSWORD)
-    server.sendmail(envelope_from, to, msg.as_string())
-    server.quit()
+    with urllib.request.urlopen(req, timeout=10) as res:
+        if res.status not in (200, 201):
+            raise RuntimeError(f"Resend API error: {res.status}")

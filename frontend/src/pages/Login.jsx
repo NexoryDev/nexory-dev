@@ -1,14 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
 import "../styles/Login.css";
 
 export default function Login() {
   const { t, language } = useLanguage();
   const navigate = useNavigate();
-  const location = useLocation();
   const { setToken } = useAuth();
 
   const [mode, setMode] = useState("login");
@@ -94,7 +93,11 @@ export default function Login() {
       await setToken(res.access_token, rememberMe);
       navigate("/me", { replace: true });
     } else {
-      setFormError(res.error || t("login.login_failed"));
+      const errorMessages = {
+        email_not_verified: t("login.email_not_verified"),
+        invalid_credentials: t("login.login_failed"),
+      };
+      setFormError(errorMessages[res.error] || t("login.login_failed"));
     }
 
     setLoading(false);
@@ -147,33 +150,6 @@ export default function Login() {
 
     setLoading(false);
   }
-
-  async function verify(tokenFromUrl) {
-    const token = tokenFromUrl;
-
-    if (!token) return;
-
-    try {
-      const res = await fetch(`/api/auth/verify/${token}`);
-      const data = await res.json().catch(() => ({}));
-
-      if (data.status === "verified") {
-        setFormSuccess(t("login.verified"));
-        setMode("login");
-      } else {
-        setFormError(t("login.verify_failed"));
-      }
-    } catch {
-      setFormError(t("login.network_error"));
-    }
-  }
-
-  useEffect(() => {
-    const params = location.pathname.split("/verify/");
-    if (params[1]) {
-      verify(params[1]);
-    }
-  }, []);
 
   return (
     <div className="login-hero">

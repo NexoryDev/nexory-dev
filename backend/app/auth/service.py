@@ -259,7 +259,7 @@ def request_password_reset(email):
         send_mail(email, "Reset password", link)
         print("[password_reset] mail sent")
     except Exception as e:
-        print(f"[password_reset] mail error: {type(e).__name__}")
+        print(f"[password_reset] mail error: {type(e).__name__}: {e}")
 
 
 def reset_password(token, new_password):

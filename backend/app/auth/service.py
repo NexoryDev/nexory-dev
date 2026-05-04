@@ -88,7 +88,7 @@ def register_user(email, password):
         send_mail(email, "Verify your account", verify_link)
         print("[register] mail sent")
     except Exception as e:
-        print(f"[register] mail error: {type(e).__name__}")
+        print(f"[register] mail error: {type(e).__name__}: {e}")
 
     return {"id": user_id}, None
 

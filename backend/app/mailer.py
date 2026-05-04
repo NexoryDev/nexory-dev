@@ -1,6 +1,7 @@
 import smtplib
 import ssl
 from email.mime.text import MIMEText
+from email.utils import parseaddr
 from app.config import Config
 
 
@@ -10,6 +11,8 @@ def send_mail(to, subject, content):
     msg["From"] = Config.MAIL_FROM
     msg["To"] = to
 
+    _, envelope_from = parseaddr(Config.MAIL_FROM)
+
     server = smtplib.SMTP(Config.MAIL_HOST, Config.MAIL_PORT, timeout=10)
     server.ehlo()
 
@@ -18,5 +21,5 @@ def send_mail(to, subject, content):
         server.ehlo()
 
     server.login(Config.MAIL_USER, Config.MAIL_PASSWORD)
-    server.sendmail(Config.MAIL_FROM, to, msg.as_string())
+    server.sendmail(envelope_from, to, msg.as_string())
     server.quit()

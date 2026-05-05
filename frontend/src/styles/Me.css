@@ -305,13 +305,17 @@
   border-color: rgba(63, 185, 80, 0.95);
 }
 
+.settings-content .settings-section .settings-save-btn:hover {
+  background: linear-gradient(180deg, #2ea043, #238636);
+}
+
 .settings-password-btn {
   border-color: rgba(88, 166, 255, 0.95) !important;
   box-shadow: inset 0 0 0 1px rgba(88, 166, 255, 0.2);
 }
 
-.settings-content .settings-section .settings-save-btn:hover {
-  background: linear-gradient(180deg, #2ea043, #238636);
+.settings-password-btn:hover {
+  background: linear-gradient(180deg, #58a6fff2, #58a7fff2);
 }
 
 .danger-zone {

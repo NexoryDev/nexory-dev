@@ -4,6 +4,7 @@ import { LanguageProvider } from './context/LanguageContext';
 import { AuthProvider, useAuth } from "./auth/AuthProvider";
 import ScrollToTop from './components/ScrollToTop';
 import Navbar from './components/Navbar';
+import ProfileNavbar from './components/ProfileNavbar';
 import Footer from './components/Footer';
 import Preloader from './components/Preloader';
 import Home from './pages/Home';
@@ -20,6 +21,7 @@ import ProtectedRoute from "./auth/ProtectedRoute";
 import AccountLayout from "./pages/profile/AccountLayout";
 import VerifyEmail from "./pages/VerifyEmail";
 import ResetPassword from "./pages/ResetPassword";
+import UserProfile from "./pages/user/UserProfile";
 
 const MIN_PRELOADER_MS = 700;
 const BOOTSTRAP_TIMEOUT_MS = 4000;
@@ -37,7 +39,7 @@ function fetchGitHubBootstrap() {
 }
 
 function AppContent() {
-  const { loading } = useAuth();
+  const { loading, user } = useAuth();
   const [ready, setReady] = useState(false);
   const [githubBootstrap, setGithubBootstrap] = useState({ data: null, error: false });
 
@@ -72,7 +74,7 @@ function AppContent() {
     <BrowserRouter>
       <ScrollToTop />
       <div id="page" style={{ opacity: 1, transition: 'opacity 0.4s ease' }}>
-        <Navbar />
+        {user ? <ProfileNavbar /> : <Navbar />}
 
         <Routes>
           <Route path="/" element={<Home />} />
@@ -100,7 +102,7 @@ function AppContent() {
             <Route path="products" element={<Products />} />
             <Route path="settings" element={<Settings />} />
           </Route>
-
+          <Route path="/user/:username" element={<UserProfile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
 

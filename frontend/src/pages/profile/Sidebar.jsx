@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { SvgProfile, SvgSettings, SvgProducts } from "../../components/svgs";
+import { SvgProfile, SvgSettings, SvgProducts } from "../../components/icons/svgs";
 import { useLanguage } from "../../context/LanguageContext";
 import "../../styles/Me.css"
 

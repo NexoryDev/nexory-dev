@@ -115,3 +115,30 @@ def update_password():
         return jsonify({"error": "update_failed"}), 400
 
     return jsonify({"status": "updated"})
+
+
+@profile_bp.route("/me/badges/sync", methods=["POST", "OPTIONS"])
+def sync_badges_route():
+    if request.method == "OPTIONS":
+        return "", 204
+
+    user_id = extract_user_id()
+    if not user_id:
+        return jsonify({"error": "invalid_token"}), 401
+
+    from app.profile.badges import sync_badges
+    badges, newly_earned = sync_badges(user_id)
+
+    if badges is None:
+        return jsonify({"error": "sync_failed"}), 500
+
+    return jsonify({"badges": badges, "newly_earned": list(newly_earned)})
+
+
+@profile_bp.route("/public/<username>", methods=["GET"])
+def public_profile(username):
+    from app.profile.badges import get_public_profile
+    data = get_public_profile(username)
+    if not data:
+        return jsonify({"error": "not_found"}), 404
+    return jsonify(data)

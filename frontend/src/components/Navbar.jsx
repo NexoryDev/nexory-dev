@@ -35,10 +35,6 @@ export default function Navbar() {
     }
   }
 
-  if (location.pathname.startsWith('/me')) {
-    return null;
-  }
-
   return (
     <nav className={`navebar${scrolled ? ' scrolled' : ''}`}>
       <div className="logo-container">

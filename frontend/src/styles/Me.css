@@ -1,14 +1,15 @@
 .me-layout {
   display: flex;
   width: 100%;
-  min-height: calc(100vh - 100px);
+  min-height: calc(100vh - 58px);
+  margin-top: 58px;
   background: #010409;
 }
 
 .me-sidebar {
   margin-top: 0;
   width: 296px;
-  min-height: calc(100vh - 100px);
+  min-height: calc(100vh - 58px);
   border-right: 1px solid #30363d;
   background: #010409;
   overflow: hidden;
@@ -500,4 +501,315 @@
     margin-right: 0;
     margin-bottom: 10px;
   }
+}
+
+/* Badge Cards (Settings) */
+.badge-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.badge-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s, background 0.2s;
+  width: 100%;
+}
+
+.badge-card:hover {
+  background: #161b22;
+  border-color: #58a6ff;
+}
+
+.badge-card-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.badge-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.badge-card-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f0f6fc;
+}
+
+.badge-card-rarity {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.badge-card-rarity[data-rarity="legendary"] { background: rgba(245,158,11,0.15); color: #f59e0b; }
+.badge-card-rarity[data-rarity="epic"]      { background: rgba(236,72,153,0.15); color: #ec4899; }
+.badge-card-rarity[data-rarity="rare"]      { background: rgba(139,92,246,0.15); color: #8b5cf6; }
+.badge-card-rarity[data-rarity="common"]    { background: rgba(16,185,129,0.15); color: #10b981; }
+
+.badge-section-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.settings-badge-sync-btn {
+  background: #010409 !important;
+  border-color: rgba(88, 166, 255, 0.85) !important;
+  min-width: 160px;
+}
+
+.settings-badge-sync-btn:hover:not(:disabled) {
+  background: #0a0f16 !important;
+}
+
+.badge-profile-link {
+  font-size: 14px;
+  color: #58a6ff;
+  text-decoration: none;
+}
+
+.badge-profile-link:hover {
+  text-decoration: underline;
+}
+
+.badge-detail-modal {
+  overflow: hidden;
+}
+
+.badge-detail-header {
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-detail-initial {
+  font-size: 40px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.badge-modal-profile-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #010409;
+  border: 1px solid rgba(88, 166, 255, 0.85);
+  color: #58a6ff;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.badge-modal-profile-btn:hover {
+  background: #0a0f16;
+}
+
+.settings-success {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: rgba(63, 185, 80, 0.1);
+  border: 1px solid rgba(63, 185, 80, 0.3);
+  color: #3fb950;
+  font-size: 13px;
+}
+
+.me-email {
+  margin: 2px 0 0;
+  color: #8b949e;
+  font-size: 14px;
+}
+
+.me-section {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid #30363d;
+}
+
+.me-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.me-section-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #f0f6fc;
+}
+
+.me-section-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.me-profile-link {
+  font-size: 13px;
+  color: #58a6ff;
+  text-decoration: none;
+}
+
+.me-profile-link:hover {
+  text-decoration: underline;
+}
+
+.me-sync-btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(88, 166, 255, 0.7);
+  background: transparent;
+  color: #58a6ff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.me-sync-btn:hover:not(:disabled) {
+  background: rgba(88, 166, 255, 0.08);
+  border-color: #58a6ff;
+}
+
+.me-sync-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.me-sync-msg {
+  margin: 0 0 14px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: rgba(63, 185, 80, 0.08);
+  border: 1px solid rgba(63, 185, 80, 0.25);
+  color: #3fb950;
+  font-size: 13px;
+}
+
+.me-empty {
+  color: #8b949e;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Badge Detail Modal (Me.jsx) */
+.badge-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 17, 23, 0.72);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 400;
+}
+
+.badge-modal {
+  width: 100%;
+  max-width: 420px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+}
+
+.badge-modal-hero {
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-modal-initial {
+  font-size: 48px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.badge-modal-body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.badge-modal-name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #f0f6fc;
+}
+
+.badge-modal-desc {
+  margin: 4px 0 0;
+  color: #8b949e;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.badge-modal-date {
+  margin: 2px 0 0;
+  color: #6e7681;
+  font-size: 13px;
+}
+
+.badge-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 20px;
+  border-top: 1px solid #30363d;
+}
+
+.badge-modal-close-btn {
+  padding: 7px 16px;
+  border-radius: 6px;
+  border: 1px solid #30363d;
+  background: #21262d;
+  color: #c9d1d9;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.badge-modal-close-btn:hover {
+  background: #2d333b;
+  border-color: #8b949e;
 }

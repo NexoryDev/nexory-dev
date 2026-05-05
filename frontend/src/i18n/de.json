@@ -154,5 +154,25 @@
   "reset.failed": "Der Link ist ungültig oder abgelaufen.",
   "reset.weak_password": "Passwort muss mindestens 6 Zeichen haben.",
   "reset.passwords_dont_match": "Passwörter stimmen nicht überein.",
-  "reset.back_to_login": "Zur Anmeldung"
+  "reset.back_to_login": "Zur Anmeldung",
+
+  "badge.rarity.legendary": "Legendary",
+  "badge.rarity.epic": "Epic",
+  "badge.rarity.rare": "Rare",
+  "badge.rarity.common": "Common",
+  "badge.earned_at": "Erhalten am",
+  "badge.close": "Schließen",
+
+  "account.me.badges_loading": "Badges werden geladen\u2026",
+  "account.me.badges_empty": "Noch keine Badges verdient.",
+  "account.me.public_profile": "\u00d6ffentliches Profil \u2192",
+
+  "profile.loading": "Profil wird geladen\u2026",
+  "profile.not_found": "Dieses Profil existiert nicht.",
+  "profile.back": "Zur\u00fcck",
+  "profile.member_since": "Mitglied seit",
+  "profile.section.badges": "Badges",
+  "profile.badges_empty": "Noch keine Badges verdient.",
+  "profile.copy_link": "Profil-Link teilen",
+  "profile.link_copied": "Link kopiert"
 }

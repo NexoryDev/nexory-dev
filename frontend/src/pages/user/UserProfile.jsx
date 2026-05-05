@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../../styles/UserProfile.css";
+import { useLanguage } from "../../context/LanguageContext";
 
-const RARITY_LABEL = {
-  legendary: "Legendary",
-  epic: "Epic",
-  rare: "Rare",
-  common: "Common",
+const RARITY_GLOW = {
+  legendary: "rgba(245,158,11,0.35)",
+  epic:      "rgba(236,72,153,0.35)",
+  rare:      "rgba(139,92,246,0.35)",
+  common:    "rgba(16,185,129,0.25)",
 };
 
-/* ── Per-badge SVG icons ─────────────────────────────────────── */
 function BadgeIcon({ id, color }) {
   const props = {
     width: 28,
@@ -29,7 +29,6 @@ function BadgeIcon({ id, color }) {
               <stop offset="100%" stopColor="#f59e0b" />
             </radialGradient>
           </defs>
-          {/* Rocket */}
           <path
             d="M12 2C9 5.5 7.5 9 7.5 13a4.5 4.5 0 009 0C16.5 9 15 5.5 12 2z"
             fill="url(#grad-ea)"
@@ -50,7 +49,6 @@ function BadgeIcon({ id, color }) {
               <stop offset="100%" stopColor="#8b5cf6" />
             </linearGradient>
           </defs>
-          {/* Hourglass */}
           <path
             d="M6 3h12v4l-4 5 4 5v4H6v-4l4-5-4-5V3z"
             fill="url(#grad-wl)"
@@ -71,7 +69,6 @@ function BadgeIcon({ id, color }) {
               <stop offset="100%" stopColor="#ec4899" />
             </linearGradient>
           </defs>
-          {/* Git merge / branch */}
           <circle cx="6" cy="6" r="2.5" fill="url(#grad-nc)" />
           <circle cx="18" cy="6" r="2.5" fill="url(#grad-nc)" />
           <circle cx="12" cy="18" r="2.5" fill="url(#grad-nc)" />
@@ -90,7 +87,6 @@ function BadgeIcon({ id, color }) {
               <stop offset="100%" stopColor="#10b981" />
             </linearGradient>
           </defs>
-          {/* Shield + checkmark */}
           <path
             d="M12 2L4 5.5V11c0 4.4 3.4 8.5 8 9.5 4.6-1 8-5.1 8-9.5V5.5L12 2z"
             fill="url(#grad-vd)"
@@ -117,17 +113,10 @@ function BadgeIcon({ id, color }) {
   }
 }
 
-/* ── Rarity glow colors ──────────────────────────────────────── */
-const RARITY_GLOW = {
-  legendary: "rgba(245,158,11,0.35)",
-  epic:      "rgba(236,72,153,0.35)",
-  rare:      "rgba(139,92,246,0.35)",
-  common:    "rgba(16,185,129,0.25)",
-};
-
 export default function UserProfile() {
   const { username } = useParams();
   const navigate = useNavigate();
+  const { t, language } = useLanguage();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
@@ -158,7 +147,7 @@ export default function UserProfile() {
       <div className="up-hero">
         <div className="up-loading-wrap">
           <div className="up-spinner" />
-          <p className="up-loading-text">Profil wird geladen…</p>
+          <p className="up-loading-text">{t("profile.loading")}</p>
         </div>
       </div>
     );
@@ -173,9 +162,9 @@ export default function UserProfile() {
             <path d="M9 9h.01M15 9h.01" stroke="#6e7681" strokeWidth="2" strokeLinecap="round" />
             <path d="M8 15s1.5-2 4-2 4 2 4 2" stroke="#6e7681" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
-          <p>Dieses Profil existiert nicht.</p>
+          <p>{t("profile.not_found")}</p>
           <button className="up-back-btn" onClick={() => navigate(-1)}>
-            ← Zurück
+            ← {t("profile.back")}
           </button>
         </div>
       </div>
@@ -183,10 +172,10 @@ export default function UserProfile() {
   }
 
   const memberSince = profile.member_since
-    ? new Date(profile.member_since).toLocaleDateString("de-DE", {
-        month: "long",
-        year: "numeric",
-      })
+    ? new Date(profile.member_since).toLocaleDateString(
+        language === "de" ? "de-DE" : "en-US",
+        { month: "long", year: "numeric" }
+      )
     : null;
 
   return (
@@ -197,7 +186,7 @@ export default function UserProfile() {
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
             <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          Zurück
+          {t("profile.back")}
         </button>
 
         {/* ── Header ── */}
@@ -217,7 +206,7 @@ export default function UserProfile() {
                   <rect x="2" y="3" width="12" height="11" rx="2" stroke="currentColor" strokeWidth="1.4" />
                   <path d="M5 1v3M11 1v3M2 7h12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
                 </svg>
-                Mitglied seit {memberSince}
+                {t("profile.member_since")} {memberSince}
               </p>
             )}
             {profile.badges.length > 0 && (
@@ -236,10 +225,10 @@ export default function UserProfile() {
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
               <path d="M8 1l1.8 3.6L14 5.6l-3 2.9.7 4.1L8 10.4l-3.7 2.2.7-4.1L2 5.6l4.2-.9L8 1z" fill="currentColor" />
             </svg>
-            Badges
+            {t("profile.section.badges")}
           </h2>
           {profile.badges.length === 0 ? (
-            <p className="up-empty">Noch keine Badges verdient.</p>
+            <p className="up-empty">{t("profile.badges_empty")}</p>
           ) : (
             <div className="up-badges-grid">
               {profile.badges.map((b) => (
@@ -258,7 +247,7 @@ export default function UserProfile() {
                   <div className="up-badge-body">
                     <span className="up-badge-name">{b.name}</span>
                     <span className="up-rarity" data-rarity={b.rarity}>
-                      {RARITY_LABEL[b.rarity] ?? b.rarity}
+                      {t(`badge.rarity.${b.rarity}`) ?? b.rarity}
                     </span>
                   </div>
                   <svg className="up-badge-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
@@ -278,14 +267,14 @@ export default function UserProfile() {
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
                   <path d="M3 8l4 4 6-7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                Link kopiert
+                {t("profile.link_copied")}
               </>
             ) : (
               <>
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
                   <path d="M10 3H13v3M13 3l-6 6M7 5H3v8h8V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                Profil-Link teilen
+                {t("profile.copy_link")}
               </>
             )}
           </button>
@@ -314,7 +303,7 @@ export default function UserProfile() {
               <div className="up-modal-title-row">
                 <h3 className="up-modal-name">{activeBadge.name}</h3>
                 <span className="up-rarity" data-rarity={activeBadge.rarity}>
-                  {RARITY_LABEL[activeBadge.rarity] ?? activeBadge.rarity}
+                  {t(`badge.rarity.${activeBadge.rarity}`) ?? activeBadge.rarity}
                 </span>
               </div>
               <p className="up-modal-desc">{activeBadge.description}</p>
@@ -324,17 +313,16 @@ export default function UserProfile() {
                     <rect x="2" y="3" width="12" height="11" rx="2" stroke="currentColor" strokeWidth="1.4" />
                     <path d="M5 1v3M11 1v3M2 7h12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
                   </svg>
-                  Erhalten am{" "}
-                  {new Date(activeBadge.earned_at).toLocaleDateString("de-DE", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
+                  {t("badge.earned_at")}{" "}
+                  {new Date(activeBadge.earned_at).toLocaleDateString(
+                    language === "de" ? "de-DE" : "en-US",
+                    { day: "numeric", month: "long", year: "numeric" }
+                  )}
                 </p>
               )}
             </div>
             <div className="up-modal-actions">
-              <button onClick={() => setActiveBadge(null)}>Schließen</button>
+              <button onClick={() => setActiveBadge(null)}>{t("badge.close")}</button>
             </div>
           </div>
         </div>

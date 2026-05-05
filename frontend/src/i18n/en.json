@@ -155,5 +155,25 @@
   "reset.failed": "The link is invalid or has expired.",
   "reset.weak_password": "Password must be at least 6 characters.",
   "reset.passwords_dont_match": "Passwords do not match.",
-  "reset.back_to_login": "Back to login"
+  "reset.back_to_login": "Back to login",
+
+  "badge.rarity.legendary": "Legendary",
+  "badge.rarity.epic": "Epic",
+  "badge.rarity.rare": "Rare",
+  "badge.rarity.common": "Common",
+  "badge.earned_at": "Earned on",
+  "badge.close": "Close",
+
+  "account.me.badges_loading": "Loading badges\u2026",
+  "account.me.badges_empty": "No badges earned yet.",
+  "account.me.public_profile": "Public profile \u2192",
+
+  "profile.loading": "Loading profile\u2026",
+  "profile.not_found": "This profile does not exist.",
+  "profile.back": "Back",
+  "profile.member_since": "Member since",
+  "profile.section.badges": "Badges",
+  "profile.badges_empty": "No badges earned yet.",
+  "profile.copy_link": "Share profile link",
+  "profile.link_copied": "Link copied"
 }

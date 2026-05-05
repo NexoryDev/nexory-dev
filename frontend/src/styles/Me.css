@@ -813,3 +813,157 @@
   background: #2d333b;
   border-color: #8b949e;
 }
+
+/* === NEW Badge Grid (SVG icons) === */
+.me-badges-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #8b949e;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.me-badges-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #30363d;
+  border-top-color: #58a6ff;
+  border-radius: 50%;
+  animation: me-spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes me-spin {
+  to { transform: rotate(360deg); }
+}
+
+.me-badge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 10px;
+}
+
+.me-badge-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  width: 100%;
+  position: relative;
+}
+
+.me-badge-card:hover {
+  background: #111820;
+  border-color: var(--badge-color, #58a6ff);
+  box-shadow: 0 0 16px var(--badge-glow, transparent);
+}
+
+.me-badge-icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.me-badge-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.me-badge-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f0f6fc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.me-badge-rarity {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.me-badge-rarity[data-rarity="legendary"] { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); }
+.me-badge-rarity[data-rarity="epic"]      { background: rgba(236,72,153,0.15); color: #ec4899; border: 1px solid rgba(236,72,153,0.25); }
+.me-badge-rarity[data-rarity="rare"]      { background: rgba(139,92,246,0.15); color: #8b5cf6; border: 1px solid rgba(139,92,246,0.25); }
+.me-badge-rarity[data-rarity="common"]    { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.25); }
+
+.me-badge-arrow {
+  color: #30363d;
+  flex-shrink: 0;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.me-badge-card:hover .me-badge-arrow {
+  color: var(--badge-color, #58a6ff);
+  transform: translateX(2px);
+}
+
+/* New Badge Modal (with SVG hero + glow) */
+.badge-modal-hero {
+  position: relative;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.badge-modal-hero[data-rarity="legendary"] { background: linear-gradient(160deg, #1a1200 0%, #0d1117 100%); }
+.badge-modal-hero[data-rarity="epic"]      { background: linear-gradient(160deg, #1a0010 0%, #0d1117 100%); }
+.badge-modal-hero[data-rarity="rare"]      { background: linear-gradient(160deg, #100d1a 0%, #0d1117 100%); }
+.badge-modal-hero[data-rarity="common"]    { background: linear-gradient(160deg, #001a10 0%, #0d1117 100%); }
+
+.badge-modal-icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 24px var(--badge-glow, transparent);
+}
+
+.badge-modal-icon-wrap svg {
+  width: 34px;
+  height: 34px;
+}
+
+.badge-modal-glow {
+  position: absolute;
+  inset: -20px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.badge-modal-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}

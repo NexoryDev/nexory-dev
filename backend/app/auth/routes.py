@@ -14,14 +14,16 @@ from app.config import Config
 auth_bp = Blueprint("auth", __name__)
 
 
-def set_refresh_cookie(response, token):
+def set_refresh_cookie(response, token, remember_me=False):
+    max_age = 7 * 24 * 60 * 60 if remember_me else None
     response.set_cookie(
         "refresh_token",
         token,
         httponly=True,
         secure=Config.COOKIE_SECURE,
         samesite=Config.COOKIE_SAMESITE,
-        path="/"
+        path="/",
+        max_age=max_age,
     )
 
 
@@ -104,7 +106,7 @@ def login():
         "remember_me": result["remember_me"]
     }))
 
-    set_refresh_cookie(res, result["refresh_token"])
+    set_refresh_cookie(res, result["refresh_token"], remember_me=remember_me)
     return res
 
 
@@ -124,7 +126,7 @@ def refresh():
         "access_token": result["access_token"]
     }))
 
-    set_refresh_cookie(res, result["refresh_token"])
+    set_refresh_cookie(res, result["refresh_token"], remember_me=result.get("remember_me", False))
     return res
 
 

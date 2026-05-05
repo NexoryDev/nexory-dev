@@ -218,7 +218,8 @@ def refresh_tokens(refresh_token):
 
     return {
         "access_token": create_access_token(row["user_id"]),
-        "refresh_token": new_refresh
+        "refresh_token": new_refresh,
+        "remember_me": remember_me,
     }, None
 
 

@@ -6,7 +6,7 @@ from app.auth.tokens import create_access_token, decode_access_token
 from app.security.hashing import hash_token, generate_refresh_token
 from app.security.password import hash_password, verify_password
 from app.config import Config
-from app.mailer import send_mail
+from app.mailer import send_verify_mail, send_reset_mail
 
 
 def get_user(email):
@@ -85,7 +85,7 @@ def register_user(email, password):
     verify_link = f"{Config.FRONTEND_URL}/verify/{raw_token}"
 
     try:
-        send_mail(email, "Verify your account", verify_link)
+        send_verify_mail(email, verify_link)
         print("[register] mail sent")
     except Exception as e:
         print(f"[register] mail error: {type(e).__name__}: {e}")
@@ -256,7 +256,7 @@ def request_password_reset(email):
 
     link = f"{Config.FRONTEND_URL}/reset/{raw_token}"
     try:
-        send_mail(email, "Reset password", link)
+        send_reset_mail(email, link)
         print("[password_reset] mail sent")
     except Exception as e:
         print(f"[password_reset] mail error: {type(e).__name__}: {e}")

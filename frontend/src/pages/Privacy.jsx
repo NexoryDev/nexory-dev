@@ -107,6 +107,7 @@ export default function Privacy() {
             <li><strong>Password</strong> — stored exclusively as a bcrypt hash (one-way). The plain-text password is never stored or logged.</li>
             <li><strong>Username and avatar URL</strong> — optional display name and profile picture URL, set by you in your account settings.</li>
             <li><strong>Account metadata</strong> — account creation timestamp, verification status, role.</li>
+            <li><strong>Badges</strong> — automatically assigned labels (e.g. "Early Adopter", "Verified Dev") derived from your account data, such as registration date and connected GitHub activity. Badges are stored as a JSON field in the database.</li>
           </ul>
           <p>
             Additionally, for login session management the following data is stored temporarily:
@@ -123,6 +124,13 @@ export default function Privacy() {
             <strong>Retention:</strong> Your account data is retained until you delete your
             account via the account settings. On deletion, all associated data (refresh tokens,
             pending email verifications, password-reset tokens) is permanently removed.
+          </p>
+          <p>
+            <strong>Public profiles:</strong> If you have set a username, a public profile page
+            is accessible at <code>/user/&lt;username&gt;</code> without login. This page displays
+            your username, avatar (if set), the month and year of your account registration, and
+            any badges you have earned. You can prevent public visibility by not setting a
+            username, or by removing it in your account settings.
           </p>
           <p>
             <strong>Email delivery:</strong> Transactional emails (account verification,
@@ -298,7 +306,7 @@ export default function Privacy() {
         </section>
 
         <footer className="legal-foot">
-          <p>Last updated: 3 May 2026</p>
+          <p>Last updated: 5 May 2026</p>
         </footer>
       </div>
     </main>

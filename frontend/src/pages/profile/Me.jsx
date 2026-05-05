@@ -143,7 +143,6 @@ const Me = () => {
     <div className="me-layout">
       <main className="me-content">
 
-        {/* Header */}
         <div className="me-header">
           <div className="avatar">
             {user.avatar ? (
@@ -158,7 +157,6 @@ const Me = () => {
           </div>
         </div>
 
-        {/* Badges */}
         <div className="me-section">
           <div className="me-section-header">
             <h3 className="me-section-title">{t("account.me.badges")}</h3>
@@ -268,7 +266,7 @@ const Me = () => {
                 {t("badge.close")}
               </button>
               {user.username ? (
-                <a href={`/u/${user.username}`} target="_blank" rel="noreferrer" className="badge-modal-profile-btn">
+                <a href={`/user/${user.username}`} target="_blank" rel="noreferrer" className="badge-modal-profile-btn">
                   {t("account.me.public_profile")}
                 </a>
               ) : null}

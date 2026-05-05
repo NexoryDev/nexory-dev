@@ -1,15 +1,24 @@
 import urllib.request
-import urllib.error
 import json
 from app.config import Config
 
 
-def send_mail(to, subject, content):
+def send_verify_mail(to, verify_link):
+    _send_template(to, Config.MAIL_TEMPLATE_VERIFY, {"LINK": verify_link})
+
+
+def send_reset_mail(to, reset_link):
+    _send_template(to, Config.MAIL_TEMPLATE_RESET, {"LINK": reset_link})
+
+
+def _send_template(to, template_id, variables):
     payload = json.dumps({
         "from": Config.MAIL_FROM,
         "to": [to],
-        "subject": subject,
-        "text": content,
+        "template": {
+            "id": template_id,
+            "variables": variables,
+        },
     }).encode("utf-8")
 
     req = urllib.request.Request(

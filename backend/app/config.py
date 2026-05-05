@@ -21,12 +21,10 @@ class Config:
     DB_PASSWORD = os.getenv("DB_PASSWORD")
     DB_NAME = os.getenv("DB_NAME")
 
-    MAIL_HOST = os.getenv("MAIL_HOST")
-    MAIL_PORT = int(os.getenv("MAIL_PORT", 587))
-    MAIL_USER = os.getenv("MAIL_USER")
     MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
     MAIL_FROM = os.getenv("MAIL_FROM")
-    MAIL_TLS = os.getenv("MAIL_TLS", "true").lower() == "true"
+    MAIL_TEMPLATE_VERIFY = os.getenv("MAIL_TEMPLATE_VERIFY")
+    MAIL_TEMPLATE_RESET = os.getenv("MAIL_TEMPLATE_RESET")
 
     FRONTEND_URL = os.getenv("FRONTEND_URL")
 

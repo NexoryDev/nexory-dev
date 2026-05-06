@@ -107,7 +107,7 @@ export default function Privacy() {
             <li><strong>Password</strong> — stored exclusively as a bcrypt hash (one-way). The plain-text password is never stored or logged.</li>
             <li><strong>Username and avatar URL</strong> — optional display name and profile picture URL, set by you in your account settings.</li>
             <li><strong>Account metadata</strong> — account creation timestamp, verification status, role.</li>
-            <li><strong>Badges</strong> — automatically assigned labels (e.g. "Early Adopter", "Verified Dev") derived from your account data, such as registration date and connected GitHub activity. Badges are stored as a JSON field in the database.</li>
+            <li><strong>Badges</strong> — automatically assigned labels (e.g. "Day One Supporter", "Verified Dev") derived from your account data, such as registration date and connected GitHub activity. Badges are stored as a JSON field in the database.</li>
           </ul>
           <p>
             Additionally, for login session management the following data is stored temporarily:

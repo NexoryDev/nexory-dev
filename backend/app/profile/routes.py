@@ -1,10 +1,12 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, send_from_directory
+import os
 
 from app.auth.tokens import decode_access_token
 from app.profile.service import (
     get_user_by_id,
     serialize_user,
     update_user,
+    upload_avatar,
     get_user_and_refresh_token,
     delete_user_account,
     change_password
@@ -64,12 +66,33 @@ def update():
 
     data = request.get_json()
 
-    success = update_user(user_id, data)
+    success, err = update_user(user_id, data)
 
     if not success:
-        return jsonify({"error": "no_fields_to_update"}), 400
+        status = 409 if err == "username_taken" else 400
+        return jsonify({"error": err or "no_fields_to_update"}), status
 
     return jsonify({"status": "updated"})
+
+
+@profile_bp.route("/me/avatar", methods=["POST", "OPTIONS"])
+def upload_avatar_route():
+    if request.method == "OPTIONS":
+        return "", 204
+
+    user_id = extract_user_id()
+    if not user_id:
+        return jsonify({"error": "invalid_token"}), 401
+
+    file = request.files.get("file")
+    if not file or file.filename == "":
+        return jsonify({"error": "no_file"}), 400
+
+    url, err = upload_avatar(user_id, file)
+    if not url:
+        return jsonify({"error": err or "upload_failed"}), 400
+
+    return jsonify({"avatar": url})
 
 
 @profile_bp.route("/me/delete", methods=["POST", "OPTIONS"])

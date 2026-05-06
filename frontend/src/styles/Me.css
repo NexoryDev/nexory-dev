@@ -242,6 +242,60 @@
   font-size: 13px;
 }
 
+.settings-username-error {
+  margin: -6px 0 10px;
+  font-size: 12px;
+  color: #f85149;
+}
+
+.settings-avatar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.settings-avatar-preview {
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  border: 1px solid #30363d;
+  object-fit: cover;
+  background: #161b22;
+  flex-shrink: 0;
+}
+
+.settings-avatar-placeholder {
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  border: 1px solid #30363d;
+  background: #161b22;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #8b949e;
+  flex-shrink: 0;
+}
+
+.settings-avatar-btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(88, 166, 255, 0.85);
+  background: #010409;
+  color: #58a6ff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.settings-avatar-btn:hover {
+  background: #0a0f16;
+}
+
 .settings-content .settings-section {
   border-top: 1px solid #30363d;
   padding: 20px 0;
@@ -763,36 +817,42 @@
 }
 
 .badge-modal-body {
-  padding: 20px 24px;
+  padding: 18px 24px 6px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  text-align: center;
+  align-items: center;
 }
 
 .badge-modal-name {
   margin: 0;
   font-size: 20px;
   font-weight: 700;
-  color: #f0f6fc;
+  color: var(--badge-color, #f0f6fc);
+  text-shadow: 0 0 24px var(--badge-glow, transparent);
 }
 
 .badge-modal-desc {
-  margin: 4px 0 0;
+  margin: 0;
   color: #8b949e;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
+  text-align: center;
+  max-width: 280px;
 }
 
 .badge-modal-date {
-  margin: 2px 0 0;
+  margin: 4px 0 0;
   color: #6e7681;
-  font-size: 13px;
+  font-size: 12px;
+  text-align: center;
 }
 
 .badge-modal-footer {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 10px;
   padding: 14px 20px;
   border-top: 1px solid #30363d;
@@ -814,7 +874,6 @@
   border-color: #8b949e;
 }
 
-/* === NEW Badge Grid (SVG icons) === */
 .me-badges-loading {
   display: flex;
   align-items: center;
@@ -868,9 +927,8 @@
 .me-badge-icon-wrap {
   width: 40px;
   height: 40px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 50%;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -923,10 +981,12 @@
 /* New Badge Modal (with SVG hero + glow) */
 .badge-modal-hero {
   position: relative;
-  height: 120px;
+  height: 180px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 14px;
   overflow: hidden;
 }
 
@@ -936,22 +996,29 @@
 .badge-modal-hero[data-rarity="common"]    { background: linear-gradient(160deg, #001a10 0%, #0d1117 100%); }
 
 .badge-modal-icon-wrap {
-  width: 64px;
-  height: 64px;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2.5px solid var(--badge-color, rgba(255,255,255,0.15));
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   z-index: 1;
-  box-shadow: 0 0 24px var(--badge-glow, transparent);
+  box-shadow: 0 0 28px var(--badge-glow, transparent), 0 0 0 6px color-mix(in srgb, var(--badge-color, #fff) 10%, transparent);
+}
+
+.badge-modal-icon-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .badge-modal-icon-wrap svg {
-  width: 34px;
-  height: 34px;
+  width: 48px;
+  height: 48px;
 }
 
 .badge-modal-glow {

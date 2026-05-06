@@ -9,6 +9,8 @@ services:
     restart: always
     networks:
       - app
+    volumes:
+      - avatar_uploads:/app/static/uploads/avatars
 
   frontend:
     build:
@@ -24,3 +26,6 @@ services:
 networks:
   app:
     driver: bridge
+
+volumes:
+  avatar_uploads:

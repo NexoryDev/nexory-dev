@@ -7,13 +7,17 @@ import "../../styles/Me.css";
 const Settings = () => {
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
-  const [avatar, setAvatar] = useState("");
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState("");
+  const [avatarError, setAvatarError] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
   const [error, setError] = useState("");
+  const [usernameError, setUsernameError] = useState(false);
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -61,7 +65,6 @@ const Settings = () => {
       const nextUser = data.user || data;
       setUser(nextUser);
       setUsername(nextUser?.username || nextUser?.email || "");
-      setAvatar(nextUser?.avatar || "");
     } catch {
       setError(t("account.settings.errors.load_failed"));
     } finally {
@@ -112,7 +115,6 @@ const Settings = () => {
       setNewPassword("");
       setConfirmPassword("");
 
-      // All other sessions got revoked — keep current session alive by refreshing token
       clearAuth();
       navigate("/login");
     } catch {
@@ -128,22 +130,52 @@ const Settings = () => {
 
     setSaving(true);
     setError("");
+    setUsernameError(false);
+    setAvatarError("");
 
     try {
+      // 1. Upload avatar if a new file was selected
+      if (avatarFile) {
+        setUploading(true);
+        const fd = new FormData();
+        fd.append("file", avatarFile);
+        const uploadRes = await fetch("/api/profile/me/avatar", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: fd,
+        });
+        setUploading(false);
+
+        if (!uploadRes.ok) {
+          const body = await uploadRes.json().catch(() => ({}));
+          if (uploadRes.status === 413) {
+            setAvatarError(t("account.settings.avatar.too_large"));
+          } else if (body.error === "invalid_file_type") {
+            setAvatarError(t("account.settings.avatar.invalid_type"));
+          } else {
+            setAvatarError(t("account.settings.avatar.upload_failed"));
+          }
+          return;
+        }
+      }
+
+      // 2. Update username
       const res = await fetch("/api/profile/me/update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          username: username.trim(),
-          avatar
-        })
+        body: JSON.stringify({ username: username.trim() }),
       });
 
       if (!res.ok) {
-        setError(t("account.settings.errors.save_failed"));
+        const body = await res.json().catch(() => ({}));
+        if (body.error === "username_taken") {
+          setUsernameError(true);
+        } else {
+          setError(t("account.settings.errors.save_failed"));
+        }
         return;
       }
 
@@ -152,6 +184,7 @@ const Settings = () => {
       setError(t("account.settings.errors.save_failed"));
     } finally {
       setSaving(false);
+      setUploading(false);
     }
   };
 
@@ -208,19 +241,28 @@ const Settings = () => {
 
   const onAvatarSelect = (e) => {
     const file = e.target.files?.[0];
+    setAvatarError("");
 
     if (!file) {
-      setAvatar("");
+      setAvatarFile(null);
+      setAvatarPreview("");
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === "string") {
-        setAvatar(reader.result);
-      }
-    };
-    reader.readAsDataURL(file);
+    const allowed = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowed.includes(file.type)) {
+      setAvatarError(t("account.settings.avatar.invalid_type"));
+      e.target.value = "";
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setAvatarError(t("account.settings.avatar.too_large"));
+      e.target.value = "";
+      return;
+    }
+
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
   };
 
   if (loading || !user) return <div className="me-loading">{t("account.loading")}</div>;
@@ -240,14 +282,38 @@ const Settings = () => {
 
             <input
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => { setUsername(e.target.value); setUsernameError(false); }}
               placeholder={t("account.settings.profile.username_placeholder")}
+              style={usernameError ? { borderColor: "#f85149", boxShadow: "0 0 0 3px rgba(248,81,73,0.2)" } : undefined}
             />
+            {usernameError ? (
+              <p className="settings-username-error">{t("account.settings.errors.username_taken_inline")}</p>
+            ) : null}
 
-            <input
-              type="file"
-              onChange={onAvatarSelect}
-            />
+            <div className="settings-avatar-wrap">
+              {avatarPreview || user?.avatar ? (
+                <img
+                  src={avatarPreview || user.avatar}
+                  alt="avatar preview"
+                  className="settings-avatar-preview"
+                />
+              ) : (
+                <div className="settings-avatar-placeholder">
+                  {user?.email?.charAt(0).toUpperCase() || "?"}
+                </div>
+              )}
+              <label className="settings-avatar-btn" htmlFor="avatar-upload">
+                {uploading ? "..." : t("account.settings.avatar.change")}
+              </label>
+              <input
+                id="avatar-upload"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={onAvatarSelect}
+                style={{ display: "none" }}
+              />
+              {avatarError ? <p className="settings-username-error">{avatarError}</p> : null}
+            </div>
 
             <button className="settings-save-btn" onClick={save} disabled={saving || deleting}>
               {saving ? t("account.settings.actions.saving") : t("account.settings.actions.save_changes")}

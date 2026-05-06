@@ -3,34 +3,34 @@ from datetime import datetime, timezone
 from app.db.connection import get_db
 from app.github.service import gh, get_token, GITHUB_ORG
 
-EARLY_ADOPTER_CUTOFF = datetime(2026, 8, 1, tzinfo=timezone.utc)
+DAY_ONE_SUPPORTER_LIMIT = 100
 
 BADGE_DEFINITIONS = {
-    "early_adopter": {
-        "id":          "early_adopter",
-        "name":        "Early Adopter",
-        "description": "War von Anfang an dabei – einer der ersten Nutzer von Nexory.",
+    "day_one_supporter": {
+        "id":          "day_one_supporter",
+        "name":        "Day One Supporter",
+        "description": "badge.desc.day_one_supporter",
         "color":       "#f59e0b",
         "rarity":      "legendary",
     },
     "waitlister": {
         "id":          "waitlister",
         "name":        "Waitlister",
-        "description": "Hat sich für zukünftige Nexory-Services auf der Warteliste eingetragen.",
+        "description": "badge.desc.waitlister",
         "color":       "#8b5cf6",
         "rarity":      "rare",
     },
     "nexory_contributor": {
         "id":          "nexory_contributor",
         "name":        "Nexory Contributor",
-        "description": "Hat aktiv zu einem Projekt der NexoryDev-Organisation beigetragen.",
+        "description": "badge.desc.nexory_contributor",
         "color":       "#ec4899",
         "rarity":      "epic",
     },
     "verified_dev": {
         "id":          "verified_dev",
         "name":        "Verified Dev",
-        "description": "Verifiziertes Entwicklerkonto mit vollständigem Profil.",
+        "description": "badge.desc.verified_dev",
         "color":       "#10b981",
         "rarity":      "common",
     },
@@ -46,21 +46,28 @@ def _load_existing_badges(user):
     except Exception:
         return {}
     
-def _check_early_adopter(user):
-    created_at = user.get("created_at")
-    if not created_at:
+def _check_day_one_supporter(user):
+    user_id = user.get("id")
+    if not user_id:
         return False
-    
-    if isinstance(created_at, str):
-        try:
-            created_at = datetime.fromisoformat(created_at)
-        except Exception:
-            return False
-    
-    if created_at.tzinfo is None:
-        created_at = created_at.replace(tzinfo=timezone.utc)
 
-    return created_at < EARLY_ADOPTER_CUTOFF
+    db = get_db()
+    cursor = db.cursor()
+    try:
+        cursor.execute(
+            "SELECT COUNT(*) AS rank_pos FROM users WHERE created_at < "
+            "(SELECT created_at FROM users WHERE id = %s)",
+            (user_id,)
+        )
+        row = cursor.fetchone()
+        if not row:
+            return False
+        rank = row["rank_pos"] + 1
+        return rank <= DAY_ONE_SUPPORTER_LIMIT
+    except Exception:
+        return False
+    finally:
+        db.close()
 
 def _check_nexory_contributor(username):
     if not username:
@@ -96,10 +103,10 @@ def evaluate_badges(user):
     already_earned = set(existing.keys())
     newly_earned = set()
 
-    if _check_early_adopter(user):
-        newly_earned.add("early_adopter")
+    if _check_day_one_supporter(user):
+        newly_earned.add("day_one_supporter")
 
-    if user.get("verified") and user.get("username"):
+    if user.get("verified") and user.get("username") and user.get("avatar"):
         newly_earned.add("verified_dev")
 
     if _check_nexory_contributor(user.get("username")):

@@ -107,7 +107,7 @@ export default function ProfileNavbar() {
             className={`user-menu__btn${dropdownOpen ? " open" : ""}`}
             onClick={() => setDropdownOpen((v) => !v)}
             aria-expanded={dropdownOpen}
-            aria-label="Benutzermenü"
+            aria-label={t("profile.dropdown.aria_label")}
           >
             <span className="user-menu__avatar">
               {avatar ? (
@@ -133,20 +133,20 @@ export default function ProfileNavbar() {
               <div className="user-menu__divider" />
               <button className="user-menu__item" onClick={() => navigate("/me")}>
                 <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="5.5" r="2.5" stroke="currentColor" strokeWidth="1.25"/><path d="M2 13c0-3.038 2.462-5.5 5.5-5.5S13 9.962 13 13" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round"/></svg>
-                Mein Profil
+                {t("profile.dropdown.my_profile")}
               </button>
               <button className="user-menu__item" onClick={() => navigate("/me/products")}>
                 <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><rect x="1.5" y="2.5" width="12" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.25"/><path d="M5 2.5V5m5-2.5V5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round"/></svg>
-                Produkte
+                {t("profile.dropdown.products")}
               </button>
               <button className="user-menu__item" onClick={() => navigate("/me/settings")}>
                 <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" strokeWidth="1.25"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.636 2.636l1.06 1.06M11.304 11.304l1.06 1.06M2.636 12.364l1.06-1.06M11.304 3.696l1.06-1.06" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round"/></svg>
-                Einstellungen
+                {t("profile.dropdown.settings")}
               </button>
               <div className="user-menu__divider" />
               <button className="user-menu__item user-menu__item--danger" onClick={handleLogout}>
                 <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><path d="M5 13H3a1 1 0 01-1-1V3a1 1 0 011-1h2M10 10l3-2.5L10 5M13 7.5H6" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                Abmelden
+                {t("profile.dropdown.logout")}
               </button>
             </div>
           )}

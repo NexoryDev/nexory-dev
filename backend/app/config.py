@@ -9,6 +9,8 @@ class Config:
     JWT_TOKEN_LOCATION = ["headers"]
 
     ENV = os.getenv("ENV", "development")
+    UPLOAD_FOLDER = "/app/static/uploads/avatars"
+    MAX_CONTENT_LENGTH = 5 * 1024 * 1024
 
     COOKIE_SECURE = ENV == "production"
     COOKIE_SAMESITE = "Strict" if ENV == "production" else "Lax"
@@ -30,3 +32,5 @@ class Config:
 
     if not SECRET_KEY or not JWT_SECRET_KEY:
         raise RuntimeError("Missing critical env secrets")
+
+UPLOAD_FOLDER = Config.UPLOAD_FOLDER

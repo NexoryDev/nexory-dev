@@ -4,8 +4,9 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import threading
 import time
+import os
 
-from app.config import Config
+from app.config import Config, UPLOAD_FOLDER
 from app.auth.routes import auth_bp
 from app.github.routes import github_bp
 from app.profile.routes import profile_bp
@@ -14,7 +15,6 @@ limiter = Limiter(key_func=get_remote_address, default_limits=[])
 
 
 def _cleanup_worker():
-    """Background thread: removes expired tokens from DB every hour."""
     while True:
         time.sleep(3600)
         try:
@@ -59,13 +59,20 @@ def create_app():
     app.register_blueprint(profile_bp, url_prefix="/api/profile")
     app.register_blueprint(github_bp, url_prefix="/api")
 
-    # Rate limits on sensitive auth endpoints
     limiter.limit("10 per minute")(app.view_functions["auth.login"])
     limiter.limit("5 per minute")(app.view_functions["auth.register"])
     limiter.limit("5 per minute")(app.view_functions["auth.password_request"])
     limiter.limit("30 per minute")(app.view_functions["github.github"])
 
-    # Start background cleanup thread (daemon so it stops with the process)
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+    @app.route("/uploads/avatars/<path:filename>")
+    def serve_avatar(filename):
+        from flask import send_from_directory
+        if "/" in filename or "\\" in filename or filename.startswith("."):
+            return "", 404
+        return send_from_directory(UPLOAD_FOLDER, filename)
+
     t = threading.Thread(target=_cleanup_worker, daemon=True)
     t.start()
 

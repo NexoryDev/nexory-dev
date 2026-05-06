@@ -1,3 +1,9 @@
+import os
+import uuid
+
+from PIL import Image
+from flask import current_app
+
 from app.db.connection import get_db
 from app.auth.tokens import create_access_token
 from app.security.password import hash_password
@@ -24,6 +30,14 @@ def update_user(user_id, data):
 
     if username is not None:
         username = username.strip()
+        if username:
+            cursor.execute(
+                "SELECT id FROM users WHERE username=%s AND id!=%s",
+                (username, user_id)
+            )
+            if cursor.fetchone():
+                db.close()
+                return False, "username_taken"
         fields.append("username=%s")
         values.append(username if username != "" else None)
 
@@ -31,13 +45,13 @@ def update_user(user_id, data):
         avatar = avatar.strip()
         if avatar and not avatar.startswith(("http://", "https://")):
             db.close()
-            return False
+            return False, "invalid_avatar"
         fields.append("avatar=%s")
         values.append(avatar if avatar != "" else None)
 
     if not fields:
         db.close()
-        return False
+        return False, "no_fields"
 
     values.append(user_id)
 
@@ -46,10 +60,84 @@ def update_user(user_id, data):
     try:
         cursor.execute(query, values)
         db.commit()
-        return True
+        return True, None
     except Exception:
         db.rollback()
-        return False
+        return False, "db_error"
+    finally:
+        db.close()
+
+
+_ALLOWED_AVATAR_TYPES = {"jpg", "jpeg", "png", "webp"}
+
+
+def upload_avatar(user_id, file):
+    """Validate, resize and store an uploaded avatar. Returns (url, error_code)."""
+    filename = file.filename or ""
+    ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
+
+    if ext not in _ALLOWED_AVATAR_TYPES:
+        return None, "invalid_file_type"
+
+    # Validate image data with Pillow
+    try:
+        file.stream.seek(0)
+        img = Image.open(file.stream)
+        img.load()
+    except Exception:
+        return None, "invalid_file_type"
+
+    # Center-crop to square, resize to 400x400
+    try:
+        img = img.convert("RGB")
+        w, h = img.size
+        min_dim = min(w, h)
+        left = (w - min_dim) // 2
+        top = (h - min_dim) // 2
+        img = img.crop((left, top, left + min_dim, top + min_dim))
+        img = img.resize((400, 400), Image.LANCZOS)
+    except Exception:
+        return None, "upload_failed"
+
+    upload_folder = current_app.config["UPLOAD_FOLDER"]
+
+    # Delete old local avatar file to avoid orphans
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT avatar FROM users WHERE id=%s", (user_id,))
+    row = cursor.fetchone()
+    if row and row.get("avatar"):
+        old = row["avatar"]
+        if old.startswith("/uploads/avatars/"):
+            old_path = os.path.join(upload_folder, old.rsplit("/", 1)[-1])
+            if os.path.isfile(old_path):
+                try:
+                    os.remove(old_path)
+                except OSError:
+                    pass
+
+    # Save new file
+    new_filename = uuid.uuid4().hex + ".jpg"
+    save_path = os.path.join(upload_folder, new_filename)
+    try:
+        img.save(save_path, "JPEG", quality=85)
+    except Exception:
+        db.close()
+        return None, "upload_failed"
+
+    url = f"/uploads/avatars/{new_filename}"
+
+    try:
+        cursor.execute("UPDATE users SET avatar=%s WHERE id=%s", (url, user_id))
+        db.commit()
+        return url, None
+    except Exception:
+        db.rollback()
+        try:
+            os.remove(save_path)
+        except OSError:
+            pass
+        return None, "db_error"
     finally:
         db.close()
 

@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/Me.css";
 import { apiFetch } from "../../api/apiClient";
 import { useLanguage } from "../../context/LanguageContext";
+import supportIcon from "../../components/icons/support_icon.png";
+import devIcon from "../../components/icons/dev_icon.png";
+import contributorIcon from "../../components/icons/constributor_icon.png";
 
 const RARITY_GLOW = {
   legendary: "rgba(245,158,11,0.35)",
@@ -11,24 +14,28 @@ const RARITY_GLOW = {
   common:    "rgba(16,185,129,0.25)",
 };
 
+const BADGE_ICONS = {
+  day_one_supporter: supportIcon,
+  nexory_contributor: contributorIcon,
+  verified_dev: devIcon,
+};
+
 function BadgeIcon({ id, color }) {
+  const src = BADGE_ICONS[id];
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt={id}
+        width={40}
+        height={40}
+        aria-hidden
+        style={{ objectFit: "cover", display: "block", width: "100%", height: "100%" }}
+      />
+    );
+  }
   const props = { width: 26, height: 26, viewBox: "0 0 24 24", fill: "none", "aria-hidden": true };
   switch (id) {
-    case "early_adopter":
-      return (
-        <svg {...props}>
-          <defs>
-            <radialGradient id="me-grad-ea" cx="50%" cy="30%" r="70%">
-              <stop offset="0%" stopColor="#fde68a" /><stop offset="100%" stopColor="#f59e0b" />
-            </radialGradient>
-          </defs>
-          <path d="M12 2C9 5.5 7.5 9 7.5 13a4.5 4.5 0 009 0C16.5 9 15 5.5 12 2z" fill="url(#me-grad-ea)" />
-          <ellipse cx="8.5" cy="14.5" rx="1.5" ry="2.5" fill={color} opacity="0.7" transform="rotate(-20 8.5 14.5)" />
-          <ellipse cx="15.5" cy="14.5" rx="1.5" ry="2.5" fill={color} opacity="0.7" transform="rotate(20 15.5 14.5)" />
-          <path d="M10.5 22c0-2 3-2 3 0" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
-          <circle cx="12" cy="10" r="1.5" fill="#fff" opacity="0.9" />
-        </svg>
-      );
     case "waitlister":
       return (
         <svg {...props}>
@@ -41,34 +48,6 @@ function BadgeIcon({ id, color }) {
           <path d="M6 3h12" stroke="#c4b5fd" strokeWidth="1.5" strokeLinecap="round" />
           <path d="M6 21h12" stroke="#c4b5fd" strokeWidth="1.5" strokeLinecap="round" />
           <path d="M8 17l4-4 4 4" fill="#fff" opacity="0.5" />
-        </svg>
-      );
-    case "nexory_contributor":
-      return (
-        <svg {...props}>
-          <defs>
-            <linearGradient id="me-grad-nc" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#f9a8d4" /><stop offset="100%" stopColor="#ec4899" />
-            </linearGradient>
-          </defs>
-          <circle cx="6" cy="6" r="2.5" fill="url(#me-grad-nc)" />
-          <circle cx="18" cy="6" r="2.5" fill="url(#me-grad-nc)" />
-          <circle cx="12" cy="18" r="2.5" fill="url(#me-grad-nc)" />
-          <path d="M6 8.5v2c0 2 1.5 3.5 3.5 3.5H12" stroke="#f9a8d4" strokeWidth="1.5" strokeLinecap="round" />
-          <path d="M18 8.5v2c0 2-1.5 3.5-3.5 3.5H12" stroke="#f9a8d4" strokeWidth="1.5" strokeLinecap="round" />
-          <path d="M12 15.5v2" stroke="#f9a8d4" strokeWidth="1.5" strokeLinecap="round" />
-        </svg>
-      );
-    case "verified_dev":
-      return (
-        <svg {...props}>
-          <defs>
-            <linearGradient id="me-grad-vd" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#6ee7b7" /><stop offset="100%" stopColor="#10b981" />
-            </linearGradient>
-          </defs>
-          <path d="M12 2L4 5.5V11c0 4.4 3.4 8.5 8 9.5 4.6-1 8-5.1 8-9.5V5.5L12 2z" fill="url(#me-grad-vd)" />
-          <path d="M8.5 12l2.5 2.5 4.5-5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       );
     default:
@@ -127,7 +106,6 @@ const Me = () => {
 
 
     } catch {
-      // silent
     } finally {
       setSyncing(false);
     }
@@ -210,7 +188,6 @@ const Me = () => {
           ) : null}
         </div>
 
-        {/* Achievements */}
         {user.achievements.length > 0 ? (
           <div className="me-section">
             <h3 className="me-section-title">{t("account.me.achievements")}</h3>
@@ -226,7 +203,6 @@ const Me = () => {
 
       </main>
 
-      {/* Badge Detail Modal */}
       {activeBadge ? (
         <div className="badge-modal-backdrop" onClick={() => setActiveBadge(null)}>
           <div
@@ -250,7 +226,7 @@ const Me = () => {
                   {t(`badge.rarity.${activeBadge.rarity}`) ?? activeBadge.rarity}
                 </span>
               </div>
-              <p className="badge-modal-desc">{activeBadge.description}</p>
+              <p className="badge-modal-desc">{t(activeBadge.description)}</p>
               {activeBadge.earned_at ? (
                 <p className="badge-modal-date">
                   {t("badge.earned_at")}{" "}
@@ -265,11 +241,6 @@ const Me = () => {
               <button className="badge-modal-close-btn" onClick={() => setActiveBadge(null)}>
                 {t("badge.close")}
               </button>
-              {user.username ? (
-                <a href={`/user/${user.username}`} target="_blank" rel="noreferrer" className="badge-modal-profile-btn">
-                  {t("account.me.public_profile")}
-                </a>
-              ) : null}
             </div>
           </div>
         </div>

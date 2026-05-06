@@ -243,18 +243,17 @@
 .up-badge-icon-wrap {
   width: 46px;
   height: 46px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid #21262d;
+  border-radius: 50%;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: background 0.2s;
+  transition: opacity 0.2s;
 }
 
 .up-badge-card:hover .up-badge-icon-wrap {
-  background: rgba(255,255,255,0.07);
+  opacity: 0.85;
 }
 
 .up-badge-body {
@@ -382,10 +381,12 @@
 }
 
 .up-modal-hero {
-  height: 120px;
+  height: 180px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 14px;
   position: relative;
   overflow: hidden;
   background: #0d1117;
@@ -403,34 +404,44 @@
 }
 
 .up-modal-icon-wrap {
-  width: 64px;
-  height: 64px;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2.5px solid var(--badge-color, rgba(255,255,255,0.15));
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   z-index: 1;
-  box-shadow: 0 0 32px var(--badge-glow, transparent);
+  box-shadow: 0 0 28px var(--badge-glow, transparent), 0 0 0 6px color-mix(in srgb, var(--badge-color, #fff) 10%, transparent);
+}
+
+.up-modal-icon-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .up-modal-icon-wrap svg {
-  width: 34px;
-  height: 34px;
+  width: 48px;
+  height: 48px;
 }
 
 .up-modal-body {
-  padding: 22px 24px 6px;
+  padding: 18px 24px 6px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  align-items: center;
+  text-align: center;
 }
 
 .up-modal-title-row {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   flex-wrap: wrap;
 }
@@ -439,7 +450,8 @@
   margin: 0;
   font-size: 20px;
   font-weight: 700;
-  color: #f0f6fc;
+  color: var(--badge-color, #e6edf3);
+  text-shadow: 0 0 24px var(--badge-glow, transparent);
 }
 
 .up-modal-desc {
@@ -447,6 +459,8 @@
   color: #8b949e;
   font-size: 14px;
   line-height: 1.6;
+  text-align: center;
+  max-width: 280px;
 }
 
 .up-earned-on {

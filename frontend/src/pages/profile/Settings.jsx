@@ -134,7 +134,6 @@ const Settings = () => {
     setAvatarError("");
 
     try {
-      // 1. Upload avatar if a new file was selected
       if (avatarFile) {
         setUploading(true);
         const fd = new FormData();
@@ -159,7 +158,6 @@ const Settings = () => {
         }
       }
 
-      // 2. Update username
       const res = await fetch("/api/profile/me/update", {
         method: "POST",
         headers: {
@@ -172,6 +170,8 @@ const Settings = () => {
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         if (body.error === "username_taken") {
+          setUsernameError(true);
+        } else if (body.error === "username_too_long") {
           setUsernameError(true);
         } else {
           setError(t("account.settings.errors.save_failed"));
@@ -287,7 +287,11 @@ const Settings = () => {
               style={usernameError ? { borderColor: "#f85149", boxShadow: "0 0 0 3px rgba(248,81,73,0.2)" } : undefined}
             />
             {usernameError ? (
-              <p className="settings-username-error">{t("account.settings.errors.username_taken_inline")}</p>
+              <p className="settings-username-error">
+                {username.trim().length > 15
+                  ? t("account.settings.errors.username_too_long")
+                  : t("account.settings.errors.username_taken_inline")}
+              </p>
             ) : null}
 
             <div className="settings-avatar-wrap">

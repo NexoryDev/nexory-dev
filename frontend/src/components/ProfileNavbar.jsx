@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
 import { useLanguage } from "../context/LanguageContext";
+import { SvgProfile, SvgSettings, SvgProducts } from "../components/icons/svgs";
 import "../styles/Navbar.css";
 import "../styles/ProfileNavbar.css";
 
@@ -13,6 +14,7 @@ export default function ProfileNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -109,14 +111,21 @@ export default function ProfileNavbar() {
             aria-expanded={dropdownOpen}
             aria-label={t("profile.dropdown.aria_label")}
           >
-            <span className="user-menu__avatar">
-              {avatar ? (
-                <img src={avatar} alt={displayName} />
-              ) : (
-                <span className="user-menu__initial">{initial}</span>
-              )}
-            </span>
-            <span className="user-menu__label">{user?.email || displayName}</span>
+          <span className="user-menu__avatar">
+            {avatar && !avatarError ? (
+              <img
+                src={avatar}
+                alt={displayName}
+                width={22}
+                height={22}
+                style={{ width: 22, height: 22, objectFit: "cover", borderRadius: "50%", display: "block" }}
+                onError={() => setAvatarError(true)}
+              />
+            ) : (
+              <span className="user-menu__initial">{initial}</span>
+            )}
+          </span>
+            <span className="user-menu__label">{displayName || user?.email}</span>
             <svg className="user-menu__chevron" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden>
               <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -126,21 +135,18 @@ export default function ProfileNavbar() {
             <div className="user-menu__dropdown">
               <div className="user-menu__dropdown-header">
                 <span className="user-menu__dropdown-email">{user?.email}</span>
-                {user?.username && (
-                  <span className="user-menu__dropdown-username">@{user.username}</span>
-                )}
               </div>
               <div className="user-menu__divider" />
               <button className="user-menu__item" onClick={() => navigate("/me")}>
-                <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="5.5" r="2.5" stroke="currentColor" strokeWidth="1.25"/><path d="M2 13c0-3.038 2.462-5.5 5.5-5.5S13 9.962 13 13" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round"/></svg>
+                <SvgProfile size={14} />
                 {t("profile.dropdown.my_profile")}
               </button>
               <button className="user-menu__item" onClick={() => navigate("/me/products")}>
-                <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><rect x="1.5" y="2.5" width="12" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.25"/><path d="M5 2.5V5m5-2.5V5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round"/></svg>
+                <SvgProducts size={14} />
                 {t("profile.dropdown.products")}
               </button>
               <button className="user-menu__item" onClick={() => navigate("/me/settings")}>
-                <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" strokeWidth="1.25"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.636 2.636l1.06 1.06M11.304 11.304l1.06 1.06M2.636 12.364l1.06-1.06M11.304 3.696l1.06-1.06" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round"/></svg>
+                <SvgSettings size={14} />
                 {t("profile.dropdown.settings")}
               </button>
               <div className="user-menu__divider" />

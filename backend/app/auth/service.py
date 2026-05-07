@@ -21,7 +21,7 @@ def get_user(email):
 def get_user_by_id(user_id):
     db = get_db()
     cur = db.cursor()
-    cur.execute("SELECT id, email, verified FROM users WHERE id=%s", (user_id,))
+    cur.execute("SELECT id, email, username, avatar, verified FROM users WHERE id=%s", (user_id,))
     result = cur.fetchone()
     db.close()
     return result
@@ -44,6 +44,8 @@ def get_current_user(token):
     return {
         "id": user["id"],
         "email": user["email"],
+        "username": user.get("username"),
+        "avatar": user.get("avatar"),
         "verified": user["verified"]
     }
 
@@ -118,29 +120,38 @@ def verify_email(token):
     return "ok"
 
 
-# Dummy hash used to prevent timing-based email enumeration
-_DUMMY_HASH = "$2b$12$invalidhashfortimingXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+def login_user(identifier, password, ip, user_agent, device_id, remember_me=False):
+    db = get_db()
+    cur = db.cursor()
 
+    cur.execute(
+        """
+        SELECT *
+        FROM users
+        WHERE LOWER(email)=LOWER(%s)
+           OR LOWER(username)=LOWER(%s)
+        LIMIT 1
+        """,
+        (identifier, identifier)
+    )
 
-def login_user(email, password, ip, user_agent, device_id, remember_me=False):
-    user = get_user(email)
+    user = cur.fetchone()
 
-    check_hash = user["password_hash"] if user else _DUMMY_HASH
+    check_hash = user["password_hash"]
     password_ok = verify_password(password, check_hash)
 
     if not user or not password_ok:
+        db.close()
         return None, "invalid_credentials"
 
     if int(user["verified"]) != 1:
+        db.close()
         return None, "email_not_verified"
 
     access = create_access_token(user["id"])
     refresh = generate_refresh_token()
 
     ttl = timedelta(days=7) if remember_me else timedelta(hours=24)
-
-    db = get_db()
-    cur = db.cursor()
 
     cur.execute(
         """

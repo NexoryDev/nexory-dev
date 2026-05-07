@@ -54,7 +54,7 @@ export default function Login() {
   function validate() {
     const newErrors = {};
 
-    if (!email.includes("@")) newErrors.email = t("login.invalid_email");
+    if (!email.trim()) newErrors.email = t("login.identifier_required");
     if (!password) newErrors.password = t("login.invalid_password");
 
     setErrors(newErrors);
@@ -64,7 +64,7 @@ export default function Login() {
   function validateRegister() {
     const newErrors = {};
 
-    if (!email.includes("@")) newErrors.email = t("login.invalid_email");
+    if (!email.trim()) newErrors.email = t("login.identifier_required");
     if (!password || password.length < 8)
       newErrors.password = t("login.invalid_password");
 
@@ -83,7 +83,7 @@ export default function Login() {
     }
 
     const res = await api("/api/auth/login", {
-      email,
+      identifier: email,
       password,
       remember_me: rememberMe,
       device_id: getDeviceId(),
@@ -170,9 +170,13 @@ export default function Login() {
           <>
             <input
               className={errors.email ? "input-error" : ""}
-              placeholder={t("login.mail")}
+              placeholder={mode === "login" ? t("login.identifier") : t("login.mail")}
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setErrors((prev) => ({ ...prev, email: undefined }));
+                setFormError("");
+              }}
             />
 
             <div className="password-wrapper">
@@ -181,7 +185,11 @@ export default function Login() {
                 type={showPassword ? "text" : "password"}
                 placeholder={t("login.password")}
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setErrors((prev) => ({ ...prev, password: undefined }));
+                  setFormError("");
+                }}
               />
 
               <button

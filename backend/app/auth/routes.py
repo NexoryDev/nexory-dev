@@ -90,7 +90,7 @@ def login():
     remember_me = bool(data.get("remember_me", False))
 
     result, error = login_user(
-        data.get("email"),
+        data.get("identifier") or data.get("email"),
         data.get("password"),
         request.remote_addr,
         request.headers.get("User-Agent"),

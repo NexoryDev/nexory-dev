@@ -30,6 +30,9 @@ def update_user(user_id, data):
 
     if username is not None:
         username = username.strip()
+        if len(username) > 15:
+            db.close()
+            return False, "username_too_long"
         if username:
             cursor.execute(
                 "SELECT id FROM users WHERE username=%s AND id!=%s",
@@ -72,14 +75,12 @@ _ALLOWED_AVATAR_TYPES = {"jpg", "jpeg", "png", "webp"}
 
 
 def upload_avatar(user_id, file):
-    """Validate, resize and store an uploaded avatar. Returns (url, error_code)."""
     filename = file.filename or ""
     ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
 
     if ext not in _ALLOWED_AVATAR_TYPES:
         return None, "invalid_file_type"
 
-    # Validate image data with Pillow
     try:
         file.stream.seek(0)
         img = Image.open(file.stream)
@@ -87,7 +88,6 @@ def upload_avatar(user_id, file):
     except Exception:
         return None, "invalid_file_type"
 
-    # Center-crop to square, resize to 400x400
     try:
         img = img.convert("RGB")
         w, h = img.size
@@ -101,7 +101,6 @@ def upload_avatar(user_id, file):
 
     upload_folder = current_app.config["UPLOAD_FOLDER"]
 
-    # Delete old local avatar file to avoid orphans
     db = get_db()
     cursor = db.cursor()
     cursor.execute("SELECT avatar FROM users WHERE id=%s", (user_id,))
@@ -116,7 +115,6 @@ def upload_avatar(user_id, file):
                 except OSError:
                     pass
 
-    # Save new file
     new_filename = uuid.uuid4().hex + ".jpg"
     save_path = os.path.join(upload_folder, new_filename)
     try:

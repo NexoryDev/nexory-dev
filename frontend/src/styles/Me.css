@@ -286,14 +286,14 @@
   border-radius: 6px;
   border: 1px solid rgba(88, 166, 255, 0.85);
   background: #010409;
-  color: #58a6ff;
+  color: white;
   font-size: 13px;
   cursor: pointer;
   transition: background 0.2s;
 }
 
-.settings-avatar-btn:hover {
-  background: #0a0f16;
+.settings-content .settings-section .settings-avatar-btn:hover {
+  background: linear-gradient(180deg, #58a6fff2, #58a7fff2);
 }
 
 .settings-content .settings-section {
@@ -369,7 +369,7 @@
   box-shadow: inset 0 0 0 1px rgba(88, 166, 255, 0.2);
 }
 
-.settings-password-btn:hover {
+.settings-content .settings-section .settings-password-btn:hover {
   background: linear-gradient(180deg, #58a6fff2, #58a7fff2);
 }
 

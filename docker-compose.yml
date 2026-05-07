@@ -1,4 +1,11 @@
 services:
+  redis:
+    image: redis:7-alpine
+    restart: always
+    networks:
+      - app
+    command: redis-server --save "" --appendonly no
+
   backend:
     build:
       context: ./backend
@@ -7,6 +14,8 @@ services:
     expose:
       - "5000"
     restart: always
+    depends_on:
+      - redis
     networks:
       - app
     volumes:

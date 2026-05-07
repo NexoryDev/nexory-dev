@@ -24,6 +24,14 @@ const Settings = () => {
   const [changingPassword, setChangingPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
   const [passwordSuccess, setPasswordSuccess] = useState("");
+  const [twoFaEnabled, setTwoFaEnabled] = useState(false);
+  const [twoFaBusy, setTwoFaBusy] = useState(false);
+  const [twoFaCode, setTwoFaCode] = useState("");
+  const [twoFaSecret, setTwoFaSecret] = useState("");
+  const [twoFaOtpauthUrl, setTwoFaOtpauthUrl] = useState("");
+  const [twoFaBackupCodes, setTwoFaBackupCodes] = useState([]);
+  const [twoFaError, setTwoFaError] = useState("");
+  const [twoFaSuccess, setTwoFaSuccess] = useState("");
 
   const navigate = useNavigate();
   const { clearAuth } = useAuth();
@@ -65,10 +73,201 @@ const Settings = () => {
       const nextUser = data.user || data;
       setUser(nextUser);
       setUsername(nextUser?.username || nextUser?.email || "");
+      await loadTwoFaStatus(token);
     } catch {
       setError(t("account.settings.errors.load_failed"));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadTwoFaStatus = async (tokenOverride) => {
+    const token = tokenOverride || getAccessToken();
+    if (!token) return;
+
+    try {
+      const res = await fetch("/api/auth/2fa/status", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) return;
+      const data = await res.json().catch(() => ({}));
+      setTwoFaEnabled(Boolean(data.enabled));
+    } catch {
+    }
+  };
+
+  const startTwoFaSetup = async () => {
+    const token = getAccessToken();
+    if (!token) return navigate("/login");
+
+    setTwoFaBusy(true);
+    setTwoFaError("");
+    setTwoFaSuccess("");
+    setTwoFaBackupCodes([]);
+
+    try {
+      const res = await fetch("/api/auth/2fa/setup", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        const map = {
+          already_enabled: t("account.settings.twofa.errors.already_enabled"),
+        };
+        setTwoFaError(map[data.error] || t("account.settings.twofa.errors.setup_failed"));
+        return;
+      }
+
+      setTwoFaSecret(data.secret || "");
+      setTwoFaOtpauthUrl(data.otpauth_url || "");
+      setTwoFaSuccess(t("account.settings.twofa.setup_ready"));
+    } catch {
+      setTwoFaError(t("account.settings.twofa.errors.setup_failed"));
+    } finally {
+      setTwoFaBusy(false);
+    }
+  };
+
+  const enableTwoFa = async () => {
+    const token = getAccessToken();
+    if (!token) return navigate("/login");
+
+    if (!twoFaCode.trim()) {
+      setTwoFaError(t("account.settings.twofa.errors.code_required"));
+      return;
+    }
+
+    setTwoFaBusy(true);
+    setTwoFaError("");
+    setTwoFaSuccess("");
+
+    try {
+      const res = await fetch("/api/auth/2fa/enable", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ code: twoFaCode.trim() }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        const map = {
+          setup_not_started: t("account.settings.twofa.errors.setup_not_started"),
+          invalid_code: t("account.settings.twofa.errors.invalid_code"),
+        };
+        setTwoFaError(map[data.error] || t("account.settings.twofa.errors.enable_failed"));
+        return;
+      }
+
+      setTwoFaEnabled(true);
+      setTwoFaBackupCodes(Array.isArray(data.backup_codes) ? data.backup_codes : []);
+      setTwoFaSecret("");
+      setTwoFaOtpauthUrl("");
+      setTwoFaCode("");
+      setTwoFaSuccess(t("account.settings.twofa.enabled"));
+    } catch {
+      setTwoFaError(t("account.settings.twofa.errors.enable_failed"));
+    } finally {
+      setTwoFaBusy(false);
+    }
+  };
+
+  const disableTwoFa = async () => {
+    const token = getAccessToken();
+    if (!token) return navigate("/login");
+
+    if (!twoFaCode.trim()) {
+      setTwoFaError(t("account.settings.twofa.errors.code_required"));
+      return;
+    }
+
+    setTwoFaBusy(true);
+    setTwoFaError("");
+    setTwoFaSuccess("");
+
+    try {
+      const res = await fetch("/api/auth/2fa/disable", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ code: twoFaCode.trim() }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        const map = {
+          not_enabled: t("account.settings.twofa.errors.not_enabled"),
+          invalid_code: t("account.settings.twofa.errors.invalid_code"),
+        };
+        setTwoFaError(map[data.error] || t("account.settings.twofa.errors.disable_failed"));
+        return;
+      }
+
+      setTwoFaEnabled(false);
+      setTwoFaCode("");
+      setTwoFaBackupCodes([]);
+      setTwoFaSuccess(t("account.settings.twofa.disabled"));
+    } catch {
+      setTwoFaError(t("account.settings.twofa.errors.disable_failed"));
+    } finally {
+      setTwoFaBusy(false);
+    }
+  };
+
+  const regenerateBackupCodes = async () => {
+    const token = getAccessToken();
+    if (!token) return navigate("/login");
+
+    if (!twoFaCode.trim()) {
+      setTwoFaError(t("account.settings.twofa.errors.code_required"));
+      return;
+    }
+
+    setTwoFaBusy(true);
+    setTwoFaError("");
+    setTwoFaSuccess("");
+
+    try {
+      const res = await fetch("/api/auth/2fa/backup/regenerate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ code: twoFaCode.trim() }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        const map = {
+          not_enabled: t("account.settings.twofa.errors.not_enabled"),
+          invalid_code: t("account.settings.twofa.errors.invalid_code"),
+        };
+        setTwoFaError(map[data.error] || t("account.settings.twofa.errors.regenerate_failed"));
+        return;
+      }
+
+      setTwoFaBackupCodes(Array.isArray(data.backup_codes) ? data.backup_codes : []);
+      setTwoFaSuccess(t("account.settings.twofa.backup_regenerated"));
+    } catch {
+      setTwoFaError(t("account.settings.twofa.errors.regenerate_failed"));
+    } finally {
+      setTwoFaBusy(false);
     }
   };
 
@@ -351,6 +550,97 @@ const Settings = () => {
             >
               {changingPassword ? "..." : t("account.settings.actions.change_password")}
             </button>
+
+            <div style={{ marginTop: 20 }}>
+              <h4 className="settings-title" style={{ marginBottom: 8 }}>{t("account.settings.twofa.title")}</h4>
+              <p className="settings-help" style={{ marginBottom: 12 }}>
+                {twoFaEnabled ? t("account.settings.twofa.status_enabled") : t("account.settings.twofa.status_disabled")}
+              </p>
+
+              {twoFaError ? <p className="settings-error">{twoFaError}</p> : null}
+              {twoFaSuccess ? <p className="settings-success">{twoFaSuccess}</p> : null}
+
+              {!twoFaEnabled ? (
+                <>
+                  <button
+                    className="settings-password-btn"
+                    onClick={startTwoFaSetup}
+                    disabled={twoFaBusy || saving || deleting}
+                  >
+                    {twoFaBusy ? "..." : t("account.settings.twofa.start_setup")}
+                  </button>
+
+                  {twoFaSecret ? (
+                    <div style={{ marginTop: 12 }}>
+                      <p className="settings-help">{t("account.settings.twofa.secret_label")}: <strong>{twoFaSecret}</strong></p>
+                      {twoFaOtpauthUrl ? (
+                        <a href={twoFaOtpauthUrl} className="me-profile-link" style={{ display: "inline-block", marginBottom: 10 }}>
+                          {t("account.settings.twofa.otpauth_link")}
+                        </a>
+                      ) : null}
+                      <input
+                        value={twoFaCode}
+                        onChange={(e) => setTwoFaCode(e.target.value)}
+                        placeholder={t("account.settings.twofa.code_placeholder")}
+                      />
+                      <button
+                        className="settings-password-btn"
+                        onClick={enableTwoFa}
+                        disabled={twoFaBusy || saving || deleting}
+                      >
+                        {twoFaBusy ? "..." : t("account.settings.twofa.enable")}
+                      </button>
+                    </div>
+                  ) : null}
+                </>
+              ) : (
+                <>
+                  <input
+                    value={twoFaCode}
+                    onChange={(e) => setTwoFaCode(e.target.value)}
+                    placeholder={t("account.settings.twofa.code_or_backup_placeholder")}
+                  />
+                  <div style={{ display: "flex", gap: 10, marginTop: 10, flexWrap: "wrap" }}>
+                    <button
+                      className="settings-password-btn"
+                      onClick={regenerateBackupCodes}
+                      disabled={twoFaBusy || saving || deleting}
+                    >
+                      {twoFaBusy ? "..." : t("account.settings.twofa.regenerate_backup")}
+                    </button>
+                    <button
+                      className="danger-btn delete-btn"
+                      onClick={disableTwoFa}
+                      disabled={twoFaBusy || saving || deleting}
+                    >
+                      {twoFaBusy ? "..." : t("account.settings.twofa.disable")}
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {twoFaBackupCodes.length > 0 ? (
+                <div style={{ marginTop: 12 }}>
+                  <p className="settings-help">{t("account.settings.twofa.backup_codes_label")}</p>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                    {twoFaBackupCodes.map((code) => (
+                      <span
+                        key={code}
+                        style={{
+                          border: "1px solid rgba(110,118,129,0.3)",
+                          borderRadius: 8,
+                          padding: "6px 10px",
+                          fontFamily: "monospace",
+                          fontSize: 12,
+                        }}
+                      >
+                        {code}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+            </div>
           </section>
 
           <section className="settings-section danger-zone">

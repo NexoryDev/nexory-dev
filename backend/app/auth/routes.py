@@ -1,13 +1,19 @@
 from flask import Blueprint, request, jsonify, make_response
 from app.auth.service import (
     login_user,
+    verify_login_2fa,
     refresh_tokens,
     logout_user,
     register_user,
     verify_email,
     request_password_reset,
     reset_password,
-    get_current_user
+    get_current_user,
+    get_2fa_status,
+    start_2fa_setup,
+    enable_2fa,
+    disable_2fa,
+    regenerate_2fa_backup_codes,
 )
 from app.config import Config
 
@@ -37,6 +43,13 @@ def clear_refresh_cookie(response):
         expires=0,
         path="/"
     )
+
+
+def extract_bearer_token():
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return None
+    return auth_header.split(" ", 1)[1].strip()
 
 
 @auth_bp.route("/me", methods=["GET"])
@@ -101,6 +114,12 @@ def login():
     if error:
         return jsonify({"error": error}), 401
 
+    if result.get("mfa_required"):
+        return jsonify({
+            "mfa_required": True,
+            "mfa_ticket": result["mfa_ticket"],
+        })
+
     res = make_response(jsonify({
         "access_token": result["access_token"],
         "remember_me": result["remember_me"]
@@ -108,6 +127,111 @@ def login():
 
     set_refresh_cookie(res, result["refresh_token"], remember_me=remember_me)
     return res
+
+
+@auth_bp.route("/2fa/verify", methods=["POST"])
+def verify_2fa():
+    data = request.get_json() or {}
+
+    result, error = verify_login_2fa(
+        data.get("mfa_ticket"),
+        data.get("code"),
+    )
+
+    if error:
+        return jsonify({"error": error}), 401
+
+    res = make_response(jsonify({
+        "access_token": result["access_token"],
+        "remember_me": result["remember_me"],
+    }))
+
+    set_refresh_cookie(res, result["refresh_token"], remember_me=result.get("remember_me", False))
+    return res
+
+
+@auth_bp.route("/2fa/status", methods=["GET"])
+def twofa_status():
+    token = extract_bearer_token()
+    if not token:
+        return jsonify({"error": "missing_token"}), 401
+
+    user = get_current_user(token)
+    if not user:
+        return jsonify({"error": "invalid_token"}), 401
+
+    return jsonify({"enabled": get_2fa_status(user["id"])})
+
+
+@auth_bp.route("/2fa/setup", methods=["POST"])
+def twofa_setup():
+    token = extract_bearer_token()
+    if not token:
+        return jsonify({"error": "missing_token"}), 401
+
+    user = get_current_user(token)
+    if not user:
+        return jsonify({"error": "invalid_token"}), 401
+
+    result, error = start_2fa_setup(user["id"])
+    if error:
+        return jsonify({"error": error}), 400
+
+    return jsonify(result)
+
+
+@auth_bp.route("/2fa/enable", methods=["POST"])
+def twofa_enable():
+    token = extract_bearer_token()
+    if not token:
+        return jsonify({"error": "missing_token"}), 401
+
+    user = get_current_user(token)
+    if not user:
+        return jsonify({"error": "invalid_token"}), 401
+
+    data = request.get_json() or {}
+    result, error = enable_2fa(user["id"], data.get("code"))
+    if error:
+        return jsonify({"error": error}), 400
+
+    return jsonify(result)
+
+
+@auth_bp.route("/2fa/disable", methods=["POST"])
+def twofa_disable():
+    token = extract_bearer_token()
+    if not token:
+        return jsonify({"error": "missing_token"}), 401
+
+    user = get_current_user(token)
+    if not user:
+        return jsonify({"error": "invalid_token"}), 401
+
+    data = request.get_json() or {}
+    result, error = disable_2fa(user["id"], data.get("code"))
+    if error:
+        return jsonify({"error": error}), 400
+
+    return jsonify(result)
+
+
+@auth_bp.route("/2fa/backup/regenerate", methods=["POST"])
+def twofa_regenerate_backup_codes():
+    token = extract_bearer_token()
+    if not token:
+        return jsonify({"error": "missing_token"}), 401
+
+    user = get_current_user(token)
+    if not user:
+        return jsonify({"error": "invalid_token"}), 401
+
+    data = request.get_json() or {}
+    result, error = regenerate_2fa_backup_codes(user["id"], data.get("code"))
+    if error:
+        return jsonify({"error": error}), 400
+
+    return jsonify(result)
 
 
 @auth_bp.route("/refresh", methods=["POST"])

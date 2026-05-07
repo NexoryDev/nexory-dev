@@ -62,6 +62,11 @@ def create_app():
     limiter.limit("10 per minute")(app.view_functions["auth.login"])
     limiter.limit("5 per minute")(app.view_functions["auth.register"])
     limiter.limit("5 per minute")(app.view_functions["auth.password_request"])
+    limiter.limit("10 per minute")(app.view_functions["auth.verify_2fa"])
+    limiter.limit("5 per minute")(app.view_functions["auth.twofa_setup"])
+    limiter.limit("5 per minute")(app.view_functions["auth.twofa_enable"])
+    limiter.limit("5 per minute")(app.view_functions["auth.twofa_disable"])
+    limiter.limit("3 per minute")(app.view_functions["auth.twofa_regenerate_backup_codes"])
     limiter.limit("30 per minute")(app.view_functions["github.github"])
 
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)

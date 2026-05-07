@@ -19,6 +19,9 @@ export default function Login() {
 
   const [resetEmail, setResetEmail] = useState("");
   const [resetStep, setResetStep] = useState(false);
+  const [mfaStep, setMfaStep] = useState(false);
+  const [mfaTicket, setMfaTicket] = useState("");
+  const [mfaCode, setMfaCode] = useState("");
 
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState("");
@@ -89,6 +92,14 @@ export default function Login() {
       device_id: getDeviceId(),
     });
 
+    if (res.mfa_required && res.mfa_ticket) {
+      setMfaStep(true);
+      setMfaTicket(res.mfa_ticket);
+      setMfaCode("");
+      setLoading(false);
+      return;
+    }
+
     if (res.access_token) {
       await setToken(res.access_token, rememberMe);
       navigate("/me", { replace: true });
@@ -98,6 +109,46 @@ export default function Login() {
         invalid_credentials: t("login.login_failed"),
       };
       setFormError(errorMessages[res.error] || t("login.login_failed"));
+    }
+
+    setLoading(false);
+  }
+
+  async function verifyMfa() {
+    setLoading(true);
+    setFormError("");
+    setFormSuccess("");
+
+    if (!mfaCode.trim()) {
+      setFormError(t("login.mfa_code_required"));
+      setLoading(false);
+      return;
+    }
+
+    const res = await api("/api/auth/2fa/verify", {
+      mfa_ticket: mfaTicket,
+      code: mfaCode,
+    });
+
+    if (res.access_token) {
+      await setToken(res.access_token, rememberMe);
+      navigate("/me", { replace: true });
+      return;
+    }
+
+    const errorMessages = {
+      invalid_code: t("login.mfa_invalid_code"),
+      invalid_mfa_ticket: t("login.mfa_session_expired"),
+      too_many_attempts: t("login.mfa_too_many_attempts"),
+    };
+
+    setFormError(errorMessages[res.error] || t("login.login_failed"));
+
+    // Ticket abgelaufen oder verbraucht → zurück zum Login
+    if (res.error === "invalid_mfa_ticket" || res.error === "too_many_attempts") {
+      setMfaStep(false);
+      setMfaTicket("");
+      setMfaCode("");
     }
 
     setLoading(false);
@@ -168,80 +219,112 @@ export default function Login() {
 
         {!resetStep ? (
           <>
-            <input
-              className={errors.email ? "input-error" : ""}
-              placeholder={mode === "login" ? t("login.identifier") : t("login.mail")}
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setErrors((prev) => ({ ...prev, email: undefined }));
-                setFormError("");
-              }}
-            />
-
-            <div className="password-wrapper">
-              <input
-                className={errors.password ? "input-error" : ""}
-                type={showPassword ? "text" : "password"}
-                placeholder={t("login.password")}
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  setErrors((prev) => ({ ...prev, password: undefined }));
-                  setFormError("");
-                }}
-              />
-
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowPassword((v) => !v)}
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            </div>
-
-            {mode === "login" && (
-              <label className="remember">
+            {mfaStep ? (
+              <>
                 <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className={formError ? "input-error" : ""}
+                  placeholder={t("login.mfa_placeholder")}
+                  value={mfaCode}
+                  onChange={(e) => {
+                    setMfaCode(e.target.value);
+                    setFormError("");
+                  }}
                 />
-                {t("login.remember_me")}
-              </label>
-            )}
 
-            {mode === "login" ? (
-              <button onClick={login} disabled={loading}>
-                {loading ? "..." : t("login.login")}
-              </button>
+                <button onClick={verifyMfa} disabled={loading}>
+                  {loading ? "..." : t("login.mfa_verify")}
+                </button>
+
+                <button
+                  className="link-btn"
+                  onClick={() => {
+                    setMfaStep(false);
+                    setMfaTicket("");
+                    setMfaCode("");
+                    setFormError("");
+                  }}
+                >
+                  {t("login.back")}
+                </button>
+              </>
             ) : (
-              <button onClick={register} disabled={loading}>
-                {loading ? "..." : t("login.register")}
-              </button>
-            )}
+              <>
+                <input
+                  className={errors.email ? "input-error" : ""}
+                  placeholder={mode === "login" ? t("login.identifier") : t("login.mail")}
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setErrors((prev) => ({ ...prev, email: undefined }));
+                    setFormError("");
+                  }}
+                />
 
-            {mode === "login" && (
-              <button
-                className="link-btn"
-                onClick={() => setResetStep(true)}
-              >
-                {t("login.forgot_password")}
-              </button>
-            )}
+                <div className="password-wrapper">
+                  <input
+                    className={errors.password ? "input-error" : ""}
+                    type={showPassword ? "text" : "password"}
+                    placeholder={t("login.password")}
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setErrors((prev) => ({ ...prev, password: undefined }));
+                      setFormError("");
+                    }}
+                  />
 
-            <div className="switch">
-              {mode === "login" ? (
-                <button className="link-btn" onClick={() => setMode("register")}>
-                  {t("login.register_btn")}
-                </button>
-              ) : (
-                <button className="link-btn" onClick={() => setMode("login")}>
-                  {t("login.login_btn")}
-                </button>
-              )}
-            </div>
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowPassword((v) => !v)}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+
+                {mode === "login" && (
+                  <label className="remember">
+                    <input
+                      type="checkbox"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                    />
+                    {t("login.remember_me")}
+                  </label>
+                )}
+
+                {mode === "login" ? (
+                  <button onClick={login} disabled={loading}>
+                    {loading ? "..." : t("login.login")}
+                  </button>
+                ) : (
+                  <button onClick={register} disabled={loading}>
+                    {loading ? "..." : t("login.register")}
+                  </button>
+                )}
+
+                {mode === "login" && (
+                  <button
+                    className="link-btn"
+                    onClick={() => setResetStep(true)}
+                  >
+                    {t("login.forgot_password")}
+                  </button>
+                )}
+
+                <div className="switch">
+                  {mode === "login" ? (
+                    <button className="link-btn" onClick={() => setMode("register")}>
+                      {t("login.register_btn")}
+                    </button>
+                  ) : (
+                    <button className="link-btn" onClick={() => setMode("login")}>
+                      {t("login.login_btn")}
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
           </>
         ) : (
           <>

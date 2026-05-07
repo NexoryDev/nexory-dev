@@ -20,6 +20,24 @@ const BADGE_ICONS = {
   verified_dev: devIcon,
 };
 
+const BADGE_DESCRIPTION_KEYS = {
+  day_one_supporter: "badge.desc.day_one_supporter",
+  waitlister: "badge.desc.waitlister",
+  nexory_contributor: "badge.desc.nexory_contributor",
+  verified_dev: "badge.desc.verified_dev",
+};
+
+function getBadgeDescription(t, badge) {
+  const key = BADGE_DESCRIPTION_KEYS[badge?.id];
+  if (key) {
+    return t(key);
+  }
+  if (typeof badge?.description === "string" && badge.description.startsWith("badge.desc.")) {
+    return t(badge.description);
+  }
+  return badge?.description ?? "";
+}
+
 function BadgeIcon({ id, color }) {
   const src = BADGE_ICONS[id];
   if (src) {
@@ -226,7 +244,7 @@ const Me = () => {
                   {t(`badge.rarity.${activeBadge.rarity}`) ?? activeBadge.rarity}
                 </span>
               </div>
-              <p className="badge-modal-desc">{t(activeBadge.description)}</p>
+              <p className="badge-modal-desc">{getBadgeDescription(t, activeBadge)}</p>
               {activeBadge.earned_at ? (
                 <p className="badge-modal-date">
                   {t("badge.earned_at")}{" "}

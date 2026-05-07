@@ -30,6 +30,8 @@ class Config:
 
     FRONTEND_URL = os.getenv("FRONTEND_URL")
 
+    REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
+
     if not SECRET_KEY or not JWT_SECRET_KEY:
         raise RuntimeError("Missing critical env secrets")
 

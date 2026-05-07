@@ -1,5 +1,11 @@
+import json
+import secrets
+import string
 import uuid
 from datetime import datetime, timedelta
+
+import pyotp
+import redis as _redis_lib
 
 from app.db.connection import get_db
 from app.auth.tokens import create_access_token, decode_access_token
@@ -7,6 +13,126 @@ from app.security.hashing import hash_token, generate_refresh_token
 from app.security.password import hash_password, verify_password
 from app.config import Config
 from app.mailer import send_verify_mail, send_reset_mail
+
+_DUMMY_HASH = "$2b$12$GhvMmNVjRW29ulnudl.LDuAHC8BXB3eFxRVdU4DRpBz.VUCuTe.Gm"
+_MFA_TICKET_TTL_SECS = 5 * 60
+_PENDING_SETUP_TTL_SECS = 10 * 60
+_MAX_MFA_ATTEMPTS = 5
+
+
+def _get_redis():
+    return _redis_lib.from_url(Config.REDIS_URL, decode_responses=True)
+
+
+def _store_mfa_challenge(ticket, data):
+    _get_redis().setex(f"mfa:{ticket}", _MFA_TICKET_TTL_SECS, json.dumps(data))
+
+
+def _get_mfa_challenge(ticket):
+    raw = _get_redis().get(f"mfa:{ticket}")
+    return json.loads(raw) if raw else None
+
+
+def _delete_mfa_challenge(ticket):
+    r = _get_redis()
+    r.delete(f"mfa:{ticket}")
+    r.delete(f"mfa_attempts:{ticket}")
+
+
+def _increment_mfa_attempt(ticket):
+    r = _get_redis()
+    key = f"mfa_attempts:{ticket}"
+    count = r.incr(key)
+    r.expire(key, _MFA_TICKET_TTL_SECS)
+    return count
+
+
+def _store_2fa_setup(user_id, secret):
+    _get_redis().setex(f"2fa_setup:{user_id}", _PENDING_SETUP_TTL_SECS, secret)
+
+
+def _get_2fa_setup(user_id):
+    return _get_redis().get(f"2fa_setup:{user_id}")
+
+
+def _delete_2fa_setup(user_id):
+    _get_redis().delete(f"2fa_setup:{user_id}")
+
+
+def _normalize_otp(value):
+    return "".join(ch for ch in str(value or "") if ch.isdigit())
+
+
+def _normalize_backup_code(value):
+    return str(value or "").strip().upper().replace("-", "").replace(" ", "")
+
+
+def _generate_backup_code():
+    alphabet = string.ascii_uppercase + string.digits
+    raw = "".join(secrets.choice(alphabet) for _ in range(8))
+    return f"{raw[:4]}-{raw[4:]}"
+
+
+def _replace_backup_codes(cur, user_id, count=8):
+    cur.execute("DELETE FROM user_2fa_backup_codes WHERE user_id=%s", (user_id,))
+    codes = []
+    for _ in range(count):
+        code = _generate_backup_code()
+        cur.execute(
+            "INSERT INTO user_2fa_backup_codes (user_id, code_hash) VALUES (%s,%s)",
+            (user_id, hash_token(_normalize_backup_code(code))),
+        )
+        codes.append(code)
+    return codes
+
+
+def _verify_backup_code(cur, user_id, code):
+    normalized = _normalize_backup_code(code)
+    if not normalized:
+        return False
+
+    cur.execute(
+        "SELECT id FROM user_2fa_backup_codes "
+        "WHERE user_id=%s AND code_hash=%s AND used_at IS NULL LIMIT 1",
+        (user_id, hash_token(normalized)),
+    )
+    row = cur.fetchone()
+    if not row:
+        return False
+
+    cur.execute("UPDATE user_2fa_backup_codes SET used_at=NOW() WHERE id=%s", (row["id"],))
+    return True
+
+
+def _issue_tokens(cur, user_id, ip, user_agent, device_id, remember_me=False, family_id=None):
+    access = create_access_token(user_id)
+    refresh = generate_refresh_token()
+    ttl = timedelta(days=7) if remember_me else timedelta(hours=24)
+
+    cur.execute(
+        """
+        INSERT INTO refresh_tokens
+        (id,user_id,token_hash,family_id,device_id,ip_address,user_agent,expires_at,revoked,remember_me)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,0,%s)
+        """,
+        (
+            str(uuid.uuid4()),
+            user_id,
+            hash_token(refresh),
+            family_id or str(uuid.uuid4()),
+            device_id,
+            ip,
+            user_agent,
+            datetime.utcnow() + ttl,
+            1 if remember_me else 0,
+        ),
+    )
+
+    return {
+        "access_token": access,
+        "refresh_token": refresh,
+        "remember_me": remember_me,
+    }
 
 
 def get_user(email):
@@ -21,7 +147,10 @@ def get_user(email):
 def get_user_by_id(user_id):
     db = get_db()
     cur = db.cursor()
-    cur.execute("SELECT id, email, username, avatar, verified FROM users WHERE id=%s", (user_id,))
+    cur.execute(
+        "SELECT id, email, username, avatar, verified, twofa_enabled FROM users WHERE id=%s",
+        (user_id,),
+    )
     result = cur.fetchone()
     db.close()
     return result
@@ -46,7 +175,8 @@ def get_current_user(token):
         "email": user["email"],
         "username": user.get("username"),
         "avatar": user.get("avatar"),
-        "verified": user["verified"]
+        "verified": user["verified"],
+        "twofa_enabled": bool(user.get("twofa_enabled", 0)),
     }
 
 
@@ -70,14 +200,14 @@ def register_user(email, password):
     try:
         cur.execute(
             "INSERT INTO users (id,email,password_hash,verified) VALUES (%s,%s,%s,%s)",
-            (user_id, email, pw_hash, 0)
+            (user_id, email, pw_hash, 0),
         )
         cur.execute(
             "INSERT INTO email_verifications (user_id, token_hash, expires_at, created_at) VALUES (%s,%s,%s,NOW())",
-            (user_id, token_hash, datetime.utcnow() + timedelta(hours=24))
+            (user_id, token_hash, datetime.utcnow() + timedelta(hours=24)),
         )
         db.commit()
-    except Exception as e:
+    except Exception:
         db.rollback()
         print("[register] DB error")
         return None, "db_error"
@@ -132,12 +262,12 @@ def login_user(identifier, password, ip, user_agent, device_id, remember_me=Fals
            OR LOWER(username)=LOWER(%s)
         LIMIT 1
         """,
-        (identifier, identifier)
+        (identifier, identifier),
     )
 
     user = cur.fetchone()
 
-    check_hash = user["password_hash"]
+    check_hash = user["password_hash"] if user else _DUMMY_HASH
     password_ok = verify_password(password, check_hash)
 
     if not user or not password_ok:
@@ -148,38 +278,205 @@ def login_user(identifier, password, ip, user_agent, device_id, remember_me=Fals
         db.close()
         return None, "email_not_verified"
 
-    access = create_access_token(user["id"])
-    refresh = generate_refresh_token()
+    if int(user.get("twofa_enabled", 0)) == 1 and user.get("twofa_secret"):
+        ticket = str(uuid.uuid4())
+        _store_mfa_challenge(ticket, {
+            "user_id": user["id"],
+            "remember_me": bool(remember_me),
+            "device_id": device_id,
+            "ip": ip,
+            "user_agent": user_agent,
+        })
+        db.close()
+        return {"mfa_required": True, "mfa_ticket": ticket}, None
 
-    ttl = timedelta(days=7) if remember_me else timedelta(hours=24)
+    try:
+        result = _issue_tokens(cur, user["id"], ip, user_agent, device_id, remember_me=bool(remember_me))
+        db.commit()
+        return result, None
+    except Exception:
+        db.rollback()
+        return None, "db_error"
+    finally:
+        db.close()
 
-    cur.execute(
-        """
-        INSERT INTO refresh_tokens
-        (id,user_id,token_hash,family_id,device_id,ip_address,user_agent,expires_at,revoked,remember_me)
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,0,%s)
-        """,
-        (
-            str(uuid.uuid4()),
-            user["id"],
-            hash_token(refresh),
-            str(uuid.uuid4()),
-            device_id,
-            ip,
-            user_agent,
-            datetime.utcnow() + ttl,
-            1 if remember_me else 0
+
+def verify_login_2fa(mfa_ticket, code):
+    ticket = str(mfa_ticket or "").strip()
+    challenge = _get_mfa_challenge(ticket)
+
+    if not challenge:
+        return None, "invalid_mfa_ticket"
+
+    db = get_db()
+    cur = db.cursor()
+
+    try:
+        cur.execute(
+            "SELECT id, twofa_enabled, twofa_secret FROM users WHERE id=%s LIMIT 1",
+            (challenge["user_id"],),
         )
-    )
+        user = cur.fetchone()
 
-    db.commit()
-    db.close()
+        if not user or int(user.get("twofa_enabled", 0)) != 1 or not user.get("twofa_secret"):
+            _delete_mfa_challenge(ticket)
+            return None, "invalid_mfa_ticket"
 
-    return {
-        "access_token": access,
-        "refresh_token": refresh,
-        "remember_me": remember_me
-    }, None
+        otp = _normalize_otp(code)
+        valid_totp = bool(otp) and pyotp.TOTP(user["twofa_secret"]).verify(otp, valid_window=1)
+        valid_backup = _verify_backup_code(cur, user["id"], code)
+
+        if not valid_totp and not valid_backup:
+            attempts = _increment_mfa_attempt(ticket)
+            if attempts >= _MAX_MFA_ATTEMPTS:
+                _delete_mfa_challenge(ticket)
+                return None, "too_many_attempts"
+            return None, "invalid_code"
+
+        result = _issue_tokens(
+            cur,
+            user["id"],
+            challenge.get("ip"),
+            challenge.get("user_agent"),
+            challenge.get("device_id"),
+            remember_me=bool(challenge.get("remember_me", False)),
+        )
+
+        db.commit()
+        _delete_mfa_challenge(ticket)
+        return result, None
+    except Exception:
+        db.rollback()
+        return None, "db_error"
+    finally:
+        db.close()
+
+
+def get_2fa_status(user_id):
+    db = get_db()
+    cur = db.cursor()
+    try:
+        cur.execute("SELECT twofa_enabled FROM users WHERE id=%s", (user_id,))
+        row = cur.fetchone()
+        return bool(row and int(row.get("twofa_enabled", 0)) == 1)
+    finally:
+        db.close()
+
+
+def start_2fa_setup(user_id):
+    db = get_db()
+    cur = db.cursor()
+    try:
+        cur.execute("SELECT email, twofa_enabled FROM users WHERE id=%s", (user_id,))
+        row = cur.fetchone()
+        if not row:
+            return None, "user_not_found"
+        if int(row.get("twofa_enabled", 0)) == 1:
+            return None, "already_enabled"
+
+        secret = pyotp.random_base32()
+        _store_2fa_setup(user_id, secret)
+
+        otp_auth_url = pyotp.TOTP(secret).provisioning_uri(
+            name=row["email"],
+            issuer_name="Nexory",
+        )
+        return {
+            "secret": secret,
+            "otpauth_url": otp_auth_url,
+        }, None
+    finally:
+        db.close()
+
+
+def enable_2fa(user_id, code):
+    secret = _get_2fa_setup(user_id)
+    if not secret:
+        return None, "setup_not_started"
+
+    otp = _normalize_otp(code)
+    if not otp or not pyotp.TOTP(secret).verify(otp, valid_window=1):
+        return None, "invalid_code"
+
+    db = get_db()
+    cur = db.cursor()
+    try:
+        cur.execute(
+            "UPDATE users SET twofa_enabled=1, twofa_secret=%s WHERE id=%s",
+            (secret, user_id),
+        )
+        cur.execute("UPDATE refresh_tokens SET revoked=1 WHERE user_id=%s", (user_id,))
+        backup_codes = _replace_backup_codes(cur, user_id)
+        db.commit()
+        _delete_2fa_setup(user_id)
+        return {"enabled": True, "backup_codes": backup_codes}, None
+    except Exception:
+        db.rollback()
+        return None, "db_error"
+    finally:
+        db.close()
+
+
+def _validate_twofa_code(cur, user, code):
+    otp = _normalize_otp(code)
+    if otp and pyotp.TOTP(user["twofa_secret"]).verify(otp, valid_window=1):
+        return True
+    return _verify_backup_code(cur, user["id"], code)
+
+
+def disable_2fa(user_id, code):
+    db = get_db()
+    cur = db.cursor()
+    try:
+        cur.execute(
+            "SELECT id, twofa_enabled, twofa_secret FROM users WHERE id=%s LIMIT 1",
+            (user_id,),
+        )
+        user = cur.fetchone()
+
+        if not user or int(user.get("twofa_enabled", 0)) != 1 or not user.get("twofa_secret"):
+            return None, "not_enabled"
+
+        if not _validate_twofa_code(cur, user, code):
+            return None, "invalid_code"
+
+        cur.execute("UPDATE users SET twofa_enabled=0, twofa_secret=NULL WHERE id=%s", (user_id,))
+        cur.execute("DELETE FROM user_2fa_backup_codes WHERE user_id=%s", (user_id,))
+        cur.execute("UPDATE refresh_tokens SET revoked=1 WHERE user_id=%s", (user_id,))
+        db.commit()
+        _PENDING_2FA_SETUPS.pop(user_id, None)
+        return {"enabled": False}, None
+    except Exception:
+        db.rollback()
+        return None, "db_error"
+    finally:
+        db.close()
+
+
+def regenerate_2fa_backup_codes(user_id, code):
+    db = get_db()
+    cur = db.cursor()
+    try:
+        cur.execute(
+            "SELECT id, twofa_enabled, twofa_secret FROM users WHERE id=%s LIMIT 1",
+            (user_id,),
+        )
+        user = cur.fetchone()
+
+        if not user or int(user.get("twofa_enabled", 0)) != 1 or not user.get("twofa_secret"):
+            return None, "not_enabled"
+
+        if not _validate_twofa_code(cur, user, code):
+            return None, "invalid_code"
+
+        backup_codes = _replace_backup_codes(cur, user_id)
+        db.commit()
+        return {"backup_codes": backup_codes}, None
+    except Exception:
+        db.rollback()
+        return None, "db_error"
+    finally:
+        db.close()
 
 
 def refresh_tokens(refresh_token):
@@ -220,8 +517,8 @@ def refresh_tokens(refresh_token):
             row["ip_address"],
             row["user_agent"],
             datetime.utcnow() + ttl,
-            1 if remember_me else 0
-        )
+            1 if remember_me else 0,
+        ),
     )
 
     db.commit()
@@ -256,10 +553,10 @@ def request_password_reset(email):
     try:
         cur.execute(
             "INSERT INTO password_resets (user_id, token, expires_at) VALUES (%s,%s,%s)",
-            (user["id"], token_hash, datetime.utcnow() + timedelta(hours=1))
+            (user["id"], token_hash, datetime.utcnow() + timedelta(hours=1)),
         )
         db.commit()
-    except Exception as e:
+    except Exception:
         db.rollback()
         print("[password_reset] DB error")
         return
@@ -292,7 +589,7 @@ def reset_password(token, new_password):
 
     cur.execute(
         "UPDATE users SET password_hash=%s WHERE id=%s",
-        (hash_password(new_password), row["user_id"])
+        (hash_password(new_password), row["user_id"]),
     )
     cur.execute("UPDATE refresh_tokens SET revoked=1 WHERE user_id=%s", (row["user_id"],))
     cur.execute("DELETE FROM password_resets WHERE user_id=%s", (row["user_id"],))

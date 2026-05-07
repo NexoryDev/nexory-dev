@@ -56,3 +56,19 @@ CREATE TABLE IF NOT EXISTS password_resets (
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS twofa_enabled TINYINT(1) NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS twofa_secret VARCHAR(64) DEFAULT NULL;
+
+CREATE TABLE IF NOT EXISTS user_2fa_backup_codes (
+    id         INT          NOT NULL AUTO_INCREMENT,
+    user_id    VARCHAR(36)  NOT NULL,
+    code_hash  VARCHAR(255) NOT NULL,
+    used_at    DATETIME     DEFAULT NULL,
+    created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    INDEX idx_twofa_user (user_id),
+    INDEX idx_twofa_hash (code_hash),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;

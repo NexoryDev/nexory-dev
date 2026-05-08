@@ -75,12 +75,12 @@ def register():
     email = data.get("email", "").lower().strip()
     password = data.get("password")
 
-    if not email or not password or len(password) < 8:
+    if not email or not password or len(password) < 8 or len(password) > 128:
         return jsonify({"error": "missing_fields"}), 400
 
     result, error = register_user(email, password)
 
-    if error:
+    if error and error != "email_exists":
         return jsonify({"error": error}), 400
 
     return jsonify({"status": "registered"})
@@ -283,7 +283,7 @@ def password_reset(token):
     data = request.get_json() or {}
     password = data.get("password")
 
-    if not password or len(password) < 6:
+    if not password or len(password) < 8 or len(password) > 128:
         return jsonify({"error": "weak_password"}), 400
 
     result = reset_password(token, password)

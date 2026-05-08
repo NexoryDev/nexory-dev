@@ -129,7 +129,7 @@ def update_password():
     data = request.get_json()
     password = data.get("password", "")
 
-    if not password or len(password) < 6:
+    if not password or len(password) < 8 or len(password) > 128:
         return jsonify({"error": "weak_password"}), 400
 
     success = change_password(user_id, password)

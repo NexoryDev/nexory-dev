@@ -149,7 +149,7 @@ def get_public_profile(username):
 
     try:
         cursor.execute(
-            "SELECT username, avatar, role, badges, created_at "
+            "SELECT username, avatar, role, badges, created_at, bio, location, timezone, github_username "
             "FROM users WHERE username = %s AND verified = 1",
             (username,),
         )
@@ -179,6 +179,10 @@ def get_public_profile(username):
     return {
         "username":     user["username"],
         "avatar":       user.get("avatar"),
+        "bio":          user.get("bio"),
+        "location":     user.get("location"),
+        "timezone":     user.get("timezone"),
+        "github_username": user.get("github_username"),
         "role":         user.get("role"),
         "badges":       badges,
         "member_since": member_since,

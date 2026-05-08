@@ -7,12 +7,9 @@ import "../../styles/Me.css";
 const Settings = () => {
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
-  const [avatarFile, setAvatarFile] = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState("");
-  const [avatarError, setAvatarError] = useState("");
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
@@ -428,33 +425,8 @@ const Settings = () => {
     setSaving(true);
     setError("");
     setUsernameError(false);
-    setAvatarError("");
 
     try {
-      if (avatarFile) {
-        setUploading(true);
-        const fd = new FormData();
-        fd.append("file", avatarFile);
-        const uploadRes = await fetch("/api/profile/me/avatar", {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-          body: fd,
-        });
-        setUploading(false);
-
-        if (!uploadRes.ok) {
-          const body = await uploadRes.json().catch(() => ({}));
-          if (uploadRes.status === 413) {
-            setAvatarError(t("account.settings.avatar.too_large"));
-          } else if (body.error === "invalid_file_type") {
-            setAvatarError(t("account.settings.avatar.invalid_type"));
-          } else {
-            setAvatarError(t("account.settings.avatar.upload_failed"));
-          }
-          return;
-        }
-      }
-
       const res = await fetch("/api/profile/me/update", {
         method: "POST",
         headers: {
@@ -481,7 +453,6 @@ const Settings = () => {
       setError(t("account.settings.errors.save_failed"));
     } finally {
       setSaving(false);
-      setUploading(false);
     }
   };
 
@@ -536,32 +507,6 @@ const Settings = () => {
     }
   };
 
-  const onAvatarSelect = (e) => {
-    const file = e.target.files?.[0];
-    setAvatarError("");
-
-    if (!file) {
-      setAvatarFile(null);
-      setAvatarPreview("");
-      return;
-    }
-
-    const allowed = ["image/jpeg", "image/png", "image/webp"];
-    if (!allowed.includes(file.type)) {
-      setAvatarError(t("account.settings.avatar.invalid_type"));
-      e.target.value = "";
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      setAvatarError(t("account.settings.avatar.too_large"));
-      e.target.value = "";
-      return;
-    }
-
-    setAvatarFile(file);
-    setAvatarPreview(URL.createObjectURL(file));
-  };
-
   if (loading || !user) return <div className="me-loading">{t("account.loading")}</div>;
 
   return (
@@ -591,31 +536,6 @@ const Settings = () => {
               </p>
             ) : null}
 
-            <div className="settings-avatar-wrap">
-              {avatarPreview || user?.avatar ? (
-                <img
-                  src={avatarPreview || user.avatar}
-                  alt="avatar preview"
-                  className="settings-avatar-preview"
-                />
-              ) : (
-                <div className="settings-avatar-placeholder">
-                  {user?.email?.charAt(0).toUpperCase() || "?"}
-                </div>
-              )}
-              <label className="settings-avatar-btn" htmlFor="avatar-upload">
-                {uploading ? "..." : t("account.settings.avatar.change")}
-              </label>
-              <input
-                id="avatar-upload"
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                onChange={onAvatarSelect}
-                style={{ display: "none" }}
-              />
-              {avatarError ? <p className="settings-username-error">{avatarError}</p> : null}
-            </div>
-
             <button className="settings-save-btn" onClick={save} disabled={saving || deleting}>
               {saving ? t("account.settings.actions.saving") : t("account.settings.actions.save_changes")}
             </button>
@@ -635,13 +555,6 @@ const Settings = () => {
                 </span>
                 <div style={{ display: "flex", gap: 10, marginTop: 12, flexWrap: "wrap" }}>
                   <button
-                    className="settings-password-btn"
-                    onClick={syncBadges}
-                    disabled={badgeSyncing || githubDisconnecting}
-                  >
-                    {badgeSyncing ? "..." : t("account.settings.github.sync_badges")}
-                  </button>
-                  <button
                     className="danger-btn delete-btn"
                     onClick={disconnectGithub}
                     disabled={githubDisconnecting || badgeSyncing}
@@ -653,7 +566,7 @@ const Settings = () => {
               </div>
             ) : (
               <button
-                className="settings-save-btn"
+                className="settings-password-btn"
                 onClick={connectGithub}
                 disabled={githubConnecting}
               >

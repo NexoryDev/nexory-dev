@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/Me.css";
 import { apiFetch } from "../../api/apiClient";
@@ -26,6 +26,54 @@ const BADGE_DESCRIPTION_KEYS = {
   nexory_contributor: "badge.desc.nexory_contributor",
   verified_dev: "badge.desc.verified_dev",
 };
+
+const LOCATION_OPTIONS = [
+  { value: "de_berlin", de: "Berlin, Deutschland", en: "Berlin, Germany", timezone: "Europe/Berlin" },
+  { value: "de_hamburg", de: "Hamburg, Deutschland", en: "Hamburg, Germany", timezone: "Europe/Berlin" },
+  { value: "de_munich", de: "Muenchen, Deutschland", en: "Munich, Germany", timezone: "Europe/Berlin" },
+  { value: "de_cologne", de: "Koeln, Deutschland", en: "Cologne, Germany", timezone: "Europe/Berlin" },
+  { value: "at_vienna", de: "Wien, Oesterreich", en: "Vienna, Austria", timezone: "Europe/Vienna" },
+  { value: "ch_zurich", de: "Zuerich, Schweiz", en: "Zurich, Switzerland", timezone: "Europe/Zurich" },
+  { value: "ch_geneva", de: "Genf, Schweiz", en: "Geneva, Switzerland", timezone: "Europe/Zurich" },
+  { value: "nl_amsterdam", de: "Amsterdam, Niederlande", en: "Amsterdam, Netherlands", timezone: "Europe/Amsterdam" },
+  { value: "be_brussels", de: "Bruessel, Belgien", en: "Brussels, Belgium", timezone: "Europe/Brussels" },
+  { value: "fr_paris", de: "Paris, Frankreich", en: "Paris, France", timezone: "Europe/Paris" },
+  { value: "es_madrid", de: "Madrid, Spanien", en: "Madrid, Spain", timezone: "Europe/Madrid" },
+  { value: "pt_lisbon", de: "Lissabon, Portugal", en: "Lisbon, Portugal", timezone: "Europe/Lisbon" },
+  { value: "it_rome", de: "Rom, Italien", en: "Rome, Italy", timezone: "Europe/Rome" },
+  { value: "dk_copenhagen", de: "Kopenhagen, Daenemark", en: "Copenhagen, Denmark", timezone: "Europe/Copenhagen" },
+  { value: "se_stockholm", de: "Stockholm, Schweden", en: "Stockholm, Sweden", timezone: "Europe/Stockholm" },
+  { value: "no_oslo", de: "Oslo, Norwegen", en: "Oslo, Norway", timezone: "Europe/Oslo" },
+  { value: "fi_helsinki", de: "Helsinki, Finnland", en: "Helsinki, Finland", timezone: "Europe/Helsinki" },
+  { value: "pl_warsaw", de: "Warschau, Polen", en: "Warsaw, Poland", timezone: "Europe/Warsaw" },
+  { value: "cz_prague", de: "Prag, Tschechien", en: "Prague, Czechia", timezone: "Europe/Prague" },
+  { value: "uk_london", de: "London, Vereinigtes Koenigreich", en: "London, United Kingdom", timezone: "Europe/London" },
+  { value: "ie_dublin", de: "Dublin, Irland", en: "Dublin, Ireland", timezone: "Europe/Dublin" },
+  { value: "us_new_york", de: "New York, USA", en: "New York, USA", timezone: "America/New_York" },
+  { value: "us_chicago", de: "Chicago, USA", en: "Chicago, USA", timezone: "America/Chicago" },
+  { value: "us_denver", de: "Denver, USA", en: "Denver, USA", timezone: "America/Denver" },
+  { value: "us_los_angeles", de: "Los Angeles, USA", en: "Los Angeles, USA", timezone: "America/Los_Angeles" },
+  { value: "ca_toronto", de: "Toronto, Kanada", en: "Toronto, Canada", timezone: "America/Toronto" },
+  { value: "ca_vancouver", de: "Vancouver, Kanada", en: "Vancouver, Canada", timezone: "America/Vancouver" },
+  { value: "br_sao_paulo", de: "Sao Paulo, Brasilien", en: "Sao Paulo, Brazil", timezone: "America/Sao_Paulo" },
+  { value: "ar_buenos_aires", de: "Buenos Aires, Argentinien", en: "Buenos Aires, Argentina", timezone: "America/Argentina/Buenos_Aires" },
+  { value: "za_johannesburg", de: "Johannesburg, Suedafrika", en: "Johannesburg, South Africa", timezone: "Africa/Johannesburg" },
+  { value: "eg_cairo", de: "Kairo, Aegypten", en: "Cairo, Egypt", timezone: "Africa/Cairo" },
+  { value: "in_delhi", de: "Neu-Delhi, Indien", en: "New Delhi, India", timezone: "Asia/Kolkata" },
+  { value: "ae_dubai", de: "Dubai, VAE", en: "Dubai, UAE", timezone: "Asia/Dubai" },
+  { value: "sg_singapore", de: "Singapur", en: "Singapore", timezone: "Asia/Singapore" },
+  { value: "jp_tokyo", de: "Tokio, Japan", en: "Tokyo, Japan", timezone: "Asia/Tokyo" },
+  { value: "kr_seoul", de: "Seoul, Suedkorea", en: "Seoul, South Korea", timezone: "Asia/Seoul" },
+  { value: "cn_shanghai", de: "Shanghai, China", en: "Shanghai, China", timezone: "Asia/Shanghai" },
+  { value: "au_sydney", de: "Sydney, Australien", en: "Sydney, Australia", timezone: "Australia/Sydney" },
+  { value: "au_perth", de: "Perth, Australien", en: "Perth, Australia", timezone: "Australia/Perth" },
+  { value: "nz_auckland", de: "Auckland, Neuseeland", en: "Auckland, New Zealand", timezone: "Pacific/Auckland" },
+];
+
+const LOCATION_TIMEZONE_BY_VALUE = LOCATION_OPTIONS.reduce((acc, item) => {
+  acc[item.value] = item.timezone;
+  return acc;
+}, {});
 
 function getBadgeDescription(t, badge) {
   const key = BADGE_DESCRIPTION_KEYS[badge?.id];
@@ -83,8 +131,20 @@ const Me = () => {
   const [badges, setBadges] = useState([]);
   const [activeBadge, setActiveBadge] = useState(null);
   const [syncing, setSyncing] = useState(false);
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [profileError, setProfileError] = useState("");
+  const [profileSuccess, setProfileSuccess] = useState("");
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState("");
+  const [profileForm, setProfileForm] = useState({
+    bio: "",
+    location: "",
+    timezone: "",
+  });
   const navigate = useNavigate();
   const { t, language } = useLanguage();
+  const avatarInputRef = useRef(null);
 
   const getAccessToken = () =>
     localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
@@ -98,12 +158,134 @@ const Me = () => {
       ...data.user,
       username: data.user.username ?? data.user.email,
       avatar: data.user.avatar || null,
+      bio: data.user.bio || "",
+      location: data.user.location || "",
+      timezone: data.user.timezone || LOCATION_TIMEZONE_BY_VALUE[data.user.location] || "",
       achievements: data.user.achievements || [],
     };
 
     setUser(baseUser);
+    setProfileForm({
+      bio: baseUser.bio,
+      location: baseUser.location,
+      timezone: baseUser.timezone,
+    });
+    setAvatarPreview("");
+    setAvatarFile(null);
     setBadges(Array.isArray(data.user.badges) ? data.user.badges : []);
   };
+
+  const onAvatarClick = () => {
+    if (profileSaving || avatarUploading) return;
+    avatarInputRef.current?.click();
+  };
+
+  const onAvatarFileChange = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setProfileError(t("account.me.avatar_invalid"));
+      return;
+    }
+
+    setProfileError("");
+    setProfileSuccess("");
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
+  };
+
+  const uploadAvatar = async (token) => {
+    if (!avatarFile) return user?.avatar || null;
+
+    setAvatarUploading(true);
+    const formData = new FormData();
+    formData.append("file", avatarFile);
+
+    try {
+      const res = await fetch("/api/profile/me/avatar", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data.avatar) {
+        throw new Error("avatar_upload_failed");
+      }
+
+      return data.avatar;
+    } finally {
+      setAvatarUploading(false);
+    }
+  };
+
+  const saveProfile = async () => {
+    const token = getAccessToken();
+    if (!token) return navigate("/login");
+
+    setProfileSaving(true);
+    setProfileError("");
+    setProfileSuccess("");
+
+    try {
+      const uploadedAvatar = await uploadAvatar(token);
+      const payload = {
+        bio: profileForm.bio,
+        location: profileForm.location,
+        timezone: profileForm.timezone,
+      };
+
+      if (uploadedAvatar !== user?.avatar) {
+        payload.avatar = uploadedAvatar;
+      }
+
+      const res = await fetch("/api/profile/me/update", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || data.error) {
+        throw new Error(data.error || "save_failed");
+      }
+
+      setUser((prev) => ({
+        ...prev,
+        bio: profileForm.bio,
+        location: profileForm.location,
+        timezone: profileForm.timezone,
+        ...(uploadedAvatar && uploadedAvatar !== prev?.avatar ? { avatar: uploadedAvatar } : {}),
+      }));
+
+      setAvatarFile(null);
+      setAvatarPreview("");
+      if (avatarInputRef.current) avatarInputRef.current.value = "";
+
+      setProfileSuccess(t("account.me.profile_saved"));
+      setTimeout(() => setProfileSuccess(""), 5000);
+    } catch {
+      setProfileError(t("account.me.profile_save_failed"));
+    } finally {
+      setProfileSaving(false);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+    };
+  }, [avatarPreview]);
 
   const syncBadges = async () => {
     const token = getAccessToken();
@@ -139,33 +321,100 @@ const Me = () => {
     <div className="me-layout">
       <main className="me-content">
 
+        {profileError ? <p className="settings-error me-top-msg">{profileError}</p> : null}
+        {profileSuccess ? <p className="settings-success me-top-msg">{profileSuccess}</p> : null}
+
         <div className="me-header">
-          <div className="avatar">
-            {user.avatar ? (
-              <img src={user.avatar} alt={user.username} />
+          <div
+            className="avatar avatar-editable"
+            onClick={onAvatarClick}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onAvatarClick();
+              }
+            }}
+            aria-label={t("account.me.avatar_change")}
+            title={t("account.me.avatar_change")}
+          >
+            {avatarPreview || user.avatar ? (
+              <img src={avatarPreview || user.avatar} alt={user.username} />
             ) : (
               <span>{user.email?.charAt(0).toUpperCase() || "?"}</span>
             )}
+            <span className="avatar-edit-label">{t("account.me.avatar_change")}</span>
           </div>
-          <div>
-            <h2>{user.username}</h2>
+          <div className="me-header-info">
+            <div className="me-header-top">
+              <h2>{user.username}</h2>
+              {user.username ? (
+                <a
+                  href={`/user/${user.username}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="me-profile-link"
+                >
+                  {t("account.me.public_profile")}
+                </a>
+              ) : null}
+            </div>
             <p className="me-email">{user.email}</p>
+            <input
+              ref={avatarInputRef}
+              type="file"
+              accept="image/png,image/jpeg,image/jpg,image/webp"
+              className="me-hidden-input"
+              onChange={onAvatarFileChange}
+            />
           </div>
         </div>
+
+        <div className="me-section me-section-first">
+          <h3 className="me-section-title">{t("account.me.profile_details")}</h3>
+
+          <div className="me-profile-grid">
+            <label className="me-field">
+              <span>{t("account.me.bio_label")}</span>
+              <textarea
+                value={profileForm.bio}
+                onChange={(e) => setProfileForm((prev) => ({ ...prev, bio: e.target.value }))}
+                maxLength={25}
+                placeholder={t("account.me.bio_placeholder")}
+              />
+              <span className="me-bio-counter">{profileForm.bio.length}/25</span>
+            </label>
+
+            <label className="me-field">
+              <span>{t("account.me.location_label")}</span>
+              <select
+                value={profileForm.location}
+                onChange={(e) => {
+                  const nextLocation = e.target.value;
+                  setProfileForm((prev) => ({
+                    ...prev,
+                    location: nextLocation,
+                    timezone: LOCATION_TIMEZONE_BY_VALUE[nextLocation] || "",
+                  }));
+                }}
+              >
+                <option value="">{language === "de" ? "Standort auswaehlen" : "Select location"}</option>
+                {LOCATION_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {language === "de" ? option.de : option.en}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div className="me-divider" />
 
         <div className="me-section">
           <div className="me-section-header">
             <h3 className="me-section-title">{t("account.me.badges")}</h3>
-            {user.username ? (
-              <a
-                href={`/user/${user.username}`}
-                target="_blank"
-                rel="noreferrer"
-                className="me-profile-link"
-              >
-                {t("account.me.public_profile")}
-              </a>
-            ) : null}
           </div>
 
           {syncing ? (
@@ -206,18 +455,17 @@ const Me = () => {
           ) : null}
         </div>
 
-        {user.achievements.length > 0 ? (
-          <div className="me-section">
-            <h3 className="me-section-title">{t("account.me.achievements")}</h3>
-            <div>
-              {user.achievements.map((a, i) => (
-                <div key={i} className="achievement">
-                  {a.name}
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : null}
+        <div className="me-divider" />
+
+        <div className="me-save-row">
+          <button
+            className="settings-save-btn me-save-btn"
+            onClick={saveProfile}
+            disabled={profileSaving || avatarUploading}
+          >
+            {profileSaving ? t("account.me.saving_profile") : t("account.me.save_profile")}
+          </button>
+        </div>
 
       </main>
 

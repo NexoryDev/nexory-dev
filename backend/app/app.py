@@ -53,7 +53,7 @@ def create_app():
             "X-Language",
             "X-CSRFToken"
         ],
-        methods=["GET", "POST", "OPTIONS"]
+        methods=["GET", "POST", "DELETE", "OPTIONS"]
     )
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")

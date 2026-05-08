@@ -6,7 +6,7 @@ export default function Privacy() {
       <div className="legal-container">
         <header className="legal-header">
           <p className="legal-label">Rechtliches</p>
-          <h1 className="legal-title">Datenschutzerklaerung</h1>
+          <h1 className="legal-title">Datenschutzerklärung</h1>
           <p className="legal-subtitle">Informationen zur Verarbeitung personenbezogener Daten auf nexory-dev.de</p>
         </header>
 
@@ -117,10 +117,24 @@ export default function Privacy() {
           <h2>7. Profil, Avatar und öffentliche Profile</h2>
           <p>
             Wenn ein Username gesetzt ist, kann ein öffentliches Profil unter <code>/user/&lt;username&gt;</code>
-            abrufbar sein. Dort werden Username, Avatar (falls gesetzt), Mitglied seit sowie Badges angezeigt.
+            abrufbar sein. Dort werden folgende Daten angezeigt, sofern du sie angegeben hast:
+          </p>
+          <ul>
+            <li><strong>Username</strong></li>
+            <li><strong>Avatar</strong> (falls gesetzt)</li>
+            <li><strong>Mitglied seit</strong> (Monat und Jahr)</li>
+            <li><strong>Bio</strong> (kurze Selbstbeschreibung, optional)</li>
+            <li><strong>Standort</strong> (optional, aus vorgegebener Liste)</li>
+            <li><strong>Zeitzone</strong> (wird aus gewähltem Standort abgeleitet, optional)</li>
+            <li><strong>Badges</strong></li>
+          </ul>
+          <p>
+            Diese Angaben sind freiwillig. Du kannst sie jederzeit in deinem Profil ändern oder entfernen.
+            Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch aktive Eingabe).
           </p>
           <p>
-            Avatar-Uploads werden serverseitig verarbeitet, auf ein quadratisches Format zugeschnitten und gespeichert.
+            Avatar-Uploads werden serverseitig verarbeitet, auf ein quadratisches Format (400×400 px) zugeschnitten
+            und als JPEG gespeichert. Der ursprüngliche Dateiname wird nicht gespeichert.
           </p>
         </section>
 
@@ -227,11 +241,12 @@ export default function Privacy() {
         </section>
 
         <section className="legal-section">
-          <h2>11. Speicherdaür</h2>
+          <h2>11. Speicherdauer</h2>
           <ul>
-            <li>Konto- und Profildaten: bis zur Löschung des Kontos</li>
+            <li>Konto- und Profildaten (E-Mail, Username, Avatar): bis zur Löschung des Kontos</li>
+            <li>Profilangaben (Bio, Standort, Zeitzone): bis zur Änderung oder Löschung des Kontos</li>
             <li>Refresh-Tokens: bis Ablauf oder Widerruf</li>
-            <li>E-Mail-Verifizierungen und Passwort-Reset-Tokens: nur befristet</li>
+            <li>E-Mail-Verifizierungen und Passwort-Reset-Tokens: nur befristet (wenige Stunden)</li>
             <li>2FA-Backup-Codes: bis Verbrauch, Regenerierung oder Deaktivierung von 2FA</li>
             <li>GitHub-Nutzername und GitHub-ID: bis zur Trennung der Verbindung oder Kontolöschung</li>
             <li>Discord-Bot-Daten: bis zur Löschung durch Nutzer/Guild-Admins oder Entfernung des Bots</li>
@@ -265,7 +280,7 @@ export default function Privacy() {
         </section>
 
         <footer className="legal-foot">
-          <p>Stand: 8. Mai 2026</p>
+          <p>Stand: 8. Mai 2026 · Version 2</p>
         </footer>
       </div>
     </main>

@@ -167,25 +167,74 @@
   border-radius: 999px;
 }
 
-/* ── Section ─────────────────────────────────────────────────── */
+/* ── Section (single box) ────────────────────────────────────── */
 .up-section {
   background: #0d1117;
   border: 1px solid #30363d;
   border-top: none;
-  padding: 26px 36px;
   border-radius: 0 0 14px 14px;
+  overflow: hidden;
+}
+
+.up-section-inner {
+  padding: 26px 36px;
+}
+
+.up-divider {
+  height: 1px;
+  background: #30363d;
+  margin: 0;
 }
 
 .up-section-title {
   display: flex;
   align-items: center;
   gap: 7px;
-  margin: 0 0 20px;
+  margin: 0 0 16px;
   font-size: 12px;
   font-weight: 600;
   color: #8b949e;
   text-transform: uppercase;
   letter-spacing: 0.7px;
+}
+
+/* ── Bio ─────────────────────────────────────────────────────── */
+.up-bio {
+  margin: 0 0 14px;
+  color: #e6edf3;
+  font-size: 14px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ── Info rows (location / time / github) ─────────────────────── */
+.up-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.up-info-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #8b949e;
+  font-size: 13px;
+}
+
+.up-info-row svg {
+  flex-shrink: 0;
+  color: #6e7681;
+}
+
+.up-info-row span {
+  color: #c9d1d9;
+}
+
+.up-tz {
+  color: #6e7681;
+  font-size: 12px;
 }
 
 .up-empty {
@@ -509,6 +558,10 @@
 
   .up-section {
     padding: 20px 22px;
+  }
+
+  .up-meta-grid {
+    grid-template-columns: 1fr;
   }
 
   .up-badges-grid {

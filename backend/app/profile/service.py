@@ -28,6 +28,9 @@ def update_user(user_id, data):
     username = data.get("username")
     avatar = data.get("avatar")
     github_username = data.get("github_username")
+    bio = data.get("bio")
+    location = data.get("location")
+    timezone_value = data.get("timezone")
 
     if username is not None:
         username = username.strip()
@@ -47,7 +50,7 @@ def update_user(user_id, data):
 
     if avatar is not None:
         avatar = avatar.strip()
-        if avatar and not avatar.startswith(("http://", "https://")):
+        if avatar and not avatar.startswith(("http://", "https://", "/uploads/")):
             db.close()
             return False, "invalid_avatar"
         fields.append("avatar=%s")
@@ -60,6 +63,30 @@ def update_user(user_id, data):
             return False, "github_username_too_long"
         fields.append("github_username=%s")
         values.append(github_username if github_username != "" else None)
+
+    if bio is not None:
+        bio = bio.strip()
+        if len(bio) > 280:
+            db.close()
+            return False, "bio_too_long"
+        fields.append("bio=%s")
+        values.append(bio if bio != "" else None)
+
+    if location is not None:
+        location = location.strip()
+        if len(location) > 120:
+            db.close()
+            return False, "location_too_long"
+        fields.append("location=%s")
+        values.append(location if location != "" else None)
+
+    if timezone_value is not None:
+        timezone_value = timezone_value.strip()
+        if len(timezone_value) > 64:
+            db.close()
+            return False, "timezone_too_long"
+        fields.append("timezone=%s")
+        values.append(timezone_value if timezone_value != "" else None)
 
     if not fields:
         db.close()
@@ -161,6 +188,9 @@ def serialize_user(user):
         "username": username,
         "github_username": user.get("github_username"),
         "github_id": user.get("github_id"),
+        "bio": user.get("bio"),
+        "location": user.get("location"),
+        "timezone": user.get("timezone"),
         "avatar": user.get("avatar"),
         "role": user.get("role"),
         "badges": user.get("badges") or [],

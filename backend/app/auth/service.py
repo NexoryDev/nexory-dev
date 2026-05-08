@@ -520,7 +520,7 @@ def disable_2fa(user_id, code):
         cur.execute("DELETE FROM user_2fa_backup_codes WHERE user_id=%s", (user_id,))
         cur.execute("UPDATE refresh_tokens SET revoked=1 WHERE user_id=%s", (user_id,))
         db.commit()
-        _PENDING_2FA_SETUPS.pop(user_id, None)
+        _delete_2fa_setup(user_id)
         return {"enabled": False}, None
     except Exception:
         db.rollback()

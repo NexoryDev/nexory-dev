@@ -254,6 +254,15 @@ export default function Home() {
       output.innerHTML = '';
       let index = 0;
 
+      function escapeHtml(str) {
+        return str
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
       function type() {
         if (!outputRef.current) return;
 
@@ -264,7 +273,7 @@ export default function Home() {
           output.innerHTML = lines
           .map((line, i) => {
             const isLast = i === lines.length - 1;
-            return `<span class="code-line">${line}${isLast ? '<span class="cursor"></span>' : ''}</span>`;
+            return `<span class="code-line">${escapeHtml(line)}${isLast ? '<span class="cursor"></span>' : ''}</span>`;
           })
           .join('');
 

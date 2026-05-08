@@ -22,6 +22,7 @@ import AccountLayout from "./pages/profile/AccountLayout";
 import VerifyEmail from "./pages/VerifyEmail";
 import ResetPassword from "./pages/ResetPassword";
 import UserProfile from "./pages/user/UserProfile";
+import GitHubCallback from "./pages/GitHubCallback";
 
 const MIN_PRELOADER_MS = 700;
 const BOOTSTRAP_TIMEOUT_MS = 4000;
@@ -103,6 +104,7 @@ function AppContent() {
             <Route path="settings" element={<Settings />} />
           </Route>
           <Route path="/user/:username" element={<UserProfile />} />
+          <Route path="/github/callback" element={<GitHubCallback />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
 

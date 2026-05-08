@@ -81,6 +81,12 @@ MAIL_TLS=true
 FRONTEND_URL=http://localhost:3000
 
 GITHUB_TOKEN=your-github-personal-access-token
+
+# GitHub OAuth App (für Account-Verbindung)
+# Erstelle eine OAuth App unter https://github.com/settings/developers
+# Callback URL: https://yourdomain.com/github/callback
+GITHUB_CLIENT_ID=your-github-oauth-app-client-id
+GITHUB_CLIENT_SECRET=your-github-oauth-app-client-secret
 ```
 
 ---

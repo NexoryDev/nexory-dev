@@ -90,6 +90,7 @@ export default function Privacy() {
             <li><strong>Avatar</strong> (optional)</li>
             <li><strong>Verifizierungsstatus</strong> und Konto-Metadaten</li>
             <li><strong>Refresh-Token-Metadaten</strong> (Token-Hash, Ablaufzeit, User-Agent, IP, device_id)</li>
+            <li><strong>GitHub-Nutzername und GitHub-ID</strong> (nur bei freiwilliger Verbindung, siehe Abschnitt 9a)</li>
           </ul>
           <p>
             Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung des Kontosystems).
@@ -132,7 +133,7 @@ export default function Privacy() {
         </section>
 
         <section className="legal-section">
-          <h2>9. GitHub-Daten</h2>
+          <h2>9. GitHub-Daten (öffentliche Organisationsdaten)</h2>
           <p>
             In Teilen der Website werden öffentlich verfügbare Daten aus der GitHub-API angezeigt,
             insbesondere zur GitHub-Organisation <strong>NexoryDev</strong>
@@ -162,7 +163,38 @@ export default function Privacy() {
             .
           </p>
         </section>
-
+        <section className="legal-section">
+          <h2>9a. GitHub-Kontoverbindung (OAuth)</h2>
+          <p>
+            Du kannst deinen GitHub-Account freiwillig mit deinem Nexory-Konto verbinden, um GitHub-basierte
+            Badges (z. B. &bdquo;Nexory Contributor&ldquo;) freizuschalten.
+          </p>
+          <p>
+            Dabei werden ausschliesslich folgende Daten aus dem öffentlichen GitHub-Profil dauerhaft gespeichert:
+          </p>
+          <ul>
+            <li><strong>GitHub-Nutzername</strong> (Login-Name, öffentlich auf GitHub)</li>
+            <li><strong>GitHub-User-ID</strong> (numerische ID zur eindeutigen Zuordnung)</li>
+          </ul>
+          <p>
+            Es werden <strong>keine</strong> E-Mail-Adressen, keine privaten Repository-Daten,
+            keine OAuth-Tokens und kein Schreibzugriff auf GitHub abgefragt oder gespeichert.
+            Der verwendete OAuth-Scope ist auf <code>read:user</code> beschraenkt.
+          </p>
+          <p>
+            Der während der Verbindung temporär ausgestellte GitHub-OAuth-Token wird
+            ausschliesslich zum Abruf des öffentlichen Profils verwendet und danach
+            <strong> nicht</strong> persistiert.
+          </p>
+          <p>
+            Die Verbindung ist freiwillig. Du kannst sie jederzeit in den Einstellungen
+            deines Nexory-Kontos trennen. Dabei werden GitHub-Nutzername und GitHub-ID
+            sofort aus der Datenbank gelöscht.
+          </p>
+          <p>
+            Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch aktives Verbinden).
+          </p>
+        </section>
         <section className="legal-section">
           <h2>10. Discord-Bot Nexory</h2>
           <p>
@@ -201,6 +233,7 @@ export default function Privacy() {
             <li>Refresh-Tokens: bis Ablauf oder Widerruf</li>
             <li>E-Mail-Verifizierungen und Passwort-Reset-Tokens: nur befristet</li>
             <li>2FA-Backup-Codes: bis Verbrauch, Regenerierung oder Deaktivierung von 2FA</li>
+            <li>GitHub-Nutzername und GitHub-ID: bis zur Trennung der Verbindung oder Kontolöschung</li>
             <li>Discord-Bot-Daten: bis zur Löschung durch Nutzer/Guild-Admins oder Entfernung des Bots</li>
           </ul>
         </section>
@@ -232,7 +265,7 @@ export default function Privacy() {
         </section>
 
         <footer className="legal-foot">
-          <p>Stand: 7. Mai 2026</p>
+          <p>Stand: 8. Mai 2026</p>
         </footer>
       </div>
     </main>

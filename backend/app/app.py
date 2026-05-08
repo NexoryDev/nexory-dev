@@ -9,6 +9,7 @@ import os
 from app.config import Config, UPLOAD_FOLDER
 from app.auth.routes import auth_bp
 from app.github.routes import github_bp
+from app.github.oauth import github_oauth_bp
 from app.profile.routes import profile_bp
 
 limiter = Limiter(key_func=get_remote_address, default_limits=[])
@@ -58,6 +59,7 @@ def create_app():
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(profile_bp, url_prefix="/api/profile")
     app.register_blueprint(github_bp, url_prefix="/api")
+    app.register_blueprint(github_oauth_bp, url_prefix="/api")
 
     limiter.limit("10 per minute")(app.view_functions["auth.login"])
     limiter.limit("5 per minute")(app.view_functions["auth.register"])

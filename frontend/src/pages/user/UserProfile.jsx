@@ -58,36 +58,14 @@ function BadgeIcon({ id, color }) {
     fill: "none",
     "aria-hidden": true,
   };
-  switch (id) {
-    case "waitlister":
-      return (
-        <svg {...props}>
-          <defs>
-            <linearGradient id="grad-wl" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#c4b5fd" />
-              <stop offset="100%" stopColor="#8b5cf6" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M6 3h12v4l-4 5 4 5v4H6v-4l4-5-4-5V3z"
-            fill="url(#grad-wl)"
-            opacity="0.9"
-          />
-          <path d="M6 3h12" stroke="#c4b5fd" strokeWidth="1.5" strokeLinecap="round" />
-          <path d="M6 21h12" stroke="#c4b5fd" strokeWidth="1.5" strokeLinecap="round" />
-          <path d="M8 17l4-4 4 4" fill="#fff" opacity="0.5" />
-        </svg>
-      );
-    default:
-      return (
-        <svg {...props}>
-          <circle cx="12" cy="12" r="9" fill={color} opacity="0.8" />
-          <text x="12" y="16" textAnchor="middle" fontSize="10" fill="#fff" fontWeight="bold">
-            ?
-          </text>
-        </svg>
-      );
-  }
+    return (
+      <svg {...props}>
+        <circle cx="12" cy="12" r="9" fill={color} opacity="0.8" />
+        <text x="12" y="16" textAnchor="middle" fontSize="10" fill="#fff" fontWeight="bold">
+          ?
+        </text>
+      </svg>
+    );
 }
 
 export default function UserProfile() {

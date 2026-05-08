@@ -27,6 +27,7 @@ def update_user(user_id, data):
 
     username = data.get("username")
     avatar = data.get("avatar")
+    github_username = data.get("github_username")
 
     if username is not None:
         username = username.strip()
@@ -51,6 +52,14 @@ def update_user(user_id, data):
             return False, "invalid_avatar"
         fields.append("avatar=%s")
         values.append(avatar if avatar != "" else None)
+
+    if github_username is not None:
+        github_username = github_username.strip()
+        if len(github_username) > 39:
+            db.close()
+            return False, "github_username_too_long"
+        fields.append("github_username=%s")
+        values.append(github_username if github_username != "" else None)
 
     if not fields:
         db.close()
@@ -150,6 +159,8 @@ def serialize_user(user):
         "id": user["id"],
         "email": user["email"],
         "username": username,
+        "github_username": user.get("github_username"),
+        "github_id": user.get("github_id"),
         "avatar": user.get("avatar"),
         "role": user.get("role"),
         "badges": user.get("badges") or [],

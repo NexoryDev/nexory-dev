@@ -1,6 +1,7 @@
 import json
 import secrets
 import string
+import time
 import uuid
 from datetime import datetime, timedelta
 
@@ -19,44 +20,119 @@ _MFA_TICKET_TTL_SECS = 5 * 60
 _PENDING_SETUP_TTL_SECS = 10 * 60
 _MAX_MFA_ATTEMPTS = 5
 
+_mem_store: dict[str, tuple[str, float]] = {}
+
+
+def _mem_set(key: str, ttl: int, value: str) -> None:
+    _mem_store[key] = (value, time.monotonic() + ttl)
+
+
+def _mem_get(key: str) -> str | None:
+    entry = _mem_store.get(key)
+    if entry is None:
+        return None
+    value, exp = entry
+    if time.monotonic() > exp:
+        _mem_store.pop(key, None)
+        return None
+    return value
+
+
+def _mem_del(*keys: str) -> None:
+    for k in keys:
+        _mem_store.pop(k, None)
+
+
+def _mem_incr(key: str, ttl: int) -> int:
+    raw = _mem_get(key)
+    count = (int(raw) if raw else 0) + 1
+    _mem_set(key, ttl, str(count))
+    return count
+
 
 def _get_redis():
     return _redis_lib.from_url(Config.REDIS_URL, decode_responses=True)
 
 
+def _redis_available() -> bool:
+    try:
+        _get_redis().ping()
+        return True
+    except Exception:
+        return False
+
+
+_redis_ok: bool | None = None
+
+
+def _use_redis() -> bool:
+    global _redis_ok
+    if _redis_ok is None:
+        _redis_ok = _redis_available()
+        if not _redis_ok:
+            import warnings
+            warnings.warn(
+                "Redis unavailable – using in-memory fallback for MFA/2FA state. "
+                "Not suitable for production or multi-process deployments.",
+                RuntimeWarning,
+                stacklevel=2,
+            )
+    return _redis_ok
+
+
 def _store_mfa_challenge(ticket, data):
-    _get_redis().setex(f"mfa:{ticket}", _MFA_TICKET_TTL_SECS, json.dumps(data))
+    if _use_redis():
+        _get_redis().setex(f"mfa:{ticket}", _MFA_TICKET_TTL_SECS, json.dumps(data))
+    else:
+        _mem_set(f"mfa:{ticket}", _MFA_TICKET_TTL_SECS, json.dumps(data))
 
 
 def _get_mfa_challenge(ticket):
-    raw = _get_redis().get(f"mfa:{ticket}")
+    if _use_redis():
+        raw = _get_redis().get(f"mfa:{ticket}")
+    else:
+        raw = _mem_get(f"mfa:{ticket}")
     return json.loads(raw) if raw else None
 
 
 def _delete_mfa_challenge(ticket):
-    r = _get_redis()
-    r.delete(f"mfa:{ticket}")
-    r.delete(f"mfa_attempts:{ticket}")
+    if _use_redis():
+        r = _get_redis()
+        r.delete(f"mfa:{ticket}")
+        r.delete(f"mfa_attempts:{ticket}")
+    else:
+        _mem_del(f"mfa:{ticket}", f"mfa_attempts:{ticket}")
 
 
 def _increment_mfa_attempt(ticket):
-    r = _get_redis()
-    key = f"mfa_attempts:{ticket}"
-    count = r.incr(key)
-    r.expire(key, _MFA_TICKET_TTL_SECS)
-    return count
+    if _use_redis():
+        r = _get_redis()
+        key = f"mfa_attempts:{ticket}"
+        count = r.incr(key)
+        r.expire(key, _MFA_TICKET_TTL_SECS)
+        return count
+    else:
+        return _mem_incr(f"mfa_attempts:{ticket}", _MFA_TICKET_TTL_SECS)
 
 
 def _store_2fa_setup(user_id, secret):
-    _get_redis().setex(f"2fa_setup:{user_id}", _PENDING_SETUP_TTL_SECS, secret)
+    if _use_redis():
+        _get_redis().setex(f"2fa_setup:{user_id}", _PENDING_SETUP_TTL_SECS, secret)
+    else:
+        _mem_set(f"2fa_setup:{user_id}", _PENDING_SETUP_TTL_SECS, secret)
 
 
 def _get_2fa_setup(user_id):
-    return _get_redis().get(f"2fa_setup:{user_id}")
+    if _use_redis():
+        return _get_redis().get(f"2fa_setup:{user_id}")
+    return _mem_get(f"2fa_setup:{user_id}")
 
 
 def _delete_2fa_setup(user_id):
-    _get_redis().delete(f"2fa_setup:{user_id}")
+    if _use_redis():
+        _get_redis().delete(f"2fa_setup:{user_id}")
+    else:
+        _mem_del(f"2fa_setup:{user_id}")
 
 
 def _normalize_otp(value):

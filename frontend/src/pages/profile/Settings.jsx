@@ -19,6 +19,13 @@ const Settings = () => {
   const [error, setError] = useState("");
   const [usernameError, setUsernameError] = useState(false);
 
+  const [githubConnecting, setGithubConnecting] = useState(false);
+  const [githubDisconnecting, setGithubDisconnecting] = useState(false);
+  const [githubError, setGithubError] = useState("");
+  const [githubSuccess, setGithubSuccess] = useState("");
+  const [badgeSyncing, setBadgeSyncing] = useState(false);
+  const [badgeSyncMsg, setBadgeSyncMsg] = useState("");
+
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [changingPassword, setChangingPassword] = useState(false);
@@ -275,6 +282,97 @@ const Settings = () => {
     loadUser();
   }, []);
 
+  const connectGithub = async () => {
+    const token = getAccessToken();
+    if (!token) return navigate("/login");
+
+    setGithubConnecting(true);
+    setGithubError("");
+    setGithubSuccess("");
+
+    try {
+      const res = await fetch("/api/github/connect/start", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setGithubError(data.error === "github_oauth_not_configured"
+          ? t("account.settings.github.not_configured")
+          : t("account.settings.errors.save_failed"));
+        return;
+      }
+
+      // Store access token so the callback page can use it
+      sessionStorage.setItem("gh_connect_token", token);
+      window.location.href = data.url;
+    } catch {
+      setGithubError(t("account.settings.errors.save_failed"));
+    } finally {
+      setGithubConnecting(false);
+    }
+  };
+
+  const disconnectGithub = async () => {
+    const token = getAccessToken();
+    if (!token) return navigate("/login");
+
+    setGithubDisconnecting(true);
+    setGithubError("");
+    setGithubSuccess("");
+
+    try {
+      const res = await fetch("/api/profile/me/github", {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) {
+        setGithubError(t("account.settings.errors.save_failed"));
+        return;
+      }
+
+      setUser((prev) => prev ? { ...prev, github_username: null, github_id: null } : prev);
+      setGithubSuccess(t("account.settings.github.disconnected"));
+    } catch {
+      setGithubError(t("account.settings.errors.save_failed"));
+    } finally {
+      setGithubDisconnecting(false);
+    }
+  };
+
+  const syncBadges = async () => {
+    const token = getAccessToken();
+    if (!token) return navigate("/login");
+
+    setBadgeSyncing(true);
+    setBadgeSyncMsg("");
+
+    try {
+      const res = await fetch("/api/profile/me/badges/sync", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setBadgeSyncMsg(t("account.settings.github.sync_failed"));
+        return;
+      }
+
+      const count = Array.isArray(data.newly_earned) ? data.newly_earned.length : 0;
+      setBadgeSyncMsg(count > 0
+        ? t("account.settings.github.sync_new").replace("{count}", count)
+        : t("account.settings.github.sync_none"));
+    } catch {
+      setBadgeSyncMsg(t("account.settings.github.sync_failed"));
+    } finally {
+      setBadgeSyncing(false);
+    }
+  };
+
   const changePassword = async () => {
     setPasswordError("");
     setPasswordSuccess("");
@@ -521,6 +619,47 @@ const Settings = () => {
             <button className="settings-save-btn" onClick={save} disabled={saving || deleting}>
               {saving ? t("account.settings.actions.saving") : t("account.settings.actions.save_changes")}
             </button>
+          </section>
+
+          <section className="settings-section">
+            <h3 className="settings-title">{t("account.settings.github.title")}</h3>
+            <p className="settings-help">{t("account.settings.github.help")}</p>
+
+            {githubError ? <p className="settings-error">{githubError}</p> : null}
+            {githubSuccess ? <p className="settings-success">{githubSuccess}</p> : null}
+
+            {user?.github_id ? (
+              <div className="settings-github-connected">
+                <span className="settings-github-badge">
+                  ✓ {t("account.settings.github.connected_as").replace("{login}", user.github_username)}
+                </span>
+                <div style={{ display: "flex", gap: 10, marginTop: 12, flexWrap: "wrap" }}>
+                  <button
+                    className="settings-password-btn"
+                    onClick={syncBadges}
+                    disabled={badgeSyncing || githubDisconnecting}
+                  >
+                    {badgeSyncing ? "..." : t("account.settings.github.sync_badges")}
+                  </button>
+                  <button
+                    className="danger-btn delete-btn"
+                    onClick={disconnectGithub}
+                    disabled={githubDisconnecting || badgeSyncing}
+                  >
+                    {githubDisconnecting ? "..." : t("account.settings.github.disconnect")}
+                  </button>
+                </div>
+                {badgeSyncMsg ? <p className="settings-help" style={{ marginTop: 8 }}>{badgeSyncMsg}</p> : null}
+              </div>
+            ) : (
+              <button
+                className="settings-save-btn"
+                onClick={connectGithub}
+                disabled={githubConnecting}
+              >
+                {githubConnecting ? "..." : t("account.settings.github.connect")}
+              </button>
+            )}
           </section>
 
           <section className="settings-section">

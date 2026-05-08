@@ -140,6 +140,33 @@ def update_password():
     return jsonify({"status": "updated"})
 
 
+@profile_bp.route("/me/github", methods=["DELETE", "OPTIONS"])
+def disconnect_github():
+    if request.method == "OPTIONS":
+        return "", 204
+
+    user_id = extract_user_id()
+    if not user_id:
+        return jsonify({"error": "invalid_token"}), 401
+
+    from app.db.connection import get_db
+    db = get_db()
+    cursor = db.cursor()
+    try:
+        cursor.execute(
+            "UPDATE users SET github_id = NULL, github_username = NULL WHERE id = %s",
+            (user_id,),
+        )
+        db.commit()
+    except Exception:
+        db.rollback()
+        return jsonify({"error": "db_error"}), 500
+    finally:
+        db.close()
+
+    return jsonify({"status": "disconnected"})
+
+
 @profile_bp.route("/me/badges/sync", methods=["POST", "OPTIONS"])
 def sync_badges_route():
     if request.method == "OPTIONS":

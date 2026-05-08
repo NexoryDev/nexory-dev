@@ -13,16 +13,9 @@ BADGE_DEFINITIONS = {
         "color":       "#f59e0b",
         "rarity":      "legendary",
     },
-    "waitlister": {
-        "id":          "waitlister",
-        "name":        "Waitlister",
-        "description": "badge.desc.waitlister",
-        "color":       "#8b5cf6",
-        "rarity":      "rare",
-    },
     "nexory_contributor": {
         "id":          "nexory_contributor",
-        "name":        "Nexory Contributor",
+        "name":        "NexoryDev Contributor",
         "description": "badge.desc.nexory_contributor",
         "color":       "#ec4899",
         "rarity":      "epic",
@@ -69,8 +62,8 @@ def _check_day_one_supporter(user):
     finally:
         db.close()
 
-def _check_nexory_contributor(username):
-    if not username:
+def _check_nexory_contributor(github_username, github_id):
+    if not github_username or not github_id:
         return False
     
     token = get_token()
@@ -94,7 +87,7 @@ def _check_nexory_contributor(username):
             continue
 
         for contributor in contributors:
-            if contributor.get("login", "").lower() == username.lower():
+            if contributor.get("login", "").lower() == github_username.lower():
                 return True
     return False
 
@@ -109,11 +102,8 @@ def evaluate_badges(user):
     if user.get("verified") and user.get("username") and user.get("avatar"):
         newly_earned.add("verified_dev")
 
-    if _check_nexory_contributor(user.get("username")):
+    if _check_nexory_contributor(user.get("github_username"), user.get("github_id")):
         newly_earned.add("nexory_contributor")
-    
-    if "waitlister" in already_earned:
-        newly_earned.add("waitlister")
 
     all_ids = already_earned | newly_earned
     now = datetime.now(timezone.utc).isoformat()

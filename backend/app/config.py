@@ -32,6 +32,9 @@ class Config:
 
     REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
 
+    GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID", "")
+    GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET", "")
+
     if not SECRET_KEY or not JWT_SECRET_KEY:
         raise RuntimeError("Missing critical env secrets")
 

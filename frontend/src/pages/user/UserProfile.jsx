@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../../styles/UserProfile.css";
 import { useLanguage } from "../../context/LanguageContext";
+import { SvgBadges } from "../../components/icons/svgs";
 import supportIcon from "../../components/icons/support_icon.png";
 import devIcon from "../../components/icons/dev_icon.png";
 import contributorIcon from "../../components/icons/constributor_icon.png";
@@ -307,7 +308,6 @@ export default function UserProfile() {
         </div>
 
         <div className="up-section">
-          {/* ── Profile meta ── */}
           {(profile.bio || locationLabel || profileLocalTime || profile.github_username) && (
             <div className="up-section-inner">
               <h2 className="up-section-title">
@@ -354,12 +354,9 @@ export default function UserProfile() {
             <div className="up-divider" />
           )}
 
-          {/* ── Badges ── */}
           <div className="up-section-inner">
             <h2 className="up-section-title">
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
-                <path d="M8 1l1.8 3.6L14 5.6l-3 2.9.7 4.1L8 10.4l-3.7 2.2.7-4.1L2 5.6l4.2-.9L8 1z" fill="currentColor" />
-              </svg>
+              <SvgBadges size={12} style={{ marginRight: 4 }} />
               {t("profile.section.badges")}
             </h2>
             {profile.badges.length === 0 ? (

@@ -1,19 +1,29 @@
-import { StarIcon, RepoForkedIcon, IssueOpenedIcon, RepoIcon, PersonIcon, GearIcon, ProjectIcon } from '@primer/octicons-react';
+import {
+  StarIcon,
+  RepoForkedIcon,
+  IssueOpenedIcon,
+  RepoIcon,
+  PersonIcon,
+  GearIcon,
+  ProjectIcon
+} from '@primer/octicons-react';
 
 const ICON_SIZE = 16;
+
 const STAR_COLOR = '#fbbf24';
+const FORK_COLOR = '#79c0ff';
 const ISSUE_COLOR = '#ef4444';
 
 export function SvgStar(props) {
-  return <StarIcon size={ICON_SIZE} fill={STAR_COLOR} {...props} />;
+  return (<StarIcon size={ICON_SIZE} color={STAR_COLOR} {...props} />);
 }
 
 export function SvgFork(props) {
-  return <RepoForkedIcon size={ICON_SIZE} {...props} />;
+  return (<RepoForkedIcon size={ICON_SIZE} color={FORK_COLOR} {...props} />);
 }
 
 export function SvgOpenIssue(props) {
-  return <IssueOpenedIcon size={ICON_SIZE} fill={ISSUE_COLOR} {...props} />;
+  return (<IssueOpenedIcon size={ICON_SIZE} color={ISSUE_COLOR} {...props} />);
 }
 
 export const SvgIssue = SvgOpenIssue;

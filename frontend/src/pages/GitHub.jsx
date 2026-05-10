@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Star, GitFork } from 'lucide-react';
+import { SvgStar, SvgFork, SvgOpenIssue } from '../components/icons/svgs';
 import { useLanguage } from '../context/LanguageContext';
 import '../styles/Github.css';
 
@@ -10,11 +10,28 @@ const LANG_COLORS = {
   HTML: '#e34c26',
   CSS: '#563d7c',
   Java: '#b07219',
+  PHP: '#777bb4',
+  Ruby: '#701516',
+  C: '#555555',
   'C#': '#178600',
   'C++': '#f34b7d',
-  Go: '#00ADD8',
+  Kotlin: '#A97BFF',
+  Swift: '#ffac45',
+  Dart: '#00B4AB',
   Rust: '#dea584',
+  Go: '#00ADD8',
   Shell: '#89e051',
+  Vue: '#41b883',
+  SCSS: '#c6538c',
+  Less: '#1d365d',
+  Lua: '#000080',
+  Perl: '#0298c3',
+  R: '#198CE7',
+  Elixir: '#6e4a7e',
+  Haskell: '#5e5086',
+  Dockerfile: '#384d54',
+  Astro: '#ff5d01',
+  Svelte: '#ff3e00',
 };
 
 const ROLE_CSS = {
@@ -24,15 +41,44 @@ const ROLE_CSS = {
   viewer: 'pull',
 };
 
-function relativeTime(dateStr) {
+function relativeTime(dateStr, t) {
   if (!dateStr) return '';
-  const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
-  if (diff < 60) return `${diff}s ago`;
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-  if (diff < 30 * 86400) return `${Math.floor(diff / 86400)}d ago`;
-  if (diff < 365 * 86400) return `${Math.floor(diff / (30 * 86400))}mo ago`;
-  return `${Math.floor(diff / (365 * 86400))}y ago`;
+
+  const diff = Math.floor(
+    (Date.now() - new Date(dateStr).getTime()) / 1000
+  );
+
+  if (diff < 60) {
+    return t('github.time_seconds', { count: diff });
+  }
+
+  if (diff < 3600) {
+    return t('github.time_minutes', {
+      count: Math.floor(diff / 60),
+    });
+  }
+
+  if (diff < 86400) {
+    return t('github.time_hours', {
+      count: Math.floor(diff / 3600),
+    });
+  }
+
+  if (diff < 30 * 86400) {
+    return t('github.time_days', {
+      count: Math.floor(diff / 86400),
+    });
+  }
+
+  if (diff < 365 * 86400) {
+    return t('github.time_months', {
+      count: Math.floor(diff / (30 * 86400)),
+    });
+  }
+
+  return t('github.time_years', {
+    count: Math.floor(diff / (365 * 86400)),
+  });
 }
 
 export default function GitHub({ initialData, initialError }) {
@@ -96,12 +142,12 @@ export default function GitHub({ initialData, initialError }) {
         {(repos.length > 0 || members.length > 0) && (
           <div className="gh-stats">
             <span className="gh-stat">
-              <Star size={13} />
-              {totalStars} Stars
+              <SvgStar size={13}/>
+              {totalStars} {t('github.stars')}
             </span>
             <span className="gh-stat">
-              <GitFork size={13} />
-              {totalForks} Forks
+              <SvgFork size={13} />
+              {totalForks} {t('github.forks')}
             </span>
             <span className="gh-stat">
               {totalCommits} {t('github.commits')}
@@ -146,15 +192,21 @@ export default function GitHub({ initialData, initialError }) {
                       </span>
                     )}
                     <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <Star size={12} />
+                      <SvgStar size={12} />
                       {repo.stargazers_count || 0}
                     </span>
                     <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <GitFork size={12} />
+                      <SvgFork size={12} />
                       {repo.forks_count || 0}
                     </span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <SvgOpenIssue size={12} />
+                      {repo.open_issues_count || 0}
+                    </span>
                     {repo.updated_at && (
-                      <span className="gh-updated">{relativeTime(repo.updated_at)}</span>
+                      <span className="gh-updated">
+                        {relativeTime(repo.updated_at, t)}
+                      </span>
                     )}
                   </div>
                 </a>
@@ -169,6 +221,10 @@ export default function GitHub({ initialData, initialError }) {
             <div className="gh-members-grid">
               {members.map(member => {
                 const cssRole = ROLE_CSS[member.role] || 'member';
+                const activeAt = member.lastActiveAt || member.last_active_at || member.updated_at || null;
+                const activeText = activeAt
+                  ? t('github.active_ago', { time: relativeTime(activeAt, t) })
+                  : t('github.active_unknown');
                 return (
                   <a
                     key={member.login}
@@ -184,19 +240,29 @@ export default function GitHub({ initialData, initialError }) {
                       loading="lazy"
                     />
                     <div className="gh-member-info">
-                      <span className="gh-member-login">{member.login}</span>
-                      <span className={`gh-role-badge gh-role-badge--${cssRole}`}>
-                        {t(`github.role_${cssRole}`)}
-                      </span>
-                    </div>
-                    {member.commits > 0 && (
-                      <div className="gh-member-commits">
-                        <span style={{ fontWeight: 600 }}>{member.commits}</span>
-                        <span style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem' }}>
-                          {t('github.commits')}
+                      <div className="gh-member-top">
+                        <div className="gh-member-identity">
+                          <span className="gh-member-login">{member.login}</span>
+                          <span className="gh-member-external">↗</span>
+                        </div>
+                      </div>
+                      <div className="gh-member-footer">
+                        <span className={`gh-role-badge gh-role-badge--${cssRole}`}>
+                          {t(`github.role_${cssRole}`)}
                         </span>
                       </div>
-                    )}
+                      <span className="gh-member-active">{activeText}</span>
+                    </div>
+                    <div className="gh-member-metrics">
+                      <span className="gh-member-metric">
+                        <strong>{Number(member.commits) || 0}</strong>
+                        <span>{t('github.commits')}</span>
+                      </span>
+                      <span className="gh-member-metric">
+                        <strong>{Number(member.repoCount) || 0}</strong>
+                        <span>{t('github.repos')}</span>
+                      </span>
+                    </div>
                   </a>
                 );
               })}

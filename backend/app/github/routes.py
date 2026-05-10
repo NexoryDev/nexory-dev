@@ -68,11 +68,67 @@ def github():
         roles = {}
         commits = {}
         repo_counts = {}
+        last_activity_at = {}
+
+        def track_activity(login, timestamp):
+            if not login or not timestamp:
+                return
+
+            current = last_activity_at.get(login)
+
+            if not current or timestamp > current:
+                last_activity_at[login] = timestamp
+
+        ok, issue_comments = gh(
+            f"/orgs/{GITHUB_ORG}/issues/comments?per_page=100",
+            token
+        )
+
+        if ok:
+            for comment in issue_comments:
+                user = comment.get("user") or {}
+                track_activity(user.get("login"), comment.get("created_at"))
 
         for repo in top:
             name = repo.get("name")
             if not name:
                 continue
+
+            ok, repo_issues = gh(
+                f"/repos/{GITHUB_ORG}/{name}/issues?state=all&per_page=50",
+                token
+            )
+
+            if ok:
+                for issue in repo_issues:
+                    if issue.get("pull_request"):
+                        continue
+
+                    author = (issue.get("user") or {}).get("login")
+                    track_activity(author, issue.get("created_at"))
+
+                    closer = (issue.get("closed_by") or {}).get("login")
+                    track_activity(closer, issue.get("closed_at"))
+
+            ok, pulls = gh(
+                f"/repos/{GITHUB_ORG}/{name}/pulls?state=all&per_page=50",
+                token
+            )
+
+            if ok:
+                for pr in pulls:
+                    track_activity((pr.get("user") or {}).get("login"), pr.get("created_at"))
+                    track_activity((pr.get("merged_by") or {}).get("login"), pr.get("merged_at"))
+
+            ok, pr_comments = gh(
+                f"/repos/{GITHUB_ORG}/{name}/pulls/comments?per_page=100",
+                token
+            )
+
+            if ok:
+                for comment in pr_comments:
+                    reviewer = (comment.get("user") or {}).get("login")
+                    track_activity(reviewer, comment.get("created_at"))
 
             ok, contribs = gh(
                 f"/repos/{GITHUB_ORG}/{name}/contributors?per_page=100",
@@ -131,6 +187,7 @@ def github():
             m["commits"] = commits.get(login, 0)
             m["repoCount"] = repo_counts.get(login, 0)
             m["role"] = roles.get(login)
+            m["lastActiveAt"] = last_activity_at.get(login)
             enriched.append(m)
 
         payload = {

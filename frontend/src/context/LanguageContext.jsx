@@ -34,7 +34,7 @@ function sendLanguageToBackend(language) {
       }
     })
     .catch(() => {
-      // Backend sync is best effort only.
+
     });
 }
 
@@ -48,10 +48,18 @@ export function LanguageProvider({ children }) {
     sendLanguageToBackend(language);
   }, [language]);
 
-  function t(key) {
-    return translations[language]?.[key] ?? translations.en?.[key] ?? key;
-  }
+  function t(key, variables = {}) {
+    let text =
+      translations[language]?.[key] ??
+      translations.en?.[key] ??
+      key;
 
+    Object.entries(variables).forEach(([variable, value]) => {
+      text = text.replaceAll(`{${variable}}`, value);
+    });
+
+    return text;
+  }
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>
       {children}

@@ -10,6 +10,7 @@ The project consists of a React single-page app and a small Python/Flask API tha
 - Internationalisation (German / English) in the frontend
 - Flask API that proxies the GitHub REST API (with a short server-side cache)
 - Language preference stored in a server-side session
+- Secure profile features including avatar upload hardening, logging, and rate limiting
 
 ## Tech stack
 
@@ -43,6 +44,20 @@ npm start
 ```
 
 Open [http://localhost:3000](http://localhost:3000) — API calls are automatically proxied to port 5000.
+
+## Docker Setup
+
+The repository includes a `docker-compose.yml` for a production-friendly stack with Redis, the Flask backend, the React frontend, and ClamAV for avatar scans.
+
+```bash
+docker compose up --build
+```
+
+Notes:
+
+- Avatar uploads are quarantined first and only published after a clean malware scan.
+- Logging writes to rotating files under `backend/logs/<env>/app.log` by default.
+- In production, set `ENV=production` so Flask debug mode stays disabled.
 
 ## Project structure
 

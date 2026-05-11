@@ -167,7 +167,7 @@ def get_public_profile(username):
             lst = raw_badges if isinstance(raw_badges, list) else json.loads(raw_badges)
             badges = [b for b in lst if isinstance(b, dict)]
         except Exception:
-            pass
+            badges = []
 
     created_at = user.get("created_at")
     member_since = (

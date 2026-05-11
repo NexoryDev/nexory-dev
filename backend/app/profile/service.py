@@ -1,7 +1,13 @@
 import os
+import io
+import tempfile
+import socket
+import struct
+import logging
 import uuid
+import shutil
 
-from PIL import Image
+from PIL import Image, ImageOps, UnidentifiedImageError
 from flask import current_app
 
 from app.db.connection import get_db
@@ -24,6 +30,14 @@ def update_user(user_id, data):
 
     fields = []
     values = []
+    allowed_assignments = {
+        "username=%s",
+        "avatar=%s",
+        "github_username=%s",
+        "bio=%s",
+        "location=%s",
+        "timezone=%s",
+    }
 
     username = data.get("username")
     avatar = data.get("avatar")
@@ -92,9 +106,13 @@ def update_user(user_id, data):
         db.close()
         return False, "no_fields"
 
+    if any(field not in allowed_assignments for field in fields):
+        db.close()
+        return False, "invalid_fields"
+
     values.append(user_id)
 
-    query = f"UPDATE users SET {', '.join(fields)} WHERE id=%s"
+    query = f"UPDATE users SET {', '.join(fields)} WHERE id=%s"  # nosec B608
 
     try:
         cursor.execute(query, values)
@@ -108,54 +126,158 @@ def update_user(user_id, data):
 
 
 _ALLOWED_AVATAR_TYPES = {"jpg", "jpeg", "png", "webp"}
+_ALLOWED_PIL_FORMATS = {"JPEG", "PNG", "WEBP"}
+
+logger = logging.getLogger(__name__)
+
+
+def _safe_unlink(path):
+    try:
+        if path and os.path.isfile(path):
+            os.remove(path)
+    except OSError:
+        pass
+
+
+def _scan_avatar_bytes(raw_bytes):
+    if not current_app.config.get("AVATAR_ENABLE_MALWARE_SCAN", False):
+        return True
+
+    host = current_app.config.get("AVATAR_CLAMD_HOST", "127.0.0.1")
+    port = int(current_app.config.get("AVATAR_CLAMD_PORT", 3310))
+    timeout_seconds = int(current_app.config.get("AVATAR_SCAN_TIMEOUT_SECONDS", 20))
+
+    try:
+        with socket.create_connection((host, port), timeout=timeout_seconds) as sock:
+            sock.sendall(b"zINSTREAM\0")
+
+            chunk_size = 8192
+            for idx in range(0, len(raw_bytes), chunk_size):
+                chunk = raw_bytes[idx:idx + chunk_size]
+                sock.sendall(struct.pack(">I", len(chunk)))
+                sock.sendall(chunk)
+
+            sock.sendall(struct.pack(">I", 0))
+            response = sock.recv(4096).decode("utf-8", errors="replace")
+    except Exception as exc:
+        logger.warning("Avatar malware scan failed: %s", exc)
+        return False
+
+    if "OK" in response and "FOUND" not in response:
+        return True
+
+    logger.warning(
+        "Avatar malware scan rejected upload (response=%s)",
+        response.strip(),
+    )
+    return False
+
+
+def _load_avatar_image(raw_bytes):
+    try:
+        probe = Image.open(io.BytesIO(raw_bytes))
+        detected_format = (probe.format or "").upper()
+        is_animated = bool(getattr(probe, "is_animated", False)) or int(getattr(probe, "n_frames", 1)) > 1
+        width, height = probe.size
+    except (UnidentifiedImageError, OSError):
+        return None, None, "invalid_file_type"
+
+    if detected_format not in _ALLOWED_PIL_FORMATS:
+        return None, None, "invalid_file_type"
+
+    if is_animated:
+        return None, None, "animated_not_allowed"
+
+    min_dim = int(current_app.config.get("AVATAR_MIN_DIMENSION", 64))
+    max_dim = int(current_app.config.get("AVATAR_MAX_DIMENSION", 4096))
+    max_pixels = int(current_app.config.get("AVATAR_MAX_PIXELS", 12000000))
+
+    if width < min_dim or height < min_dim:
+        return None, None, "image_too_small"
+    if width > max_dim or height > max_dim:
+        return None, None, "image_dimensions_exceeded"
+    if width * height > max_pixels:
+        return None, None, "image_dimensions_exceeded"
+
+    try:
+        img = Image.open(io.BytesIO(raw_bytes))
+        img = ImageOps.exif_transpose(img)
+        img = img.convert("RGB")
+        return img, detected_format.lower(), None
+    except Exception:
+        return None, None, "upload_failed"
 
 
 def upload_avatar(user_id, file):
-    filename = file.filename or ""
-    ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
+    max_upload_bytes = int(current_app.config.get("AVATAR_MAX_UPLOAD_BYTES", 5 * 1024 * 1024))
+
+    try:
+        raw = file.stream.read(max_upload_bytes + 1)
+    except Exception:
+        return None, "upload_failed"
+
+    if not raw:
+        return None, "no_file"
+    if len(raw) > max_upload_bytes:
+        return None, "file_too_large"
+
+    Image.MAX_IMAGE_PIXELS = int(current_app.config.get("AVATAR_MAX_PIXELS", 12000000))
+
+    img, ext, err = _load_avatar_image(raw)
+    if err:
+        return None, err
 
     if ext not in _ALLOWED_AVATAR_TYPES:
         return None, "invalid_file_type"
 
     try:
-        file.stream.seek(0)
-        img = Image.open(file.stream)
-        img.load()
-    except Exception:
-        return None, "invalid_file_type"
-
-    try:
-        img = img.convert("RGB")
         w, h = img.size
-        min_dim = min(w, h)
-        left = (w - min_dim) // 2
-        top = (h - min_dim) // 2
-        img = img.crop((left, top, left + min_dim, top + min_dim))
-        img = img.resize((400, 400), Image.LANCZOS)
+        crop_dim = min(w, h)
+        left = (w - crop_dim) // 2
+        top = (h - crop_dim) // 2
+        output_size = int(current_app.config.get("AVATAR_OUTPUT_SIZE", 400))
+        img = img.crop((left, top, left + crop_dim, top + crop_dim))
+        img = img.resize((output_size, output_size), Image.Resampling.LANCZOS)
     except Exception:
         return None, "upload_failed"
 
     upload_folder = current_app.config["UPLOAD_FOLDER"]
+    quarantine_folder = current_app.config.get("AVATAR_QUARANTINE_FOLDER", os.path.join(upload_folder, "..", "avatar-quarantine"))
+    os.makedirs(upload_folder, exist_ok=True)
+    os.makedirs(quarantine_folder, exist_ok=True)
 
     db = get_db()
     cursor = db.cursor()
     cursor.execute("SELECT avatar FROM users WHERE id=%s", (user_id,))
     row = cursor.fetchone()
+    old_path = None
     if row and row.get("avatar"):
         old = row["avatar"]
         if old.startswith("/uploads/avatars/"):
             old_path = os.path.join(upload_folder, old.rsplit("/", 1)[-1])
-            if os.path.isfile(old_path):
-                try:
-                    os.remove(old_path)
-                except OSError:
-                    pass
 
     new_filename = uuid.uuid4().hex + ".jpg"
     save_path = os.path.join(upload_folder, new_filename)
+    temp_path = None
+
     try:
-        img.save(save_path, "JPEG", quality=85)
+        fd, temp_path = tempfile.mkstemp(prefix=".avatar-", suffix=".tmp", dir=quarantine_folder)
+        os.close(fd)
+        img.save(temp_path, "JPEG", quality=85, optimize=True, progressive=True)
+
+        if not _scan_avatar_bytes(raw):
+            _safe_unlink(temp_path)
+            db.close()
+            return None, "malware_detected"
+
+        shutil.copy2(temp_path, save_path)
+        _safe_unlink(temp_path)
+        try:
+            os.chmod(save_path, 0o640)
+        except OSError:
+            pass
     except Exception:
+        _safe_unlink(temp_path)
         db.close()
         return None, "upload_failed"
 
@@ -164,13 +286,14 @@ def upload_avatar(user_id, file):
     try:
         cursor.execute("UPDATE users SET avatar=%s WHERE id=%s", (url, user_id))
         db.commit()
+
+        # Delete old avatar only after successful DB update to avoid broken profile refs.
+        _safe_unlink(old_path)
+
         return url, None
     except Exception:
         db.rollback()
-        try:
-            os.remove(save_path)
-        except OSError:
-            pass
+        _safe_unlink(save_path)
         return None, "db_error"
     finally:
         db.close()

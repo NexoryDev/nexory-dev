@@ -66,6 +66,20 @@ JWT_SECRET=your-jwt-secret-min-32-chars
 
 ENV=development
 
+LOG_LEVEL=INFO
+LOG_RETENTION_DAYS=7
+LOG_DIR=/app/logs
+
+AVATAR_ENABLE_MALWARE_SCAN=false
+AVATAR_CLAMD_HOST=clamav
+AVATAR_CLAMD_PORT=3310
+AVATAR_SCAN_TIMEOUT_SECONDS=20
+AVATAR_QUARANTINE_FOLDER=/app/static/uploads/avatar-quarantine
+AVATAR_MAX_UPLOAD_BYTES=5242880
+AVATAR_MAX_DIMENSION=4096
+AVATAR_MAX_PIXELS=12000000
+AVATAR_OUTPUT_SIZE=400
+
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=your-password
@@ -131,6 +145,16 @@ docker build -t flask-backend .
 docker run -p 5000:5000 --env-file .env flask-backend
 ```
 
+### Run with Docker Compose
+
+From the repository root:
+
+```bash
+docker compose up --build
+```
+
+This starts Redis, the backend, the frontend, and ClamAV. Avatar uploads are written to a quarantine folder first and are only published after a clean scan.
+
 ---
 
 ## API Endpoints
@@ -156,6 +180,9 @@ docker run -p 5000:5000 --env-file .env flask-backend
 * Passwords are hashed using bcrypt
 * Rate limiting should be enabled in production (Redis recommended)
 * Do not use default secrets in production
+* Flask debug mode should stay disabled in production (`ENV=production`)
+* Avatar uploads are scanned via ClamAV and fail closed if the scanner is unavailable
+* Logs are rotated and redacted; avoid logging secrets, tokens, or PII
 
 ---
 
@@ -177,3 +204,4 @@ docker run -p 5000:5000 --env-file .env flask-backend
 * Implement email verification
 * Add 2FA (TOTP)
 * Set up logging and monitoring
+* Keep ClamAV and system packages updated regularly

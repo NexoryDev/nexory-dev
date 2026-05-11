@@ -1,5 +1,6 @@
-import urllib.request
 import json
+import requests
+from urllib.parse import urlparse
 from app.config import Config
 
 
@@ -21,17 +22,20 @@ def _send_template(to, template_id, variables):
         },
     }).encode("utf-8")
 
-    req = urllib.request.Request(
-        "https://api.resend.com/emails",
+    resend_url = "https://api.resend.com/emails"
+    parsed = urlparse(resend_url)
+    if parsed.scheme != "https" or parsed.netloc != "api.resend.com":
+        raise RuntimeError("Invalid mail provider URL")
+
+    res = requests.post(
+        resend_url,
         data=payload,
         headers={
             "Authorization": f"Bearer {Config.MAIL_PASSWORD}",
             "Content-Type": "application/json",
             "User-Agent": "Mozilla/5.0",
         },
-        method="POST",
+        timeout=15,
     )
-
-    with urllib.request.urlopen(req, timeout=15) as res:
-        if res.status not in (200, 201):
-            raise RuntimeError(f"Resend API error: {res.status}")
+    if res.status_code not in (200, 201):
+        raise RuntimeError(f"Resend API error: {res.status_code}")

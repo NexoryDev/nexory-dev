@@ -1,5 +1,4 @@
-from flask import Blueprint, request, jsonify, send_from_directory
-import os
+from flask import Blueprint, request, jsonify, current_app
 
 from app.auth.tokens import decode_access_token
 from app.profile.service import (
@@ -83,6 +82,13 @@ def upload_avatar_route():
     user_id = extract_user_id()
     if not user_id:
         return jsonify({"error": "invalid_token"}), 401
+
+    if not request.content_type or not request.content_type.startswith("multipart/form-data"):
+        return jsonify({"error": "invalid_content_type"}), 415
+
+    max_bytes = int(current_app.config.get("AVATAR_MAX_UPLOAD_BYTES", current_app.config.get("MAX_CONTENT_LENGTH", 5 * 1024 * 1024)))
+    if request.content_length and request.content_length > max_bytes:
+        return jsonify({"error": "file_too_large"}), 413
 
     file = request.files.get("file")
     if not file or file.filename == "":

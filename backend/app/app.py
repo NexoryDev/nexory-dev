@@ -5,14 +5,17 @@ from flask_limiter.util import get_remote_address
 import threading
 import time
 import os
+import logging
 
 from app.config import Config, UPLOAD_FOLDER
+from app.logging_config import configure_logging
 from app.auth.routes import auth_bp
 from app.github.routes import github_bp
 from app.github.oauth import github_oauth_bp
 from app.profile.routes import profile_bp
 
 limiter = Limiter(key_func=get_remote_address, default_limits=[])
+logger = logging.getLogger(__name__)
 
 
 def _cleanup_worker():
@@ -27,11 +30,13 @@ def _cleanup_worker():
             cur.execute("DELETE FROM password_resets WHERE expires_at < NOW()")
             db.commit()
             db.close()
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.warning("Cleanup worker failed: %s", exc)
 
 
 def create_app():
+    configure_logging()
+
     app = Flask(__name__)
     app.config.from_object(Config)
 
@@ -70,6 +75,7 @@ def create_app():
     limiter.limit("5 per minute")(app.view_functions["auth.twofa_disable"])
     limiter.limit("3 per minute")(app.view_functions["auth.twofa_regenerate_backup_codes"])
     limiter.limit("30 per minute")(app.view_functions["github.github"])
+    limiter.limit("6 per minute")(app.view_functions["profile.upload_avatar_route"])
 
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 

@@ -511,7 +511,7 @@
 .up-modal-actions {
   padding: 14px 24px 18px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .up-modal-actions button {

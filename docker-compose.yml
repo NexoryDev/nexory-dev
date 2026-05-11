@@ -16,10 +16,31 @@ services:
     restart: always
     depends_on:
       - redis
+      - clamav
     networks:
       - app
     volumes:
       - avatar_uploads:/app/static/uploads/avatars
+      - avatar_quarantine:/app/static/uploads/avatar-quarantine
+    environment:
+      AVATAR_ENABLE_MALWARE_SCAN: "true"
+      AVATAR_CLAMD_HOST: clamav
+      AVATAR_CLAMD_PORT: "3310"
+      AVATAR_QUARANTINE_FOLDER: /app/static/uploads/avatar-quarantine
+
+  clamav:
+    image: clamav/clamav:latest
+    restart: always
+    networks:
+      - app
+    volumes:
+      - clamav_db:/var/lib/clamav
+    healthcheck:
+      test: ["CMD-SHELL", "clamdscan --version >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   frontend:
     build:
@@ -38,3 +59,5 @@ networks:
 
 volumes:
   avatar_uploads:
+  avatar_quarantine:
+  clamav_db:

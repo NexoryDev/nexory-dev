@@ -1,9 +1,11 @@
 import json
 import time
+import logging
 from pathlib import Path
 
 CACHE_TTL = 120
 CACHE_FILE = Path(__file__).resolve().parent / "cache" / "github-dashboard.json"
+logger = logging.getLogger(__name__)
 
 
 def cache_read(allow_old=False):
@@ -31,5 +33,5 @@ def cache_write(data):
             json.dumps({"generated_at": time.time(), "data": data}, ensure_ascii=False),
             "utf-8"
         )
-    except Exception:
-        pass
+    except Exception as exc:
+        logger.warning("Could not write github cache file: %s", exc)

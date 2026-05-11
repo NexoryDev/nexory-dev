@@ -3,9 +3,14 @@
 venv/
 env/
 logs/
+*.log
+*.log.*
+backend/logs/
 .vscode/
 __pycache__/
 node_modules/
 build/
 nexory-backend.service
-backend/cache/github-dashboard.json
+backend/app/github/cache/github-dashboard.json
+backend/app/static/uploads/avatars/
+backend/app/static/uploads/avatar-quarantine/

@@ -15,7 +15,7 @@ from app.db.connection import get_db
 github_oauth_bp = Blueprint("github_oauth", __name__)
 
 _GITHUB_AUTHORIZE_URL = "https://github.com/login/oauth/authorize"
-_GITHUB_TOKEN_URL = "https://github.com/login/oauth/access_token"
+_GITHUB_TOKEN_URL = "https://github.com/login/oauth/access_token"  # nosec B105
 _GITHUB_USER_URL = "https://api.github.com/user"
 _SCOPE = "read:user"
 _STATE_TTL = 10 * 60

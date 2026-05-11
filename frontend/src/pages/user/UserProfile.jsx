@@ -433,9 +433,6 @@ export default function UserProfile() {
             <div className="up-modal-body">
               <div className="up-modal-title-row">
                 <h3 className="up-modal-name">{activeBadge.name}</h3>
-                <span className="up-rarity" data-rarity={activeBadge.rarity}>
-                  {t(`badge.rarity.${activeBadge.rarity}`) ?? activeBadge.rarity}
-                </span>
               </div>
               <p className="up-modal-desc">{getBadgeDescription(t, activeBadge)}</p>
               {activeBadge.earned_at && (

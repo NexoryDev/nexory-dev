@@ -75,6 +75,24 @@ const LOCATION_TIMEZONE_BY_VALUE = LOCATION_OPTIONS.reduce((acc, item) => {
   return acc;
 }, {});
 
+const AVATAR_ERROR_KEYS = {
+  invalid_content_type: "account.me.avatar_error.invalid_content_type",
+  invalid_file_type: "account.me.avatar_error.invalid_file_type",
+  file_too_large: "account.me.avatar_error.file_too_large",
+  image_too_small: "account.me.avatar_error.image_too_small",
+  image_dimensions_exceeded: "account.me.avatar_error.image_dimensions_exceeded",
+  animated_not_allowed: "account.me.avatar_error.animated_not_allowed",
+  malware_detected: "account.me.avatar_error.malware_detected",
+  no_file: "account.me.avatar_error.no_file",
+  upload_failed: "account.me.avatar_error.upload_failed",
+  avatar_upload_failed: "account.me.avatar_error.upload_failed",
+};
+
+function getAvatarErrorMessage(t, code) {
+  const key = AVATAR_ERROR_KEYS[code];
+  return key ? t(key) : t("account.me.avatar_error.upload_failed");
+}
+
 function getBadgeDescription(t, badge) {
   const key = BADGE_DESCRIPTION_KEYS[badge?.id];
   if (key) {
@@ -186,6 +204,14 @@ const Me = () => {
 
     if (!file.type.startsWith("image/")) {
       setProfileError(t("account.me.avatar_invalid"));
+      if (avatarInputRef.current) avatarInputRef.current.value = "";
+      return;
+    }
+
+    const maxUploadBytes = 5 * 1024 * 1024;
+    if (file.size > maxUploadBytes) {
+      setProfileError(t("account.me.avatar_error.file_too_large"));
+      if (avatarInputRef.current) avatarInputRef.current.value = "";
       return;
     }
 
@@ -214,7 +240,7 @@ const Me = () => {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok || !data.avatar) {
-        throw new Error("avatar_upload_failed");
+        throw new Error(data?.error || "avatar_upload_failed");
       }
 
       return data.avatar;
@@ -272,8 +298,13 @@ const Me = () => {
 
       setProfileSuccess(t("account.me.profile_saved"));
       setTimeout(() => setProfileSuccess(""), 5000);
-    } catch {
-      setProfileError(t("account.me.profile_save_failed"));
+    } catch (error) {
+      const errorCode = error instanceof Error ? error.message : "";
+      if (AVATAR_ERROR_KEYS[errorCode]) {
+        setProfileError(getAvatarErrorMessage(t, errorCode));
+      } else {
+        setProfileError(t("account.me.profile_save_failed"));
+      }
     } finally {
       setProfileSaving(false);
     }
@@ -380,10 +411,10 @@ const Me = () => {
               <textarea
                 value={profileForm.bio}
                 onChange={(e) => setProfileForm((prev) => ({ ...prev, bio: e.target.value }))}
-                maxLength={25}
+                maxLength={50}
                 placeholder={t("account.me.bio_placeholder")}
               />
-              <span className="me-bio-counter">{profileForm.bio.length}/25</span>
+              <span className="me-bio-counter">{profileForm.bio.length}/50</span>
             </label>
 
             <label className="me-field">
@@ -488,9 +519,6 @@ const Me = () => {
             <div className="badge-modal-body">
               <div className="badge-modal-title-row">
                 <h4 className="badge-modal-name">{activeBadge.name}</h4>
-                <span className="me-badge-rarity" data-rarity={activeBadge.rarity}>
-                  {t(`badge.rarity.${activeBadge.rarity}`) ?? activeBadge.rarity}
-                </span>
               </div>
               <p className="badge-modal-desc">{getBadgeDescription(t, activeBadge)}</p>
               {activeBadge.earned_at ? (

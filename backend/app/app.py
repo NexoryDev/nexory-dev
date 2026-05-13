@@ -86,8 +86,25 @@ def create_app():
             return "", 404
         return send_from_directory(UPLOAD_FOLDER, filename)
 
+
     t = threading.Thread(target=_cleanup_worker, daemon=True)
     t.start()
+
+    @app.after_request
+    def set_security_headers(response):
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        response.headers["Content-Security-Policy"] = (
+            "default-src 'self'; "
+            "script-src 'self'; "
+            "style-src 'self' 'unsafe-inline'; "
+            "img-src 'self' data:; "
+            "font-src 'self' data:; "
+            "connect-src 'self' https://api.github.com; "
+            "frame-ancestors 'none'; "
+            "base-uri 'self'; "
+            "form-action 'self';"
+        )
+        return response
 
     return app
 

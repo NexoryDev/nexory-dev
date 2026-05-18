@@ -1,8 +1,8 @@
 .not-found-page {
   min-height: 100vh;
   background:
-    radial-gradient(circle at top, rgba(88, 166, 255, 0.16), transparent 35%),
-    linear-gradient(180deg, #0d1117 0%, #111827 100%);
+    radial-gradient(circle at top, var(--color-accent-18), transparent 35%),
+    linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-elevated) 100%);
 }
 
 .not-found-hero {
@@ -18,10 +18,10 @@
   text-align: center;
   padding: 38px 26px;
   border-radius: 22px;
-  border: 1px solid rgba(88, 166, 255, 0.2);
+  border: 1px solid var(--color-accent-25);
   background: rgba(22, 27, 34, 0.82);
   backdrop-filter: blur(12px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 20px 60px var(--color-shadow-card);
 }
 
 .not-found-badge {
@@ -30,7 +30,7 @@
   font-size: clamp(3rem, 10vw, 5rem);
   font-weight: 700;
   letter-spacing: 0.08em;
-  background: linear-gradient(135deg, #7ee8fa, #58a6ff, #a78bfa, #c084fc);
+  background: linear-gradient(135deg, var(--color-grad-1), var(--color-accent-2), var(--color-grad-3), var(--color-grad-4));
   background-size: 250% auto;
   -webkit-background-clip: text;
   background-clip: text;
@@ -40,20 +40,20 @@
 .not-found-card h1 {
   margin: 0 0 12px;
   font-size: clamp(1.8rem, 4vw, 2.6rem);
-  color: #e6edf3;
+  color: var(--color-text);
 }
 
 .not-found-text {
   margin: 0 auto 10px;
   max-width: 560px;
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--color-white-78);
   line-height: 1.7;
 }
 
 .not-found-subtext {
   margin: 0 auto 24px;
   max-width: 520px;
-  color: #8b949e;
+  color: var(--color-text-dim);
   font-size: 0.95rem;
 }
 
@@ -77,14 +77,14 @@
 }
 
 .not-found-btn.primary {
-  background: linear-gradient(135deg, #58a6ff, #a78bfa);
-  color: #0d1117;
-  box-shadow: 0 8px 24px rgba(88, 166, 255, 0.25);
+  background: linear-gradient(135deg, var(--color-accent-2), var(--color-grad-3));
+  color: var(--color-bg);
+  box-shadow: 0 8px 24px var(--color-accent-25);
 }
 
 .not-found-btn.secondary {
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #c9d1d9;
+  border: 1px solid var(--color-white-12);
+  color: var(--color-text-soft);
   background: rgba(13, 17, 23, 0.72);
 }
 

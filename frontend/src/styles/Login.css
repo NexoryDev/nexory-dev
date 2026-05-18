@@ -3,18 +3,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: radial-gradient(ellipse at center, rgba(13,17,23,0.7), rgba(13,17,23,1)), #0d1117;
+  background: radial-gradient(ellipse at 30% 40%, var(--color-accent-06), transparent 60%),
+              radial-gradient(ellipse at 70% 60%, rgba(183, 136, 255, 0.08), transparent 60%),
+              var(--bg);
 }
 
 .login-box {
   width: 100%;
   max-width: 420px;
   padding: 2rem;
-  background: rgba(22,27,34,0.85);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(22, 27, 34, 0.85);
+  border: 1px solid var(--color-white-08);
   border-radius: 14px;
   backdrop-filter: blur(10px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  box-shadow: 0 20px 60px var(--color-shadow-strong);
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -23,28 +25,28 @@
 .login-box h1 {
   margin: 0;
   font-size: 1.8rem;
-  background: linear-gradient(135deg, #58a6ff, #a78bfa);
+  background: linear-gradient(135deg, var(--accent), var(--secondary));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .form-error {
-  color: #ff5f57;
+  color: var(--color-dot-red);
   font-size: 0.85rem;
   text-align: center;
-  background: rgba(255, 95, 87, 0.08);
-  border: 1px solid rgba(255, 95, 87, 0.25);
+  background: var(--color-danger-08);
+  border: 1px solid var(--color-danger-25);
   border-radius: 8px;
   padding: 8px 12px;
 }
 
 .form-success {
-  color: #3fb950;
+  color: var(--color-success);
   font-size: 0.85rem;
   text-align: center;
-  background: rgba(63, 185, 80, 0.08);
-  border: 1px solid rgba(63, 185, 80, 0.25);
+  background: var(--color-success-08);
+  border: 1px solid var(--color-success-25);
   border-radius: 8px;
   padding: 8px 12px;
 }
@@ -53,19 +55,20 @@
   width: 100%;
   padding: 10px;
   border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(13,17,23,0.9);
+  border: 1px solid var(--color-white-10);
+  background: var(--color-bg-surface-2);
   color: white;
 }
 
 .login-box input:focus {
   outline: none;
-  border-color: #58a6ff;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--color-accent-12);
 }
 
 .input-error {
-  border: 1px solid #ff5f57 !important;
-  box-shadow: 0 0 0 2px rgba(255, 95, 87, 0.2);
+  border: 1px solid var(--color-dot-red) !important;
+  box-shadow: 0 0 0 2px var(--color-danger-20);
 }
 
 .password-wrapper {
@@ -92,27 +95,28 @@
   transform: translateY(-50%);
   background: transparent;
   border: none;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
 }
 
 .password-toggle:hover {
-  color: rgba(255,255,255,0.9);
+  color: var(--color-white-90);
 }
 
 .login-box button:not(.link-btn):not(.password-toggle) {
   padding: 10px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
-  background: linear-gradient(135deg, #58a6ff, #7b9fff);
-  color: white;
+  background: var(--accent);
+  color: var(--color-bg);
   font-weight: 600;
   cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .login-box button:hover:not(.link-btn):not(.password-toggle) {
   transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(88,166,255,0.25);
+  box-shadow: 0 0 24px var(--color-accent-35);
 }
 
 .login-box button:disabled {
@@ -125,14 +129,14 @@
   align-items: center;
   gap: 8px;
   font-size: 0.85rem;
-  color: rgba(255,255,255,0.55);
+  color: var(--color-white-55);
   cursor: pointer;
   user-select: none;
 }
 
 .remember input[type="checkbox"] {
   width: auto;
-  accent-color: #58a6ff;
+  accent-color: var(--accent);
   cursor: pointer;
 }
 
@@ -144,16 +148,16 @@
 .link-btn {
   background: none;
   border: none;
-  color: rgba(88,166,255,0.85);
+  color: var(--color-accent);
   cursor: pointer;
   font-size: 0.85rem;
 }
 
 .link-btn:hover {
-  color: #58a6ff;
+  color: var(--accent);
   text-decoration: underline;
 }
 
 .verify {
-  background: linear-gradient(135deg, #28c941, #7ee8fa);
+  background: linear-gradient(135deg, var(--color-success), var(--color-grad-1));
 }

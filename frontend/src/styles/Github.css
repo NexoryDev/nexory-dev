@@ -30,6 +30,62 @@
     z-index: 1;
 }
 
+.gh-page-header {
+    margin-bottom: 2rem;
+}
+
+.gh-page-title {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 600;
+    margin: 0 0 0.4rem;
+    background: linear-gradient(135deg, var(--accent), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.gh-page-sub {
+    color: var(--muted);
+    margin: 0 0 1.5rem;
+    font-size: 1rem;
+}
+
+.gh-filter-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.gh-filter-tab {
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--color-white-03);
+    color: var(--muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.gh-filter-tab:hover {
+    border-color: var(--color-accent-30);
+    color: var(--text);
+}
+
+.gh-filter-tab.active {
+    background: var(--color-accent-10);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.gh-empty {
+    color: var(--muted);
+    font-size: 0.95rem;
+    padding: 2rem 0;
+}
+
 .gh-org-header {
     display: flex;
     align-items: center;
@@ -58,7 +114,7 @@
 
 .gh-org-link {
     font-size: 0.85rem;
-    color: var(--color-accent);
+    color: var(--accent);
     text-decoration: none;
     margin-top: 0.5rem;
     display: inline-block;
@@ -106,12 +162,12 @@
 
 .gh-topic {
     backdrop-filter: blur(8px);
-    background: linear-gradient(180deg, rgba(88, 166, 255, 0.12), rgba(88, 166, 255, 0.06));
-    border: 1px solid rgba(88,166,255,0.25);
+    background: var(--color-accent-06);
+    border: 1px solid var(--color-accent-18);
     border-radius: 999px;
     padding: 2px 10px;
     font-size: 0.76rem;
-    color: var(--color-accent);
+    color: var(--accent);
 }
 
 .gh-updated {
@@ -189,7 +245,7 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: linear-gradient(90deg, #58a6ff, #a78bfa);
+    background: linear-gradient(90deg, var(--accent), var(--secondary));
     opacity: 0;
     transition: opacity 0.25s;
 }
@@ -200,17 +256,17 @@
 
 .gh-repo-card:hover {
     backdrop-filter: blur(12px);
-    background: linear-gradient(rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015));
-    border-color: rgba(88,166,255,0.35);
-    box-shadow: 0 0 0 1px rgba(88, 166, 255, 0.1), 0 10px 40px rgba(88, 166, 255, 0.15), 9 2px 12px rgba(0, 0, 0, 0.45);
-    transform: translateY(-3px) scale(1.01);
+    background: var(--color-white-04);
+    border-color: var(--color-accent-30);
+    box-shadow: 0 0 32px var(--color-accent-10);
+    transform: translateY(-4px);
 }
 
 .gh-repo-name  {
     font-size: 1rem;
     font-weight: 600;
     margin: 0;
-    color: var(--color-accent);
+    color: var(--accent);
     transition: color 0.2s;
 }
 
@@ -293,7 +349,7 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: linear-gradient(90deg, #58a6ff, #a78bfa);
+    background: linear-gradient(90deg, var(--accent), var(--secondary));
     opacity: 0;
     transition: opacity 0.25s;
 }
@@ -304,17 +360,17 @@
 
 .gh-member-card:hover {
     backdrop-filter: blur(12px);
-    background: linear-gradient(rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015));
-    border-color: rgba(88,166,255,0.35);
-    box-shadow: 0 0 0 1px rgba(88, 166, 255, 0.1), 0 10px 40px rgba(88, 166, 255, 0.15), 9 2px 12px rgba(0, 0, 0, 0.45);
-    transform: translateY(-3px) scale(1.01);
+    background: var(--color-white-04);
+    border-color: var(--color-accent-30);
+    box-shadow: 0 0 32px var(--color-accent-10);
+    transform: translateY(-4px);
 }
 
 .gh-member-avatar {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    border: 2px solid var(--color-border);
+    border: 2px solid var(--border);
     flex-shrink: 0;
     align-self: center;
 }
@@ -343,7 +399,7 @@
 .gh-member-login {
     font-weight: 600;
     font-size: 0.95rem;
-    color: var(--color-accent);
+    color: var(--accent);
     transition: color 0.2s;
 }
 
@@ -399,7 +455,7 @@
 
 .gh-role-badge--push {
     background: rgba(139, 148, 158, 0.15);
-    color: #8b949e;
+    color: var(--color-text-dim);
     border: 1px solid rgba(139, 148, 158, 0.3);
 }
 

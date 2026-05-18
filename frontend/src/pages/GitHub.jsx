@@ -86,6 +86,7 @@ export default function GitHub({ initialData, initialError }) {
   const [data, setData] = useState(initialData ?? null);
   const [error, setError] = useState(!!initialError);
   const [loading, setLoading] = useState(!initialData && !initialError);
+  const [activeFilter, setActiveFilter] = useState('all');
 
   useEffect(() => {
     if (initialData || initialError) return;
@@ -108,14 +109,34 @@ export default function GitHub({ initialData, initialError }) {
   const totalForks = repos.reduce((s, r) => s + (r.forks_count || 0), 0);
   const totalCommits = members.reduce((s, m) => s + (Number(m.commits) || 0), 0);
 
+  const FILTER_TABS = [
+    { key: 'all', label: t('github.filter_all') || 'Alle' },
+    { key: 'web', label: 'Web' },
+    { key: 'app', label: 'App' },
+    { key: 'ki', label: 'KI' },
+    { key: 'api', label: 'API' },
+  ];
+
+  const TOPIC_MAP = { web: ['web', 'html', 'css', 'react', 'frontend'], app: ['app', 'mobile', 'android', 'ios', 'flutter'], ki: ['ai', 'ml', 'bot', 'gpt', 'ki'], api: ['api', 'backend', 'flask', 'fastapi', 'rest'] };
+
+  const filteredRepos = activeFilter === 'all' ? repos : repos.filter(r => {
+    const topics = r.topics || [];
+    return TOPIC_MAP[activeFilter]?.some(t => topics.includes(t));
+  });
+
   return (
     <div className="gh-page">
       <div className="gh-container">
+        <div className="gh-page-header">
+          <h1 className="gh-page-title">{t('github.repos_header') || 'Unsere Projekte'}</h1>
+          <p className="gh-page-sub">{t('github.page_sub') || 'Echte Systeme. Keine Demos.'}</p>
+        </div>
+
         {loading && (
-          <p style={{ color: 'var(--color-text-muted)' }}>{t('github.loading')}</p>
+          <p style={{ color: 'var(--muted)' }}>{t('github.loading')}</p>
         )}
         {error && !loading && (
-          <p style={{ color: 'var(--color-text-muted)' }}>{t('github.error')}</p>
+          <p style={{ color: 'var(--muted)' }}>{t('github.error')}</p>
         )}
 
         {org && (
@@ -124,7 +145,7 @@ export default function GitHub({ initialData, initialError }) {
               <img className="gh-org-avatar" src={org.avatar_url} alt={org.login} loading="lazy" />
             )}
             <div>
-              <h1 className="gh-org-name">{org.name || org.login}</h1>
+              <h2 className="gh-org-name">{org.name || org.login}</h2>
               {org.description && <p className="gh-org-desc">{org.description}</p>}
               <div className="gh-org-meta">
                 <span>{repos.length} {t('github.repos')}</span>
@@ -157,61 +178,76 @@ export default function GitHub({ initialData, initialError }) {
 
         {repos.length > 0 && (
           <section id="repos">
-            <h2 className="gh-section-title">{t('github.repos_header')}</h2>
-            <div className="gh-repo-grid">
-              {repos.map(repo => (
-                <a
-                  key={repo.name}
-                  className="gh-repo-card"
-                  href={repo.html_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+            <div className="gh-filter-tabs">
+              {FILTER_TABS.map(tab => (
+                <button
+                  key={tab.key}
+                  className={`gh-filter-tab${activeFilter === tab.key ? ' active' : ''}`}
+                  onClick={() => setActiveFilter(tab.key)}
                 >
-                  <div className="gh-repo-top">
-                    <span className="gh-repo-name">{repo.name}</span>
-                    <span className="gh-repo-external">↗</span>
-                  </div>
-                  {repo.description && (
-                    <p className="gh-repo-desc">{repo.description}</p>
-                  )}
-                  {repo.topics?.length > 0 && (
-                    <div className="gh-topics">
-                      {repo.topics.map(topic => (
-                        <span key={topic} className="gh-topic">{topic}</span>
-                      ))}
-                    </div>
-                  )}
-                  <div className="gh-repo-footer">
-                    {repo.language && (
-                      <span className="gh-lang-badge">
-                        <span
-                          className="gh-lang-dot"
-                          style={{ background: LANG_COLORS[repo.language] || '#8b949e' }}
-                        />
-                        {repo.language}
-                      </span>
-                    )}
-                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <SvgStar size={12} />
-                      {repo.stargazers_count || 0}
-                    </span>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <SvgFork size={12} />
-                      {repo.forks_count || 0}
-                    </span>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <SvgOpenIssue size={12} />
-                      {repo.open_issues_count || 0}
-                    </span>
-                    {repo.updated_at && (
-                      <span className="gh-updated">
-                        {relativeTime(repo.updated_at, t)}
-                      </span>
-                    )}
-                  </div>
-                </a>
+                  {tab.label}
+                </button>
               ))}
             </div>
+
+            {filteredRepos.length === 0 ? (
+              <p className="gh-empty">{t('github.projects_soon') || 'Projekte folgen bald.'}</p>
+            ) : (
+              <div className="gh-repo-grid">
+                {filteredRepos.map(repo => (
+                  <a
+                    key={repo.name}
+                    className="gh-repo-card"
+                    href={repo.html_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <div className="gh-repo-top">
+                      <span className="gh-repo-name">{repo.name}</span>
+                      <span className="gh-repo-external">↗</span>
+                    </div>
+                    {repo.description && (
+                      <p className="gh-repo-desc">{repo.description}</p>
+                    )}
+                    {repo.topics?.length > 0 && (
+                      <div className="gh-topics">
+                        {repo.topics.map(topic => (
+                          <span key={topic} className="gh-topic">{topic}</span>
+                        ))}
+                      </div>
+                    )}
+                    <div className="gh-repo-footer">
+                      {repo.language && (
+                        <span className="gh-lang-badge">
+                          <span
+                            className="gh-lang-dot"
+                            style={{ background: LANG_COLORS[repo.language] || '#8b949e' }}
+                          />
+                          {repo.language}
+                        </span>
+                      )}
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <SvgStar size={12} />
+                        {repo.stargazers_count || 0}
+                      </span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <SvgFork size={12} />
+                        {repo.forks_count || 0}
+                      </span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <SvgOpenIssue size={12} />
+                        {repo.open_issues_count || 0}
+                      </span>
+                      {repo.updated_at && (
+                        <span className="gh-updated">
+                          {relativeTime(repo.updated_at, t)}
+                        </span>
+                      )}
+                    </div>
+                  </a>
+                ))}
+              </div>
+            )}
           </section>
         )}
 

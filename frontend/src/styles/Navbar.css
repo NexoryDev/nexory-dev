@@ -79,9 +79,8 @@
 
   background: linear-gradient(
     90deg,
-    var(--color-grad-1),
-    var(--color-grad-2),
-    var(--color-grad-3)
+    var(--accent),
+    var(--secondary)
   );
 
   border-radius: 2px;
@@ -121,13 +120,13 @@
   background: transparent;
   cursor: pointer;
 
-  font-family: 'Fira Code', monospace;
+  font-family: inherit;
   font-size: 0.75rem;
   font-weight: 600;
 
-  color: var(--color-text-muted);
+  color: var(--muted);
 
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border);
   border-radius: 999px;
 
   padding: 3px 8px;
@@ -137,9 +136,9 @@
 
 .language-switch button:hover,
 .language-switch button.active {
-  background: var(--color-accent);
-  color: #0d1117;
-  border-color: var(--color-accent);
+  background: var(--accent);
+  color: var(--color-bg);
+  border-color: var(--accent);
 }
 
 .login {
@@ -155,18 +154,18 @@
   border: 2px solid transparent;
   border-radius: 999px;
 
-  font-family: 'Fira Code', monospace;
+  font-family: inherit;
   font-size: 0.8rem;
   font-weight: 600;
 
   padding: 4px 12px;
 
-  color: var(--color-text-muted);
+  color: var(--muted);
 
   cursor: pointer;
 
-  background-image: linear-gradient(#0d1117, #0d1117),
-    linear-gradient(90deg, var(--color-grad-1), var(--color-grad-2), var(--color-grad-3));
+  background-image: linear-gradient(var(--bg), var(--bg)),
+    linear-gradient(90deg, var(--accent), var(--secondary));
 
   background-origin: border-box;
   background-clip: padding-box, border-box;
@@ -176,18 +175,16 @@
 }
 
 .login button:hover {
-  color: #0d1117;
+  color: var(--color-bg);
 
   background-image: linear-gradient(
       90deg,
-      var(--color-grad-1),
-      var(--color-grad-2),
-      var(--color-grad-3)
+      var(--accent),
+      var(--secondary)
     ),
-    linear-gradient(90deg, var(--color-grad-1), var(--color-grad-2), var(--color-grad-3));
+    linear-gradient(90deg, var(--accent), var(--secondary));
 
-  box-shadow: 0 0 14px rgba(88, 166, 255, 0.25),
-              0 0 28px rgba(88, 166, 255, 0.15);
+  box-shadow: 0 0 20px var(--color-accent-30);
 
   transform: translateY(-1px);
 }

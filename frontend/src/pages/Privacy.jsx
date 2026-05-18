@@ -1,13 +1,16 @@
 import "../styles/Legal.css";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function Privacy() {
+  const { t } = useLanguage();
+
   return (
     <main className="legal-page">
       <div className="legal-container">
         <header className="legal-header">
-          <p className="legal-label">Rechtliches</p>
-          <h1 className="legal-title">Datenschutzerklärung</h1>
-          <p className="legal-subtitle">Informationen zur Verarbeitung personenbezogener Daten auf nexory-dev.de</p>
+          <p className="legal-label">{t("privacy.label")}</p>
+          <h1 className="legal-title">{t("privacy.title")}</h1>
+          <p className="legal-subtitle">{t("privacy.subtitle")}</p>
         </header>
 
         <section className="legal-section">

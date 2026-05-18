@@ -1,24 +1,82 @@
 :root {
+  --bg:                    #0d1117;
+  --surface:               #161b22;
+  --border:                rgba(134, 236, 255, 0.18);
+  --accent:                #86ecff;
+  --secondary:             #b788ff;
+  --text:                  #e6edf3;
+  --muted:                 #9ea8c7;
+
   --color-bg:              #0d1117;
+  --color-bg-deep:         #010409;
+  --color-bg-elevated:     #111827;
   --color-bg-surface:      #161b22;
   --color-bg-surface-2:    rgba(22, 27, 34, 0.92);
 
-  --color-border:          #30363d;
-  --color-border-subtle:   #21262d;
+  --color-border:          #364054;
+  --color-border-subtle:   #242b38;
 
-  --color-accent:          #58a6ff;
+  --color-accent:          #86ecff;
+  --color-accent-2:        #7fbeff;
+  --color-accent-soft:     #93cfff;
+  --color-accent-soft-2:   #9fd4ff;
 
-  --color-grad-1:          #7ee8fa;
-  --color-grad-2:          #58a6ff;
-  --color-grad-3:          #a78bfa;
-  --color-grad-4:          #c084fc;
+  --color-grad-1:          #8ef0ff;
+  --color-grad-2:          #73d8ff;
+  --color-grad-3:          #8d9bff;
+  --color-grad-4:          #c08bff;
 
-  --color-text:            #c9d1d9;
-  --color-text-muted:      #6e7681;
+  --color-text:            #e6edf3;
+  --color-text-bright:     #f0f6fc;
+  --color-text-soft:       #c9d1d9;
+  --color-text-muted:      #9ea8c7;
+  --color-text-dim:        #8b949e;
 
   --color-dot-red:         #ff5f57;
   --color-dot-yellow:      #ffbd2e;
   --color-dot-green:       #28c940;
+
+  --color-white-03:        rgba(255, 255, 255, 0.03);
+  --color-white-04:        rgba(255, 255, 255, 0.04);
+  --color-white-05:        rgba(255, 255, 255, 0.05);
+  --color-white-06:        rgba(255, 255, 255, 0.06);
+  --color-white-08:        rgba(255, 255, 255, 0.08);
+  --color-white-10:        rgba(255, 255, 255, 0.1);
+  --color-white-12:        rgba(255, 255, 255, 0.12);
+  --color-white-25:        rgba(255, 255, 255, 0.25);
+  --color-white-48:        rgba(255, 255, 255, 0.48);
+  --color-white-55:        rgba(255, 255, 255, 0.55);
+  --color-white-60:        rgba(255, 255, 255, 0.6);
+  --color-white-65:        rgba(255, 255, 255, 0.65);
+  --color-white-68:        rgba(255, 255, 255, 0.68);
+  --color-white-72:        rgba(255, 255, 255, 0.72);
+  --color-white-78:        rgba(255, 255, 255, 0.78);
+  --color-white-82:        rgba(255, 255, 255, 0.82);
+  --color-white-90:        rgba(255, 255, 255, 0.9);
+
+  --color-shadow-soft:     rgba(0, 0, 0, 0.18);
+  --color-shadow-card:     rgba(0, 0, 0, 0.35);
+  --color-shadow-strong:   rgba(0, 0, 0, 0.6);
+
+  --color-accent-06:       rgba(134, 236, 255, 0.06);
+  --color-accent-08:       rgba(134, 236, 255, 0.08);
+  --color-accent-10:       rgba(134, 236, 255, 0.1);
+  --color-accent-12:       rgba(134, 236, 255, 0.12);
+  --color-accent-18:       rgba(134, 236, 255, 0.18);
+  --color-accent-25:       rgba(134, 236, 255, 0.25);
+  --color-accent-30:       rgba(134, 236, 255, 0.3);
+  --color-accent-35:       rgba(134, 236, 255, 0.35);
+  --color-accent-40:       rgba(134, 236, 255, 0.4);
+  --color-accent-50:       rgba(134, 236, 255, 0.5);
+
+  --color-success:         #6ce89a;
+  --color-success-08:      rgba(108, 232, 154, 0.08);
+  --color-success-25:      rgba(108, 232, 154, 0.25);
+
+  --color-danger:          #ff8a83;
+  --color-danger-08:       rgba(255, 138, 131, 0.08);
+  --color-danger-20:       rgba(255, 138, 131, 0.2);
+  --color-danger-25:       rgba(255, 138, 131, 0.25);
 }
 
 *, *::before, *::after {
@@ -31,9 +89,10 @@ html, body, #root {
 
 body {
   margin: 0;
-  font-family: 'Fira Code', monospace;
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-display: swap;
+  background-color: var(--bg);
+  color: var(--text);
   display: flex;
   flex-direction: column;
 }
@@ -45,7 +104,7 @@ body {
 }
 
 a {
-  color: var(--color-accent);
+  color: var(--accent);
 }
 
 main {
@@ -77,8 +136,7 @@ main {
   background: linear-gradient(
     135deg,
     var(--color-grad-1) 0%,
-    var(--color-grad-2) 35%,
-    var(--color-grad-3) 70%,
+    var(--color-grad-3) 50%,
     var(--color-grad-4) 100%
   );
   background-size: 200% auto;
@@ -99,7 +157,7 @@ main {
 .preloader-bar-inner {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, var(--color-grad-2), var(--color-grad-3));
+  background: linear-gradient(90deg, var(--color-grad-1), var(--color-grad-4));
   border-radius: 99px;
   transition: width 0.3s ease;
 }

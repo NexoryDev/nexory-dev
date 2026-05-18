@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { IconEye, IconEyeOff } from "../components/icons/svgs";
 import { useLanguage } from "../context/LanguageContext";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
@@ -278,7 +278,7 @@ export default function Login() {
                     className="password-toggle"
                     onClick={() => setShowPassword((v) => !v)}
                   >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showPassword ? <IconEyeOff /> : <IconEye />}
                   </button>
                 </div>
 

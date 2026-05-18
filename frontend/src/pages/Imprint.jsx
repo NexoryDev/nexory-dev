@@ -1,17 +1,20 @@
 import '../styles/Legal.css';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Imprint() {
+  const { t } = useLanguage();
+
   return (
     <main className="legal-page">
       <div className="legal-container">
         <header className="legal-header">
-          <p className="legal-label">Legal</p>
-          <h1 className="legal-title">Imprint</h1>
-          <p className="legal-subtitle">Information pursuant to § 5 TMG (German Telemedia Act)</p>
+          <p className="legal-label">{t('imprint.label')}</p>
+          <h1 className="legal-title">{t('imprint.title')}</h1>
+          <p className="legal-subtitle">{t('imprint.subtitle')}</p>
         </header>
 
         <section className="legal-section">
-          <h2>Responsible Party</h2>
+          <h2>{t('imprint.responsible')}</h2>
           <p>
             Luca Bohnet<br />
             Vogelsangweg 3<br />
@@ -25,9 +28,9 @@ export default function Imprint() {
         </section>
 
         <section className="legal-section">
-          <h2>Disclaimer</h2>
+          <h2>{t('imprint.disclaimer')}</h2>
 
-          <h3>Liability for Content</h3>
+          <h3>{t('imprint.liability_content')}</h3>
           <p>
             The contents of this website have been created with the utmost care. However, we cannot
             guarantee the accuracy, completeness, or timeliness of the content. As a service provider
@@ -36,7 +39,7 @@ export default function Imprint() {
             to investigate circumstances that indicate illegal activity.
           </p>
 
-          <h3>Liability for Links</h3>
+          <h3>{t('imprint.liability_links')}</h3>
           <p>
             Our website contains links to external websites over which we have no control. Therefore
             we cannot accept any liability for these external contents. The respective provider or
@@ -45,7 +48,7 @@ export default function Imprint() {
             not recognizable at the time of linking.
           </p>
 
-          <h3>Copyright</h3>
+          <h3>{t('imprint.copyright')}</h3>
           <p>
             The content and works created by the site operators on these pages are subject to
             copyright law. Duplication, processing, distribution, or any form of commercialization
@@ -56,7 +59,7 @@ export default function Imprint() {
         </section>
 
         <footer className="legal-foot">
-          <p>Last updated: April 2026</p>
+          <p>{t('imprint.last_updated')}</p>
         </footer>
       </div>
     </main>

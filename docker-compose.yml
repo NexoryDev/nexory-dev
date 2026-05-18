@@ -16,11 +16,9 @@ services:
       - redis
       - clamav
 
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-
     networks:
-      - app
+      app:
+        ipv4_address: 172.19.0.10
 
     volumes:
       - avatar_uploads:/app/static/uploads/avatars
@@ -60,6 +58,10 @@ services:
 networks:
   app:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16
+          gateway: 172.19.0.1
 
 volumes:
   avatar_uploads:

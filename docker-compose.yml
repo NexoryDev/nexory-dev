@@ -11,17 +11,21 @@ services:
       context: ./backend
     env_file:
       - ./backend/.env
-    expose:
-      - "5000"
     restart: always
     depends_on:
       - redis
       - clamav
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
     networks:
       - app
+
     volumes:
       - avatar_uploads:/app/static/uploads/avatars
       - avatar_quarantine:/app/static/uploads/avatar-quarantine
+
     environment:
       AVATAR_ENABLE_MALWARE_SCAN: "true"
       AVATAR_CLAMD_HOST: clamav

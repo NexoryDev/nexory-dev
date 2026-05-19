@@ -63,33 +63,43 @@ export default function ProfileNavbar() {
   const avatar = user?.avatar;
 
   return (
-    <nav className={`navebar${scrolled ? " scrolled" : ""}`}>
-      <div className="logo-container">
-        <Link to="/home">
-          <img src="/favicon.ico" alt="Logo" className="logo" />
+    <nav className={`navbar navbar-home ${scrolled ? "scrolled" : ""}`.trim()}>
+      <div className="navbar-left">
+        <Link to="/home" className="logo-wrapper logo-wrapper-home">
+          <img src="/favicon.ico" alt="NexoryDev Logo" className="logo logo-home-round" />
+          <span className="logo-text logo-text-home">NexoryDev</span>
         </Link>
       </div>
 
-      <ul className={`navebar-menu${menuOpen ? " active" : ""}`}>
+      <ul className={`navbar-menu navbar-menu-home ${menuOpen ? "active" : ""}`.trim()}>
         <li>
-          <Link to="/home" className={isActive("/home") ? "active" : ""}>
+          <Link
+            to="/home"
+            className={`nav-link-featured ${isActive("/home") ? "active" : ""}`.trim()}
+          >
             {t("nav.home")}
           </Link>
         </li>
         <li>
-          <Link to="/github" className={isActive("/github") ? "active" : ""}>
+          <Link
+            to="/github"
+            className={`nav-link-featured ${isActive("/github") ? "active" : ""}`.trim()}
+          >
             {t("nav.github")}
           </Link>
         </li>
         <li>
-          <Link to="/contact" className={isActive("/contact") ? "active" : ""}>
+          <Link
+            to="/contact"
+            className={`nav-link-featured ${isActive("/contact") ? "active" : ""}`.trim()}
+          >
             {t("nav.contact")}
           </Link>
         </li>
       </ul>
 
-      <div className="right-controls">
-        <div className="language-switch" aria-label={t("nav.language_switcher")}>
+      <div className="navbar-right navbar-right-home">
+        <div className="language-switch language-switch-home" aria-label={t("nav.language_switcher")}>
           <button
             className={language === "de" ? "active" : ""}
             onClick={() => setLanguage("de")}
@@ -160,7 +170,7 @@ export default function ProfileNavbar() {
       </div>
 
       <div
-        className={`navebar-toggle${menuOpen ? " active" : ""}`}
+        className={`navbar-toggle ${menuOpen ? "active" : ""}`}
         onClick={toggleMenu}
         role="button"
         aria-label="Toggle menu"
@@ -168,7 +178,9 @@ export default function ProfileNavbar() {
         tabIndex={0}
         onKeyDown={onToggleKeyDown}
       >
-        <span /><span /><span /><span />
+        <span />
+        <span />
+        <span />
       </div>
     </nav>
   );

@@ -4,6 +4,12 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm install
 RUN npm install lucide-react
+RUN npm install three
+RUN npm install @react-three/fiber
+RUN npm install @react-three/drei
+RUN npm install @react-three/postprocessing
+RUN npm install framer-motion
+RUN npm install gsap
 COPY . .
 RUN npm run build
 

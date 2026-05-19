@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import '../styles/Footer.css';
 
@@ -6,10 +6,12 @@ const GITHUB_PROFILE_URL = 'https://github.com/NexoryDev';
 
 export default function Footer() {
   const { t } = useLanguage();
+  const location = useLocation();
   const year = new Date().getFullYear();
+  const isHomeRoute = location.pathname === '/' || location.pathname === '/home';
 
   return (
-    <footer className="footer">
+    <footer className={`footer ${isHomeRoute ? 'footer-home' : ''}`.trim()}>
       <div className="footer-container">
         <div className="footer-brand">
           <span className="footer-logo">nexory-dev.de</span>

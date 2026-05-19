@@ -1,19 +1,30 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useLanguage } from '../context/LanguageContext';
-import '../styles/Navbar.css';
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+
+import { useLanguage } from "../context/LanguageContext";
+
+import "../styles/Navbar.css";
 
 export default function Navbar() {
   const { language, setLanguage, t } = useLanguage();
+
   const location = useLocation();
   const navigate = useNavigate();
+  const isHomeRoute = location.pathname === "/" || location.pathname === "/home";
+
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40);
+    };
+
+    window.addEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   useEffect(() => {
@@ -25,76 +36,126 @@ export default function Navbar() {
   }
 
   function toggleMenu() {
-    setMenuOpen(current => !current);
-  }
-
-  function onToggleKeyDown(event) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      toggleMenu();
-    }
+    setMenuOpen((prev) => !prev);
   }
 
   return (
-    <nav className={`navebar${scrolled ? ' scrolled' : ''}`}>
-      <div className="logo-container">
-        <Link to="/home">
-          <img src="/favicon.ico" alt="Logo" className="logo" />
+    <nav className={`navbar navbar-home ${scrolled ? "scrolled" : ""}`.trim()}>
+
+      <div className="navbar-left">
+
+        <Link to="/home" className="logo-wrapper logo-wrapper-home">
+
+          <img
+            src="/favicon.ico"
+            alt="NexoryDev Logo"
+            className="logo logo-home-round"
+          />
+
+          <span className="logo-text logo-text-home">
+            NexoryDev
+          </span>
+
         </Link>
+
       </div>
 
-      <ul className={`navebar-menu${menuOpen ? ' active' : ''}`}>
+      <ul className={`navbar-menu navbar-menu-home ${menuOpen ? "active" : ""}`.trim()}>
+
         <li>
-          <Link to="/home" className={isActive('/home') ? 'active' : ''}>
-            {t('nav.home')}
+          <Link
+            to="/home"
+            className={`nav-link-featured ${isHomeRoute || isActive("/home") ? "active" : ""}`.trim()}
+          >
+            {t("nav.home")}
           </Link>
         </li>
+
         <li>
-          <Link to="/github" className={isActive('/github') ? 'active' : ''}>
-            {t('nav.github')}
+          <Link
+            to="/github"
+            className={`nav-link-featured ${isActive("/github") ? "active" : ""}`.trim()}
+          >
+            {t("nav.github")}
           </Link>
         </li>
+
         <li>
-          <Link to="/contact" className={isActive('/contact') ? 'active' : ''}>
-            {t('nav.contact')}
+          <Link
+            to="/contact"
+            className={`nav-link-featured ${isActive("/contact") ? "active" : ""}`.trim()}
+          >
+            {t("nav.contact")}
           </Link>
         </li>
+
+        <li className="navbar-menu-controls">
+          <div className="language-switch language-switch-home">
+
+            <button
+              className={language === "de" ? "active" : ""}
+              onClick={() => setLanguage("de")}
+            >
+              DE
+            </button>
+
+            <button
+              className={language === "en" ? "active" : ""}
+              onClick={() => setLanguage("en")}
+            >
+              EN
+            </button>
+
+          </div>
+
+          <button
+            className="login-btn login-btn-home"
+            onClick={() => navigate("/login")}
+          >
+            {t("nav.login")}
+          </button>
+        </li>
+
       </ul>
 
-      <div className="right-controls">
-        <div className="language-switch" aria-label={t('nav.language_switcher')}>
+      <div className="navbar-right navbar-right-home">
+
+        <div className="language-switch language-switch-home">
+
           <button
-            className={language === 'de' ? 'active' : ''}
-            onClick={() => setLanguage('de')}
+            className={language === "de" ? "active" : ""}
+            onClick={() => setLanguage("de")}
           >
             DE
           </button>
+
           <button
-            className={language === 'en' ? 'active' : ''}
-            onClick={() => setLanguage('en')}
+            className={language === "en" ? "active" : ""}
+            onClick={() => setLanguage("en")}
           >
             EN
           </button>
+
         </div>
 
-        <div className="login">
-          <button onClick={() => navigate("/login")}>
-            {t('nav.login')}
-          </button>
-        </div>
+        <button
+          className="login-btn login-btn-home"
+          onClick={() => navigate("/login")}
+        >
+          {t("nav.login")}
+        </button>
+
       </div>
 
       <div
-        className={`navebar-toggle${menuOpen ? ' active' : ''}`}
+        className={`navbar-toggle ${menuOpen ? "active" : ""}`}
         onClick={toggleMenu}
-        role="button"
-        aria-label="Toggle menu"
-        aria-expanded={menuOpen}
-        tabIndex={0}
-        onKeyDown={onToggleKeyDown}
       >
-        <span /><span /><span /><span />
+        <span />
+        <span />
+        <span />
       </div>
+
     </nav>
   );
 }

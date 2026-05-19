@@ -8,10 +8,20 @@
 }
 
 .footer {
-  background: var(--surface);
-  border-top: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(4, 8, 18, 0.98) 0%, rgba(3, 6, 14, 1) 100%);
+  border-top: 1px solid rgba(107, 187, 255, 0.14);
   color: var(--text);
   font-family: inherit;
+}
+
+.footer.footer-home {
+  position: relative;
+  border-top: 1px solid rgba(114, 198, 255, 0.22);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(88, 90, 255, 0.1), transparent 42%),
+    radial-gradient(circle at 22% 0%, rgba(0, 212, 255, 0.08), transparent 38%),
+    linear-gradient(180deg, rgba(3, 8, 20, 0.98) 0%, rgba(2, 5, 14, 1) 100%);
+  box-shadow: inset 0 1px 0 rgba(130, 223, 255, 0.14);
 }
 
 .footer-container {
@@ -23,6 +33,8 @@
   max-width: var(--footer-max-width);
   margin-inline: auto;
   padding: var(--footer-padding-y) var(--footer-padding-x);
+  position: relative;
+  z-index: 1;
 }
 
 .footer-brand {
@@ -46,11 +58,19 @@
   color: transparent;
 }
 
+.footer-home .footer-logo {
+  text-shadow: 0 0 14px rgba(106, 218, 255, 0.36);
+}
+
 .footer-tagline {
   margin: 0;
   font-size: 0.8rem;
   line-height: 1.65;
   color: var(--color-text-muted);
+}
+
+.footer-home .footer-tagline {
+  color: rgba(199, 219, 248, 0.82);
 }
 
 .footer-section {
@@ -67,6 +87,10 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-text-muted);
+}
+
+.footer-home .footer-section-title {
+  color: rgba(151, 195, 244, 0.78);
 }
 
 .footer-nav-list {
@@ -95,6 +119,10 @@
   transform: translateY(0);
 }
 
+.footer-home .footer-nav-list a {
+  color: rgba(213, 230, 255, 0.8);
+}
+
 .footer-nav-list a::after {
   content: "";
   position: absolute;
@@ -109,6 +137,10 @@
 .footer-nav-list a:hover {
   color: var(--color-text);
   transform: translateY(-1px);
+}
+
+.footer-home .footer-nav-list a:hover {
+  color: #9deeff;
 }
 
 .footer-nav-list a:hover::after {
@@ -137,10 +169,21 @@
   transform: translateY(-1px);
 }
 
+.footer-home .footer-social-link:hover {
+  color: #8cefff;
+  text-shadow: 0 0 10px rgba(140, 239, 255, 0.4);
+}
+
 .footer-bottom {
   border-top: 1px solid var(--color-border-subtle);
   padding: 1.25rem var(--footer-padding-x);
   text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-home .footer-bottom {
+  border-top: 1px solid rgba(111, 192, 255, 0.3);
 }
 
 .footer-bottom p {
@@ -148,6 +191,10 @@
   font-size: 0.75rem;
   color: var(--color-text-muted);
   letter-spacing: 0.02em;
+}
+
+.footer-home .footer-bottom p {
+  color: rgba(186, 209, 240, 0.76);
 }
 
 @media (max-width: 768px) {

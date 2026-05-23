@@ -16,8 +16,8 @@
   border-radius: 14px;
   background: linear-gradient(180deg, rgba(4, 10, 25, 0.18) 0%, rgba(4, 10, 25, 0.06) 100%);
   backdrop-filter: blur(6px);
-  border: 1px solid rgba(111, 198, 255, 0.12);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18), 0 0 22px rgba(0, 212, 255, 0.04);
+  border: 1px solid rgba(72, 171, 255, 0.07);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.16), 0 0 16px rgba(0, 160, 255, 0.03);
   transition: all 0.4s ease;
   font-family: "Chakra Petch", sans-serif;
 }
@@ -25,8 +25,8 @@
 .navbar.scrolled {
   background: linear-gradient(180deg, rgba(3, 16, 32, 0.96) 0%, rgba(3, 11, 24, 0.92) 100%);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(104, 214, 255, 0.28);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.56), 0 0 24px rgba(72, 171, 255, 0.1);
+  border: 1px solid rgba(72, 171, 255, 0.18);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 20px rgba(72, 171, 255, 0.06);
 }
 
 .navbar.navbar-home {
@@ -40,14 +40,14 @@
   padding: 0 24px;
   background: linear-gradient(180deg, rgba(4, 9, 24, 0.16) 0%, rgba(4, 9, 24, 0.02) 100%);
   border: 0;
-  border-bottom: 1px solid rgba(86, 178, 255, 0.12);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  border-bottom: 1px solid rgba(80, 160, 255, 0.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
   backdrop-filter: blur(6px);
 }
 
 .navbar.navbar-home.scrolled {
   background: linear-gradient(180deg, rgba(3, 16, 32, 0.96) 0%, rgba(3, 11, 24, 0.92) 100%);
-  border-bottom: 1px solid rgba(95, 203, 255, 0.24);
+  border-bottom: 1px solid rgba(80, 160, 255, 0.18);
 }
 
 .navbar-left {
@@ -70,32 +70,32 @@
   width: 38px;
   height: 38px;
   border-radius: 999px;
-  border: 1px solid rgba(130, 208, 255, 0.68);
-  box-shadow: 0 0 14px rgba(0, 212, 255, 0.28);
+  border: 1px solid rgba(115, 200, 255, 0.6);
+  box-shadow: 0 0 16px rgba(46, 180, 255, 0.32);
 }
 
 .logo-home-round {
   width: 40px;
   height: 40px;
   border-radius: 999px;
-  border: 1px solid rgba(130, 208, 255, 0.74);
-  box-shadow: 0 0 18px rgba(0, 212, 255, 0.32);
+  border: 1px solid rgba(115, 200, 255, 0.7);
+  box-shadow: 0 0 20px rgba(46, 180, 255, 0.36);
 }
 
 .logo-text {
   font-size: 19px;
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: #fff;
-  text-shadow: 0 0 14px rgba(92, 205, 255, 0.34);
+  color: #eaffff;
+  text-shadow: 0 0 16px rgba(80, 200, 255, 0.44);
 }
 
 .logo-text-home {
   font-size: 29px;
   font-weight: 700;
   letter-spacing: 0.07em;
-  color: #f4f8ff;
-  text-shadow: 0 0 14px rgba(0, 212, 255, 0.34);
+  color: #f1fcff;
+  text-shadow: 0 0 18px rgba(56, 190, 255, 0.42);
 }
 
 .navbar-menu {
@@ -141,8 +141,8 @@
 }
 
 .navbar-menu a.active {
-  color: #73ebff;
-  text-shadow: 0 0 12px rgba(115, 235, 255, 0.52);
+  color: #5ceeff;
+  text-shadow: 0 0 12px rgba(92, 235, 255, 0.44);
 }
 
 .navbar-menu a::after {
@@ -300,8 +300,8 @@
 
 .login-btn:hover {
   transform: translateY(-2px);
-  border: 1px solid rgba(176, 238, 255, 0.6);
-  box-shadow: 0 0 18px rgba(98, 220, 255, 0.28), 0 0 24px rgba(123, 47, 255, 0.18);
+  border: 1px solid rgba(140, 220, 255, 0.6);
+  box-shadow: 0 0 18px rgba(86, 200, 255, 0.26), 0 0 22px rgba(110, 60, 255, 0.14);
 }
 
 .language-switch:hover::before,

@@ -182,6 +182,10 @@
 
 .hero-btn-p,
 .hero-btn-s {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
   font-family: var(--ff);
   font-size: 0.72rem;
   letter-spacing: 0.1em;
@@ -212,8 +216,9 @@
 }
 
 .hero-btn-s:hover {
-  border-color: var(--c2);
-  color: var(--c2);
+  border-color: var(--gb);
+  color: var(--tx);
+  transform: translateY(-1px);
 }
 
 .hero-r {

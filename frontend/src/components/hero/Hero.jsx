@@ -6,7 +6,7 @@ import {
   Folder,
   Shield
 } from "lucide-react";
-
+import { Link } from "react-router-dom";
 import "../../styles/Hero.css";
 import { useLanguage } from "../../context/LanguageContext";
 
@@ -253,12 +253,12 @@ export default function Hero() {
           </p>
 
           <div className="hero-btns">
-            <button className="hero-btn-p">
-              &gt; {tt("hero.cta.primary", "Explore Services")}
-            </button>
-            <button className="hero-btn-s">
-              &gt; {tt("hero.cta.secondary", "View Architecture")}
-            </button>
+            <Link to="/contact" className="hero-btn-p">
+              {t('hero.cta.primary')}
+            </Link>
+            <Link to="/github" className="hero-btn-s">
+              {t('hero.cta.secondary')}
+            </Link>
           </div>
         </div>
 

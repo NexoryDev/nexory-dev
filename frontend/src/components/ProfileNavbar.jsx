@@ -80,6 +80,19 @@ export default function ProfileNavbar() {
             {t("nav.home")}
           </Link>
         </li>
+        <li className="navbar-menu-controls">
+          <div className="language-switch" aria-label={t("nav.language_switcher")}> 
+            <button className={language === "de" ? "active" : ""} onClick={() => setLanguage("de")}>DE</button>
+            <button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")}>EN</button>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}>
+            <Link to="/me" onClick={() => setMenuOpen(false)} className="login-btn">{t('profile.dropdown.my_profile')}</Link>
+            <Link to="/me/products" onClick={() => setMenuOpen(false)} className="login-btn">{t('profile.dropdown.products')}</Link>
+            <Link to="/me/settings" onClick={() => setMenuOpen(false)} className="login-btn">{t('profile.dropdown.settings')}</Link>
+            <button onClick={() => { setMenuOpen(false); handleLogout(); }} style={{ marginTop: 4 }} className="login-btn">{t('profile.dropdown.logout')}</button>
+          </div>
+        </li>
         <li>
           <Link
             to="/github"

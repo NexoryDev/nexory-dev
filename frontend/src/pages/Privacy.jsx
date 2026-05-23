@@ -14,162 +14,177 @@ export default function Privacy() {
         </header>
 
         <section className="legal-section">
-          <h2>1. Verantwortlicher</h2>
+          <h2>1. Controller</h2>
           <p>
             Luca Bohnet<br />
           </p>
           <p>
-            <strong>E-Mail:</strong>{" "}
+            <strong>Email:</strong>{" "}
             <a href="mailto:support@nexory-dev.de">support@nexory-dev.de</a>
           </p>
         </section>
 
         <section className="legal-section">
-          <h2>2. Allgemeines zur Datenverarbeitung</h2>
+          <h2>2. General Information on Data Processing</h2>
           <p>
-            Der Schutz deiner personenbezogenen Daten ist uns wichtig. Wir verarbeiten personenbezogene Daten nur,
-            soweit dies zur Bereitstellung einer funktionsfaehigen Website, zur Bereitstellung unseres Nutzerkontosystems
-            sowie zur Gewaehrleistung von Sicherheit und Stabilitaet erforderlich ist.
+            Protecting your personal data is important to us. We only process personal data to provide a functional
+            website, operate our user account system, and ensure security and stability.
           </p>
           <p>
-            Rechtsgrundlagen sind insbesondere Art. 6 Abs. 1 lit. b DSGVO (Vertrag / vorvertragliche Massnahmen)
-            und Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an sicherem, stabilem und effizientem Betrieb).
+            The legal bases are primarily Art. 6(1)(b) GDPR (contract / pre-contractual measures) and
+            Art. 6(1)(f) GDPR (legitimate interest in secure, stable, and efficient operation).
           </p>
         </section>
 
         <section className="legal-section">
-          <h2>3. Hosting und Server-Logfiles</h2>
+          <h2>3. External Fonts / Google Fonts</h2>
           <p>
-            Die Website wird auf einem Server in Deutschland betrieben. Beim Aufruf der Website werden automatisch
-            technisch erforderliche Verbindungsdaten verarbeitet, insbesondere:
+            The homepage uses the Google Fonts "Chakra Petch" and "JetBrains Mono" for styling.
+            These fonts are loaded from the homepage stylesheet(s) (for example Home / Hero) via an external request
+            to <code>fonts.googleapis.com</code>.
+          </p>
+          <p>
+            This request is executed by the user's browser. We do not store any personal data from this request.
+            It is only used as a resource for correct visual presentation of the website.
+          </p>
+          <p>
+            If you do not want these fonts to be loaded, you can block external fonts in your browser.
+            The website will remain usable, but its appearance may differ.
+          </p>
+        </section>
+
+        <section className="legal-section">
+          <h2>4. Hosting and Server Logs</h2>
+          <p>
+            The website is hosted on a server in Germany. When the website is accessed, technically necessary connection
+            data is processed automatically, in particular:
           </p>
           <ul>
-            <li>IP-Adresse</li>
-            <li>Datum und Uhrzeit der Anfrage</li>
-            <li>angeforderte URL</li>
-            <li>HTTP-Statuscode</li>
-            <li>User-Agent (Browser, Betriebssystem)</li>
-            <li>Referrer-URL (falls übermittelt)</li>
+            <li>IP address</li>
+            <li>Date and time of the request</li>
+            <li>Requested URL</li>
+            <li>HTTP status code</li>
+            <li>User-Agent (browser, operating system)</li>
+            <li>Referrer URL (if provided)</li>
           </ul>
           <p>
-            Die Verarbeitung erfolgt zur Gewaehrleistung von Systemsicherheit und technischem Betrieb
-            (Art. 6 Abs. 1 lit. f DSGVO).
+            The processing is carried out to ensure system security and technical operation
+            (Art. 6(1)(f) GDPR).
           </p>
         </section>
 
         <section className="legal-section">
-          <h2>4. Cookies, Local Storage und Session Storage</h2>
+          <h2>5. Cookies, Local Storage and Session Storage</h2>
 
-          <h3>Technisch erforderlicher Cookie</h3>
+          <h3>Technically Required Cookie</h3>
           <ul>
             <li>
-              <strong>refresh_token</strong> (httpOnly, Secure, SameSite): dient der Sitzungsverwaltung
-              nach erfolgreichem Login. Der Cookie ist nicht über JavaScript auslesbar.
+              <strong>refresh_token</strong> (httpOnly, Secure, SameSite): used for session management after successful login.
+              The cookie is not readable by JavaScript.
             </li>
           </ul>
 
-          <h3>Browser-Speicher</h3>
+          <h3>Browser Storage</h3>
           <ul>
-            <li><strong>language</strong>: gewaehlte Sprache (de/en)</li>
-            <li><strong>access_token</strong>: kurzlebiges JWT für API-Authentifizierung</li>
-            <li><strong>remember_me</strong>: merkt, ob "Angemeldet bleiben" aktiviert wurde</li>
-            <li><strong>device_id</strong>: technische Geraete-ID für Login-Sitzungen</li>
-            <li><strong>home_github_stats</strong>: temporarer Cache öffentlicher GitHub-Statistiken</li>
+            <li><strong>language</strong>: selected language (de/en)</li>
+            <li><strong>access_token</strong>: short-lived JWT for API authentication</li>
+            <li><strong>remember_me</strong>: remembers whether "keep me signed in" was enabled</li>
+            <li><strong>device_id</strong>: technical device ID for login sessions</li>
+            <li><strong>home_github_stats</strong>: temporary cache of public GitHub statistics</li>
           </ul>
           <p>
-            Es werden keine Tracking- oder Marketing-Cookies eingesetzt.
+            No tracking or marketing cookies are used.
           </p>
         </section>
 
         <section className="legal-section">
-          <h2>5. Nutzerkonto und Authentifizierung</h2>
+          <h2>6. User Account and Authentication</h2>
           <p>
-            Bei Registrierung und Nutzung eines Kontos verarbeiten wir insbesondere folgende Daten:
+            When registering and using an account, we process the following data in particular:
           </p>
           <ul>
-            <li><strong>E-Mail-Adresse</strong> (Pflichtfeld)</li>
-            <li><strong>Passwort-Hash</strong> (kein Klartext-Passwort)</li>
-            <li><strong>Username</strong> (optional, öffentlich sichtbar wenn gesetzt)</li>
+            <li><strong>Email address</strong> (required)</li>
+            <li><strong>Password hash</strong> (no plaintext password)</li>
+            <li><strong>Username</strong> (optional, publicly visible if set)</li>
             <li><strong>Avatar</strong> (optional)</li>
-            <li><strong>Verifizierungsstatus</strong> und Konto-Metadaten</li>
-            <li><strong>Refresh-Token-Metadaten</strong> (Token-Hash, Ablaufzeit, User-Agent, IP, device_id)</li>
-            <li><strong>GitHub-Nutzername und GitHub-ID</strong> (nur bei freiwilliger Verbindung, siehe Abschnitt 9a)</li>
+            <li><strong>Verification status</strong> and account metadata</li>
+            <li><strong>Refresh token metadata</strong> (token hash, expiration time, user agent, IP, device_id)</li>
+            <li><strong>GitHub username and GitHub ID</strong> (only if you voluntarily connect your account, see section 10a)</li>
           </ul>
           <p>
-            Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung des Kontosystems).
+            Legal basis: Art. 6(1)(b) GDPR (provision of the account system).
           </p>
         </section>
 
         <section className="legal-section">
-          <h2>6. Zwei-Faktor-Authentifizierung (2FA)</h2>
+          <h2>7. Two-Factor Authentication (2FA)</h2>
           <p>
-            Wenn du 2FA aktivierst, werden zusaetzlich folgende Daten verarbeitet:
+            If you activate 2FA, the following additional data will be processed:
           </p>
           <ul>
-            <li><strong>TOTP-Secret</strong> zur Erzeugung zeitbasierter Einmalcodes</li>
-            <li><strong>Backup-Codes</strong> in gehashter Form (einmal nutzbar)</li>
-            <li><strong>Kurzlebige MFA-Challenges</strong> waehrend des Login-Prozesses</li>
+            <li><strong>TOTP secret</strong> for generating time-based one-time codes</li>
+            <li><strong>Backup codes</strong> in hashed form (single-use)</li>
+            <li><strong>Short-lived MFA challenges</strong> during the login process</li>
           </ul>
           <p>
-            Der 2FA-Code selbst wird nur zur Verifikation verwendet. Backup-Codes werden nicht im Klartext gespeichert.
-            Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO sowie Art. 6 Abs. 1 lit. f DSGVO (Sicherheitsinteresse).
+            The 2FA code itself is only used for verification. Backup codes are not stored in plaintext.
+            Legal basis: Art. 6(1)(b) GDPR and Art. 6(1)(f) GDPR (security interest).
           </p>
         </section>
 
         <section className="legal-section">
-          <h2>7. Profil, Avatar und öffentliche Profile</h2>
+          <h2>8. Profile, Avatar and Public Profiles</h2>
           <p>
-            Wenn ein Username gesetzt ist, kann ein öffentliches Profil unter <code>/user/&lt;username&gt;</code>
-            abrufbar sein. Dort werden folgende Daten angezeigt, sofern du sie angegeben hast:
+            If a username is set, a public profile may be available at <code>/user/&lt;username&gt;</code>.
+            The following data may be displayed there if you have provided it:
           </p>
           <ul>
             <li><strong>Username</strong></li>
-            <li><strong>Avatar</strong> (falls gesetzt)</li>
-            <li><strong>Mitglied seit</strong> (Monat und Jahr)</li>
-            <li><strong>Bio</strong> (kurze Selbstbeschreibung, optional)</li>
-            <li><strong>Standort</strong> (optional, aus vorgegebener Liste)</li>
-            <li><strong>Zeitzone</strong> (wird aus gewähltem Standort abgeleitet, optional)</li>
+            <li><strong>Avatar</strong> (if set)</li>
+            <li><strong>Member since</strong> (month and year)</li>
+            <li><strong>Bio</strong> (short self-description, optional)</li>
+            <li><strong>Location</strong> (optional, from a predefined list)</li>
+            <li><strong>Timezone</strong> (derived from the selected location, optional)</li>
             <li><strong>Badges</strong></li>
           </ul>
           <p>
-            Diese Angaben sind freiwillig. Du kannst sie jederzeit in deinem Profil ändern oder entfernen.
-            Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch aktive Eingabe).
+            This information is voluntary. You can change or remove it at any time in your profile.
+            Legal basis: Art. 6(1)(a) GDPR (consent through active input).
           </p>
           <p>
-            Avatar-Uploads werden serverseitig verarbeitet, auf ein quadratisches Format (400×400 px) zugeschnitten
-            und als JPEG gespeichert. Der ursprüngliche Dateiname wird nicht gespeichert.
-          </p>
-        </section>
-
-        <section className="legal-section">
-          <h2>8. E-Mail-Versand</h2>
-          <p>
-            Für transaktionale E-Mails (z. B. Verifizierung, Passwort-Reset) wird ein externer Versanddienst eingesetzt.
-            Dabei wird deine E-Mail-Adresse ausschliesslich zum Versand dieser technisch erforderlichen Nachrichten verarbeitet.
+            Avatar uploads are processed server-side, cropped to a square format (400×400 px), and stored as JPEG.
+            The original filename is not saved.
           </p>
         </section>
 
         <section className="legal-section">
-          <h2>9. GitHub-Daten (öffentliche Organisationsdaten)</h2>
+          <h2>9. Email Delivery</h2>
           <p>
-            In Teilen der Website werden öffentlich verfügbare Daten aus der GitHub-API angezeigt,
-            insbesondere zur GitHub-Organisation <strong>NexoryDev</strong>
-            (z. B. Repositories, Sterne, Commits, Mitglieder und Projektinformationen).
+            For transactional emails (e.g. verification, password reset), an external email delivery service is used.
+            Your email address is processed exclusively for sending these technically necessary messages.
+          </p>
+        </section>
+
+        <section className="legal-section">
+          <h2>10. GitHub Data (Public Organization Data)</h2>
+          <p>
+            Parts of the website display publicly available data from the GitHub API, particularly related to the
+            GitHub organization <strong>NexoryDev</strong> (e.g. repositories, stars, commits, members, and project information).
           </p>
           <p>
-            Die Abfragen erfolgen über unsere eigenen API-Endpunkte. Zweck ist die Darstellung
-            öffentlicher Open-Source-Informationen (Art. 6 Abs. 1 lit. f DSGVO).
+            Requests are made through our own API endpoints. The purpose is to display public open source information
+            (Art. 6(1)(f) GDPR).
           </p>
           <p>
-            Die zugehörige Organisation ist erreichbar unter{" "}
+            The organization is available at{" "}
             <a href="https://github.com/NexoryDev" target="_blank" rel="noopener noreferrer">
               https://github.com/NexoryDev
             </a>
             .
           </p>
           <p>
-            GitHub ist ein Dienst der GitHub, Inc. Weitere Informationen zur Datenverarbeitung durch
-            GitHub findest du unter{" "}
+            GitHub is a service of GitHub, Inc. For more information on GitHub's data processing, please see
+            {" "}
             <a
               href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
               target="_blank"
@@ -180,61 +195,56 @@ export default function Privacy() {
             .
           </p>
         </section>
+
         <section className="legal-section">
-          <h2>9a. GitHub-Kontoverbindung (OAuth)</h2>
+          <h2>10a. GitHub Account Linking (OAuth)</h2>
           <p>
-            Du kannst deinen GitHub-Account freiwillig mit deinem Nexory-Konto verbinden, um GitHub-basierte
-            Badges (z. B. &bdquo;Nexory Contributor&ldquo;) freizuschalten.
+            You can voluntarily connect your GitHub account to your Nexory account to unlock GitHub-based badges
+            (for example "Nexory Contributor").
           </p>
           <p>
-            Dabei werden ausschliesslich folgende Daten aus dem öffentlichen GitHub-Profil dauerhaft gespeichert:
+            Only the following data from the public GitHub profile is stored permanently:
           </p>
           <ul>
-            <li><strong>GitHub-Nutzername</strong> (Login-Name, öffentlich auf GitHub)</li>
-            <li><strong>GitHub-User-ID</strong> (numerische ID zur eindeutigen Zuordnung)</li>
+            <li><strong>GitHub username</strong> (login name, publicly visible on GitHub)</li>
+            <li><strong>GitHub user ID</strong> (numeric ID for unique identification)</li>
           </ul>
           <p>
-            Es werden <strong>keine</strong> E-Mail-Adressen, keine privaten Repository-Daten,
-            keine OAuth-Tokens und kein Schreibzugriff auf GitHub abgefragt oder gespeichert.
-            Der verwendete OAuth-Scope ist auf <code>read:user</code> beschraenkt.
+            We do not request or store email addresses, private repository data, OAuth tokens, or write access to GitHub.
+            The OAuth scope used is limited to <code>read:user</code>.
           </p>
           <p>
-            Der während der Verbindung temporär ausgestellte GitHub-OAuth-Token wird
-            ausschliesslich zum Abruf des öffentlichen Profils verwendet und danach
-            <strong> nicht</strong> persistiert.
+            The GitHub OAuth token issued during the connection is used only to fetch the public profile and is not
+            persisted afterwards.
           </p>
           <p>
-            Die Verbindung ist freiwillig. Du kannst sie jederzeit in den Einstellungen
-            deines Nexory-Kontos trennen. Dabei werden GitHub-Nutzername und GitHub-ID
-            sofort aus der Datenbank gelöscht.
+            The connection is voluntary. You can disconnect it at any time in your Nexory account settings.
+            GitHub username and GitHub ID are deleted from the database immediately after disconnection.
           </p>
           <p>
-            Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch aktives Verbinden).
+            Legal basis: Art. 6(1)(a) GDPR (consent through active connection).
           </p>
         </section>
+
         <section className="legal-section">
-          <h2>10. Discord-Bot Nexory</h2>
+          <h2>11. Discord Bot Nexory</h2>
           <p>
-            NexoryDev betreibt den Discord-Bot <strong>Nexory</strong>. Der Qüllcode ist öffentlich
-            einsehbar unter{" "}
+            NexoryDev operates the Discord bot <strong>Nexory</strong>. The source code is publicly available at{" "}
             <a href="https://github.com/NexoryDev/Nexory" target="_blank" rel="noopener noreferrer">
               https://github.com/NexoryDev/Nexory
             </a>
             .
           </p>
           <p>
-            Bei Nutzung des Bots können folgende Daten verarbeitet werden: Discord User-ID,
-            Discord Server-ID (Guild-ID), Bot-Konfigurationen sowie in Commands eingegebene Inhalte,
-            soweit dies für die jeweilige Bot-Funktion erforderlich ist.
+            When using the bot, the following data may be processed: Discord user ID, Discord server ID (guild ID), bot
+            configurations, and content entered in commands, as far as it is required for the respective bot function.
           </p>
           <p>
-            Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Bereitstellung der angeforderten
-            Bot-Funktionen) sowie Art. 6 Abs. 1 lit. f DSGVO (Sicherheit, Stabilitaet und
-            Missbrauchspraevention).
+            Legal basis: Art. 6(1)(b) GDPR (provision of the requested bot functions) and Art. 6(1)(f) GDPR (security,
+            stability, and abuse prevention).
           </p>
           <p>
-            Discord selbst ist ein externer Plattformanbieter. Bei Nutzung von Discord gelten
-            zusaetzlich die Datenschutzbestimmungen von Discord:
+            Discord itself is an external platform provider. When using Discord, the Discord privacy policy also applies:
             {" "}
             <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer">
               https://discord.com/privacy
@@ -244,46 +254,45 @@ export default function Privacy() {
         </section>
 
         <section className="legal-section">
-          <h2>11. Speicherdauer</h2>
+          <h2>12. Retention Periods</h2>
           <ul>
-            <li>Konto- und Profildaten (E-Mail, Username, Avatar): bis zur Löschung des Kontos</li>
-            <li>Profilangaben (Bio, Standort, Zeitzone): bis zur Änderung oder Löschung des Kontos</li>
-            <li>Refresh-Tokens: bis Ablauf oder Widerruf</li>
-            <li>E-Mail-Verifizierungen und Passwort-Reset-Tokens: nur befristet (wenige Stunden)</li>
-            <li>2FA-Backup-Codes: bis Verbrauch, Regenerierung oder Deaktivierung von 2FA</li>
-            <li>GitHub-Nutzername und GitHub-ID: bis zur Trennung der Verbindung oder Kontolöschung</li>
-            <li>Discord-Bot-Daten: bis zur Löschung durch Nutzer/Guild-Admins oder Entfernung des Bots</li>
+            <li>Account and profile data (email, username, avatar): until account deletion</li>
+            <li>Profile information (bio, location, timezone): until account change or deletion</li>
+            <li>Refresh tokens: until expiration or revocation</li>
+            <li>Email verification and password reset tokens: only for a limited period (a few hours)</li>
+            <li>2FA backup codes: until use, regeneration, or deactivation of 2FA</li>
+            <li>GitHub username and GitHub ID: until account unlinking or account deletion</li>
+            <li>Discord bot data: until deletion by the user/guild admins or removal of the bot</li>
           </ul>
         </section>
 
         <section className="legal-section">
-          <h2>12. Deine Rechte</h2>
-          <p>Du hast nach der DSGVO insbesondere folgende Rechte:</p>
+          <h2>13. Your Rights</h2>
+          <p>You have the following rights under the GDPR:</p>
           <ul>
-            <li>Auskunft (Art. 15 DSGVO)</li>
-            <li>Berichtigung (Art. 16 DSGVO)</li>
-            <li>Löschung (Art. 17 DSGVO)</li>
-            <li>Einschraenkung der Verarbeitung (Art. 18 DSGVO)</li>
-            <li>Datenübertragbarkeit (Art. 20 DSGVO)</li>
-            <li>Widerspruch (Art. 21 DSGVO)</li>
+            <li>Right of access (Art. 15 GDPR)</li>
+            <li>Right to rectification (Art. 16 GDPR)</li>
+            <li>Right to erasure (Art. 17 GDPR)</li>
+            <li>Right to restriction of processing (Art. 18 GDPR)</li>
+            <li>Right to data portability (Art. 20 GDPR)</li>
+            <li>Right to object (Art. 21 GDPR)</li>
           </ul>
           <p>
-            Zur Ausübung deiner Rechte kontaktiere uns bitte unter{" "}
+            To exercise your rights, please contact us at{" "}
             <a href="mailto:support@nexory-dev.de">support@nexory-dev.de</a>.
           </p>
         </section>
 
         <section className="legal-section">
-          <h2>13. Beschwerderecht bei Aufsichtsbehörden</h2>
+          <h2>14. Right to Lodge a Complaint with a Supervisory Authority</h2>
           <p>
-            Du hast das Recht, dich bei einer Datenschutzaufsichtsbehörde zu beschweren,
-            wenn du der Ansicht bist, dass die Verarbeitung deiner personenbezogenen Daten
-            nicht rechtmaessig erfolgt.
+            You have the right to lodge a complaint with a data protection supervisory authority if you believe that the
+            processing of your personal data is not lawful.
           </p>
         </section>
 
         <footer className="legal-foot">
-          <p>Stand: 8. Mai 2026 · Version 2</p>
+          <p>Effective date: 8 May 2026 · Version 2</p>
         </footer>
       </div>
     </main>

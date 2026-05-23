@@ -6,15 +6,9 @@
   "nav.imprint": "Imprint",
   "nav.language_switcher": "Language Switcher",
   "nav.login": "Login",
-  "nav.services": "Services",
-  "nav.solutions": "Solutions",
-  "nav.technologies": "Technologies",
-  "nav.about": "About",
-  "nav.insights": "Insights",
-  "nav.system_online": "SYSTEM ONLINE",
 
   "footer.nav_section_title": "Legal",
-  "footer.tagline": "Open source projects · Python, JavaScript, PHP and more",
+  "footer.tagline": "Open source projects · Python, JavaScript, React and more",
   "footer.nav_heading": "Navigation",
   "footer.links_heading": "Links",
 

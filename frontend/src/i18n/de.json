@@ -8,9 +8,10 @@
   "nav.login": "Anmelden",
 
   "footer.nav_section_title": "Rechtliches",
-  "footer.tagline": "Open-Source-Projekte · Python, JavaScript, React und mehr",
+  "footer.tagline": "Open-Source-Projekte · Python, JavaScript, PHP und mehr",
   "footer.nav_heading": "Navigation",
   "footer.links_heading": "Links",
+
   "home.title": "NexoryDev-dev.de",
   "home.stats_loading": "Daten werden geladen ...",
   "home.stats_members": "Mitglieder",
@@ -149,6 +150,9 @@
   "github.time_months": "{count} Monate",
   "github.active_ago": "aktiv vor {time}",
   "github.active_unknown": "zuletzt aktiv unbekannt",
+  "github.filter_all": "Alle",
+  "github.page_subtitle": "Unsere Open-Source-Projekte auf GitHub",
+  "github.projects_soon": "Unsere Projekte werden bald hier zu sehen sein.",
 
   "notfound.title": "Seite nicht gefunden",
   "notfound.message": "Diese Seite ist derzeit nicht verfügbar oder wurde verschoben.",

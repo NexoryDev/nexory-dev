@@ -152,6 +152,9 @@
   "github.time_years": "{count} years",
   "github.active_ago": "active {time} ago",
   "github.active_unknown": "last active unknown",
+  "github.filters_all": "All",
+  "github.page_sub": "Our open-source projects on GitHub.",
+  "github.projects_soon": "More projects coming soon.",
 
   "notfound.title": "Page not found",
   "notfound.message": "The requested page is currently unavailable or may have been moved.",

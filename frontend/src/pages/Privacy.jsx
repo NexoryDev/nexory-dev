@@ -37,24 +37,7 @@ export default function Privacy() {
         </section>
 
         <section className="legal-section">
-          <h2>3. External Fonts / Google Fonts</h2>
-          <p>
-            The homepage uses the Google Fonts "Chakra Petch" and "JetBrains Mono" for styling.
-            These fonts are loaded from the homepage stylesheet(s) (for example Home / Hero) via an external request
-            to <code>fonts.googleapis.com</code>.
-          </p>
-          <p>
-            This request is executed by the user's browser. We do not store any personal data from this request.
-            It is only used as a resource for correct visual presentation of the website.
-          </p>
-          <p>
-            If you do not want these fonts to be loaded, you can block external fonts in your browser.
-            The website will remain usable, but its appearance may differ.
-          </p>
-        </section>
-
-        <section className="legal-section">
-          <h2>4. Hosting and Server Logs</h2>
+          <h2>3. Hosting and Server Logs</h2>
           <p>
             The website is hosted on a server in Germany. When the website is accessed, technically necessary connection
             data is processed automatically, in particular:
@@ -74,7 +57,7 @@ export default function Privacy() {
         </section>
 
         <section className="legal-section">
-          <h2>5. Cookies, Local Storage and Session Storage</h2>
+          <h2>4. Cookies, Local Storage and Session Storage</h2>
 
           <h3>Technically Required Cookie</h3>
           <ul>
@@ -98,7 +81,7 @@ export default function Privacy() {
         </section>
 
         <section className="legal-section">
-          <h2>6. User Account and Authentication</h2>
+          <h2>5. User Account and Authentication</h2>
           <p>
             When registering and using an account, we process the following data in particular:
           </p>
@@ -117,7 +100,7 @@ export default function Privacy() {
         </section>
 
         <section className="legal-section">
-          <h2>7. Two-Factor Authentication (2FA)</h2>
+          <h2>6. Two-Factor Authentication (2FA)</h2>
           <p>
             If you activate 2FA, the following additional data will be processed:
           </p>
@@ -133,7 +116,7 @@ export default function Privacy() {
         </section>
 
         <section className="legal-section">
-          <h2>8. Profile, Avatar and Public Profiles</h2>
+          <h2>7. Profile, Avatar and Public Profiles</h2>
           <p>
             If a username is set, a public profile may be available at <code>/user/&lt;username&gt;</code>.
             The following data may be displayed there if you have provided it:
@@ -158,7 +141,7 @@ export default function Privacy() {
         </section>
 
         <section className="legal-section">
-          <h2>9. Email Delivery</h2>
+          <h2>8. Email Delivery</h2>
           <p>
             For transactional emails (e.g. verification, password reset), an external email delivery service is used.
             Your email address is processed exclusively for sending these technically necessary messages.
@@ -166,7 +149,7 @@ export default function Privacy() {
         </section>
 
         <section className="legal-section">
-          <h2>10. GitHub Data (Public Organization Data)</h2>
+          <h2>9. GitHub Data (Public Organization Data)</h2>
           <p>
             Parts of the website display publicly available data from the GitHub API, particularly related to the
             GitHub organization <strong>NexoryDev</strong> (e.g. repositories, stars, commits, members, and project information).
@@ -197,7 +180,7 @@ export default function Privacy() {
         </section>
 
         <section className="legal-section">
-          <h2>10a. GitHub Account Linking (OAuth)</h2>
+          <h2>10. GitHub Account Linking (OAuth)</h2>
           <p>
             You can voluntarily connect your GitHub account to your Nexory account to unlock GitHub-based badges
             (for example "Nexory Contributor").

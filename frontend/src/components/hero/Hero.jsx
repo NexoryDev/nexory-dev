@@ -146,11 +146,15 @@ function buildSvgLine({ cubeCenter, ep, color, gradId, pathLen }) {
 export default function Hero() {
   const { t } = useLanguage();
 
-  function tt(key, fallback) {
-    const v = t(key);
+  const handleServicesClick = (event) => {
+    event.preventDefault();
 
-    return v === key ? fallback : v;
-  }
+    const target = document.getElementById("services");
+
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   const particles = useMemo(
     () =>
@@ -370,43 +374,40 @@ export default function Hero() {
       <div className="hero-corner hero-corner-br" aria-hidden="true" />
 
       <div className="hero-readout" aria-hidden="true">
-        {tt("hero.readout.sys", "SYS_VER")} 4.2.1
+        {t("hero.readout.sys")} 4.2.1
         <br />
-        {tt("hero.readout.uptime", "UPTIME")} 99.98%
+        {t("hero.readout.uptime")} 99.98%
         <br />
-        {tt("hero.readout.nodes", "NODES")} 2,847
+        {t("hero.readout.nodes")} 2,847
         <br />
-        {tt("hero.readout.latency", "LATENCY")} 4ms
+        {t("hero.readout.latency")} 4ms
         <br />
-        {tt("hero.readout.load", "LOAD")} 0.31
+        {t("hero.readout.load")} 0.31
       </div>
 
       <div className="hero-main">
         <div className="hero-l">
           <p className="hero-tag">
-            {tt("hero.kicker", "DIGITAL INFRASTRUCTURE")}
+            {t("hero.kicker")}
           </p>
 
           <h1>
-            {tt("hero.title.line1", "BUILDING DIGITAL")}
+            {t("hero.title.line1")}
             <br />
-            {tt("hero.title.line2", "INFRASTRUCTURE")}
+            {t("hero.title.line2")}
             <br />
-            {tt("hero.title.line3_pre", "FOR THE")}{" "}
-            <span>{tt("hero.title.line3_highlight", "NEXT ERA")}</span>
+            {t("hero.title.line3_pre")}{" "}
+            <span>{t("hero.title.line3_highlight")}</span>
           </h1>
 
           <p className="hero-sub">
-            {tt(
-              "hero.description",
-              "We design, build and operate mission-critical systems that empower your business, secure your data and accelerate your growth.",
-            )}
+            {t("hero.description")}
           </p>
 
           <div className="hero-btns">
-            <Link to="/contact" className="hero-btn-p">
+            <a href="#services" className="hero-btn-p" onClick={handleServicesClick}>
               {t("hero.cta.primary")}
-            </Link>
+            </a>
 
             <Link to="/github" className="hero-btn-s">
               {t("hero.cta.secondary")}
@@ -452,19 +453,19 @@ export default function Hero() {
                 </div>
 
                 <div className="hero-sc-title">
-                  {tt("hero.card.cloud.title", "CLOUD")}
+                  {t("hero.card.title")}
                 </div>
 
                 <div className="hero-sc-item">
-                  {tt("hero.card.cloud.item1", "Scalable")}
+                  {t("hero.card.item1")}
                 </div>
 
                 <div className="hero-sc-item">
-                  {tt("hero.card.cloud.item2", "Secure")}
+                  {t("hero.card.item2")}
                 </div>
 
                 <div className="hero-sc-item">
-                  {tt("hero.card.cloud.item3", "Global")}
+                  {t("hero.card.item3")}
                 </div>
               </div>
             </div>
@@ -476,19 +477,19 @@ export default function Hero() {
                 </div>
 
                 <div className="hero-sc-title">
-                  {tt("hero.card.ecm.title", "ECM")}
+                  {t("hero.card1.title")}
                 </div>
 
                 <div className="hero-sc-item">
-                  {tt("hero.card.ecm.item1", "Manage")}
+                  {t("hero.card1.item1")}
                 </div>
 
                 <div className="hero-sc-item">
-                  {tt("hero.card.ecm.item2", "Store")}
+                  {t("hero.card1.item2")}
                 </div>
 
                 <div className="hero-sc-item">
-                  {tt("hero.card.ecm.item3", "Secure")}
+                  {t("hero.card1.item3")}
                 </div>
               </div>
             </div>
@@ -500,19 +501,19 @@ export default function Hero() {
                 </div>
 
                 <div className="hero-sc-title hero-sc-title-purple">
-                  {tt("hero.card.erp.title", "ERP")}
+                  {t("hero.card2.title")}
                 </div>
 
                 <div className="hero-sc-item">
-                  {tt("hero.card.erp.item1", "Integrate")}
+                  {t("hero.card2.item1")}
                 </div>
 
                 <div className="hero-sc-item">
-                  {tt("hero.card.erp.item2", "Automate")}
+                  {t("hero.card2.item2")}
                 </div>
 
                 <div className="hero-sc-item">
-                  {tt("hero.card.erp.item3", "Optimize")}
+                  {t("hero.card2.item3")}
                 </div>
               </div>
             </div>
@@ -520,23 +521,23 @@ export default function Hero() {
             <div className="hero-cp hero-cp-ai" id="cp-ai">
               <div className="hero-sc">
                 <div className="hero-sc-icon">
-                  <BrainCircuit size={18} />
+                  <Shield size={18} />
                 </div>
 
                 <div className="hero-sc-title">
-                  {tt("hero.card.ai.title", "AI")}
+                  {t("hero.card3.title")}
                 </div>
 
                 <div className="hero-sc-item">
-                  {tt("hero.card.ai.item1", "Intelligence")}
+                  {t("hero.card3.item1")}
                 </div>
 
                 <div className="hero-sc-item">
-                  {tt("hero.card.ai.item2", "Automation")}
+                  {t("hero.card3.item2")}
                 </div>
 
                 <div className="hero-sc-item">
-                  {tt("hero.card.ai.item3", "Insights")}
+                  {t("hero.card3.item3")}
                 </div>
               </div>
             </div>
@@ -544,23 +545,23 @@ export default function Hero() {
             <div className="hero-cp hero-cp-sec" id="cp-sec">
               <div className="hero-sc hero-sc-purple">
                 <div className="hero-sc-icon hero-sc-icon-purple">
-                  <Shield size={18} />
+                  <BrainCircuit size={18} />
                 </div>
 
                 <div className="hero-sc-title hero-sc-title-purple">
-                  {tt("hero.card.security.title", "SECURITY")}
+                  {t("hero.card4.title")}
                 </div>
 
                 <div className="hero-sc-item">
-                  {tt("hero.card.security.item1", "Protect")}
+                  {t("hero.card4.item1")}
                 </div>
 
                 <div className="hero-sc-item">
-                  {tt("hero.card.security.item2", "Detect")}
+                  {t("hero.card4.item2")}
                 </div>
 
                 <div className="hero-sc-item">
-                  {tt("hero.card.security.item3", "Respond")}
+                  {t("hero.card4.item3")}
                 </div>
               </div>
             </div>
@@ -568,11 +569,7 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="hero-scroll-h" aria-hidden="true">
-        <p>{tt("hero.scroll_hint", "SCROLL TO EXPLORE")}</p>
 
-        <div className="hero-mouse" />
-      </div>
 
       <div className="hero-particles" aria-hidden="true">
         {particles.map((p) => (

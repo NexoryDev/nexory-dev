@@ -143,13 +143,23 @@ function buildSvgLine({ cubeCenter, ep, color, gradId, pathLen }) {
   return frag;
 }
 
-export default function Hero() {
+export default function Hero({ onCardClick }) {
   const { t } = useLanguage();
 
   const handleServicesClick = (event) => {
     event.preventDefault();
 
     const target = document.getElementById("services");
+
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const handleAnchorClick = (event, id) => {
+    event.preventDefault();
+
+    const target = document.getElementById(id);
 
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -446,7 +456,12 @@ export default function Hero() {
               <div className="hero-iface hero-ibt" />
             </div>
 
-            <div className="hero-cp hero-cp-cloud" id="cp-cloud">
+            <a
+              href="#solution-discord"
+              className="hero-cp hero-cp-cloud"
+              id="cp-cloud"
+              onClick={(e) => onCardClick ? onCardClick(e, "solution-discord") : handleAnchorClick(e, "solution-discord")}
+            >
               <div className="hero-sc">
                 <div className="hero-sc-icon">
                   <Cloud size={18} />
@@ -468,9 +483,14 @@ export default function Hero() {
                   {t("hero.card.item3")}
                 </div>
               </div>
-            </div>
+            </a>
 
-            <div className="hero-cp hero-cp-ecm" id="cp-ecm">
+            <a
+              href="#solution-website"
+              className="hero-cp hero-cp-ecm"
+              id="cp-ecm"
+              onClick={(e) => onCardClick ? onCardClick(e, "solution-website") : handleAnchorClick(e, "solution-website")}
+            >
               <div className="hero-sc">
                 <div className="hero-sc-icon">
                   <Folder size={18} />
@@ -492,9 +512,14 @@ export default function Hero() {
                   {t("hero.card1.item3")}
                 </div>
               </div>
-            </div>
+            </a>
 
-            <div className="hero-cp hero-cp-erp" id="cp-erp">
+            <a
+              href="#solution-app"
+              className="hero-cp hero-cp-erp"
+              id="cp-erp"
+              onClick={(e) => onCardClick ? onCardClick(e, "solution-app") : handleAnchorClick(e, "solution-app")}
+            >
               <div className="hero-sc hero-sc-purple">
                 <div className="hero-sc-icon hero-sc-icon-purple">
                   <Boxes size={18} />
@@ -516,9 +541,14 @@ export default function Hero() {
                   {t("hero.card2.item3")}
                 </div>
               </div>
-            </div>
+            </a>
 
-            <div className="hero-cp hero-cp-ai" id="cp-ai">
+            <a
+              href="#solution-security"
+              className="hero-cp hero-cp-ai"
+              id="cp-ai"
+              onClick={(e) => onCardClick ? onCardClick(e, "solution-security") : handleAnchorClick(e, "solution-security")}
+            >
               <div className="hero-sc">
                 <div className="hero-sc-icon">
                   <Shield size={18} />
@@ -540,9 +570,14 @@ export default function Hero() {
                   {t("hero.card3.item3")}
                 </div>
               </div>
-            </div>
+            </a>
 
-            <div className="hero-cp hero-cp-sec" id="cp-sec">
+            <a
+              href="#solution-support"
+              className="hero-cp hero-cp-sec"
+              id="cp-sec"
+              onClick={(e) => onCardClick ? onCardClick(e, "solution-support") : handleAnchorClick(e, "solution-support")}
+            >
               <div className="hero-sc hero-sc-purple">
                 <div className="hero-sc-icon hero-sc-icon-purple">
                   <BrainCircuit size={18} />
@@ -564,7 +599,7 @@ export default function Hero() {
                   {t("hero.card4.item3")}
                 </div>
               </div>
-            </div>
+            </a>
           </div>
         </div>
       </div>

@@ -592,10 +592,18 @@
 .hero-cp {
   position: absolute;
   z-index: 2;
+  text-decoration: none;
+  color: inherit;
+}
+.hero-cp:hover,
+.hero-cp:focus,
+.hero-cp:active {
+  text-decoration: none;
+  color: inherit;
 }
 
 .hero-cp-cloud {
-  top: -6%;
+  top: -13%;
   left: 50%;
 
   transform: translateX(-50%);
@@ -604,28 +612,28 @@
 
 .hero-cp-ecm {
   top: 23%;
-  left: -8%;
+  left: -15%;
 
   animation: hero-flt 7s ease-in-out infinite 1s;
 }
 
 .hero-cp-erp {
   top: 18%;
-  right: -9%;
+  right: -15%;
 
   animation: hero-flt 8s ease-in-out infinite 0.5s;
 }
 
 .hero-cp-ai {
   bottom: 8%;
-  left: -6%;
+  left: -12%;
 
   animation: hero-flt 6.5s ease-in-out infinite 1.5s;
 }
 
 .hero-cp-sec {
   bottom: 8%;
-  right: -8%;
+  right: -9%;
 
   animation: hero-flt 7.5s ease-in-out infinite 2s;
 }
@@ -1047,27 +1055,27 @@
   }
 
   .hero-cp-cloud {
-    top: 8%;
+    top: 0%;
   }
 
   .hero-cp-ecm {
     top: 30%;
-    left: 0;
+    left: -8%;
   }
 
   .hero-cp-erp {
     top: 30%;
-    right: 0;
+    right: -8%;
   }
 
   .hero-cp-ai {
-    bottom: 15%;
-    left: 0;
+    bottom: 2%;
+    left: -2%;
   }
 
   .hero-cp-sec {
-    bottom: 15%;
-    right: 0;
+    bottom: 2%;
+    right: -2%;
   }
 
   .hero-btns {
@@ -1118,10 +1126,6 @@
     min-height: 118px;
 
     padding: 0.7rem 0.85rem;
-  }
-
-  .hero-cp-cloud {
-    top: 12%;
   }
 
   .hero-sc-title {

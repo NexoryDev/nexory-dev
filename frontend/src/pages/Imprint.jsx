@@ -19,10 +19,11 @@ export default function Imprint() {
             Luca Bohnet<br />
             Vogelsangweg 3<br />
             72202 Nagold<br />
-            07452 8866722
+            Germany<br />
+            Phone: +49 7452 8866722
           </p>
           <p>
-            <strong>E-Mail:</strong>{' '}
+            <strong>Email:</strong>{' '}
             <a href="mailto:support@nexory-dev.de">support@nexory-dev.de</a>
           </p>
         </section>
@@ -32,29 +33,36 @@ export default function Imprint() {
 
           <h3>{t('imprint.liability_content')}</h3>
           <p>
-            The contents of this website have been created with the utmost care. However, we cannot
-            guarantee the accuracy, completeness, or timeliness of the content. As a service provider
-            we are responsible for our own content on these pages in accordance with general law.
-            However, we are not obligated to monitor transmitted or stored third-party information or
-            to investigate circumstances that indicate illegal activity.
+            The content of this website is created with highest possible care. However, we cannot
+            guarantee that the information is always complete, correct, or up to date. We are
+            therefore liable only according to applicable legal provisions.
+          </p>
+          <p>
+            This imprint is provided for legal compliance and informational purposes only and does
+            not constitute legal advice.
           </p>
 
           <h3>{t('imprint.liability_links')}</h3>
           <p>
-            Our website contains links to external websites over which we have no control. Therefore
-            we cannot accept any liability for these external contents. The respective provider or
-            operator of the linked pages is always responsible for their content. The linked pages
-            were checked for possible legal violations at the time of linking. Illegal content was
-            not recognizable at the time of linking.
+            This website may contain links to third-party websites. We have no influence on the
+            content of external websites and therefore assume no liability for them. The respective
+            provider or operator of the linked pages is solely responsible for their content.
+          </p>
+          <p>
+            At the time of linking, no illegal content was apparent. A permanent content control of
+            the linked pages is not possible without concrete evidence of a violation of law.
           </p>
 
           <h3>{t('imprint.copyright')}</h3>
           <p>
-            The content and works created by the site operators on these pages are subject to
-            copyright law. Duplication, processing, distribution, or any form of commercialization
-            of such material beyond the scope of copyright law requires the prior written consent of
-            its respective author or creator. Downloads and copies of this site are only permitted
-            for private, non-commercial use.
+            The content and works published on this website by the operator are subject to German
+            and international copyright law. Reproduction, editing, distribution, or any form of
+            commercialization of such material beyond the scope of copyright law requires the prior
+            written consent of the respective author or creator.
+          </p>
+          <p>
+            Downloads and copies of this website are permitted solely for private, non-commercial
+            use.
           </p>
         </section>
 

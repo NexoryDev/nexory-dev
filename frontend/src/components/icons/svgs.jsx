@@ -12,10 +12,25 @@ import {
   ShieldIcon,
   DeviceMobileIcon
 } from '@primer/octicons-react';
+
 import { 
   FaDiscord,
-  FaHeadset
+  FaHeadset,
+  FaPython,
+  FaReact
  } from 'react-icons/fa';
+
+import {
+  SiFlask,
+  SiDiscord,
+  SiThreedotjs,
+  SiMysql,
+  SiRedis,
+  SiDocker,
+  SiNginx,
+  SiGsap,
+  SiFramer,
+} from "react-icons/si";
 
 const ICON_SIZE = 16;
 
@@ -75,6 +90,50 @@ export function IconDiscord(props) {
 
 export function IconShield(props) {
   return <ShieldIcon size={ICON_SIZE} {...props} />;
+}
+
+export function IconPython(props) {
+  return <FaPython size={ICON_SIZE} {...props} />;
+}
+
+export function IconReact(props) {
+  return <FaReact size={ICON_SIZE} {...props} />;
+}
+
+export function IconFlask(props) {
+  return <SiFlask size={16} {...props} />;
+}
+
+export function IconDiscordPy(props) {
+  return <SiDiscord size={16} {...props} />;
+}
+
+export function IconThreeJS(props) {
+  return <SiThreedotjs size={16} {...props} />;
+}
+
+export function IconMySQL(props) {
+  return <SiMysql size={16} {...props} />;
+}
+
+export function IconRedis(props) {
+  return <SiRedis size={16} {...props} />;
+}
+
+export function IconDocker(props) {
+  return <SiDocker size={16} {...props} />;
+}
+
+export function IconNginx(props) {
+  return <SiNginx size={16} {...props} />;
+}
+
+export function IconGSAP(props) {
+  return <SiGsap size={16} {...props} />;
+}
+
+export function IconFramerMotion(props) {
+  return <SiFramer size={16} {...props} />;
 }
 
 export const IconWeb = () => (

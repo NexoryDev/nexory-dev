@@ -3,6 +3,7 @@ FROM node:20-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm install
+RUN npm install react-icons
 RUN npm install lucide-react
 RUN npm install three
 RUN npm install @react-three/fiber

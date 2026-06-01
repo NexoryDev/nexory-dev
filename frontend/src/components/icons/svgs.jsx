@@ -6,8 +6,16 @@ import {
   PersonIcon,
   GearIcon,
   ProjectIcon,
-  TrophyIcon
+  TrophyIcon,
+  CloudIcon,
+  QuestionIcon,
+  ShieldIcon,
+  DeviceMobileIcon
 } from '@primer/octicons-react';
+import { 
+  FaDiscord,
+  FaHeadset
+ } from 'react-icons/fa';
 
 const ICON_SIZE = 16;
 
@@ -47,6 +55,26 @@ export function SvgProducts(props) {
 
 export function SvgBadges(props) {
   return <TrophyIcon size={ICON_SIZE} {...props} />;
+}
+
+export function IconSupport(props) {
+  return <FaHeadset size={ICON_SIZE} {...props} />;
+}
+
+export function IconPhone(props) {
+  return <DeviceMobileIcon size={ICON_SIZE} {...props} />;
+}
+
+export function IconCloud(props) {
+  return <CloudIcon size={ICON_SIZE} {...props} />;
+}
+
+export function IconDiscord(props) {
+  return <FaDiscord size={ICON_SIZE} {...props} />;
+}
+
+export function IconShield(props) {
+  return <ShieldIcon size={ICON_SIZE} {...props} />;
 }
 
 export const IconWeb = () => (
@@ -142,12 +170,6 @@ export const IconUpload = () => (
     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
     <polyline points="17 8 12 3 7 8"/>
     <line x1="12" y1="3" x2="12" y2="15"/>
-  </svg>
-);
-
-export const IconShield = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
   </svg>
 );
 

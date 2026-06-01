@@ -1,11 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
-  BrainCircuit,
-  Boxes,
-  Cloud,
-  Folder,
-  Shield,
   Cpu,
   Terminal,
   Layers,
@@ -16,6 +11,7 @@ import {
 import Hero from "../components/hero/Hero";
 import "../styles/Home.css";
 import { useLanguage } from "../context/LanguageContext";
+import { IconDiscord, IconPhone, IconCloud, IconSupport, IconShield } from "../components/icons/svgs";
 
 export default function Home() {
   const { t } = useLanguage();
@@ -73,7 +69,7 @@ export default function Home() {
   const solutionCards = [
     {
       id: "solution-discord",
-      icon: Cloud,
+      icon: IconDiscord,
       number: "01.",
       titleKey: "services.card.cloud.title",
       bullets: [
@@ -85,7 +81,7 @@ export default function Home() {
     },
     {
       id: "solution-website",
-      icon: Folder,
+      icon: IconCloud,
       number: "02.",
       titleKey: "services.card.ecm.title",
       bullets: [
@@ -97,7 +93,7 @@ export default function Home() {
     },
     {
       id: "solution-app",
-      icon: Boxes,
+      icon: IconPhone,
       number: "03.",
       titleKey: "services.card.erp.title",
       bullets: [
@@ -109,7 +105,7 @@ export default function Home() {
     },
     {
       id: "solution-security",
-      icon: Shield,
+      icon: IconShield,
       number: "04.",
       titleKey: "services.card.security.title",
       bullets: [
@@ -121,7 +117,7 @@ export default function Home() {
     },
     {
       id: "solution-support",
-      icon: BrainCircuit,
+      icon: IconSupport,
       number: "05.",
       titleKey: "services.card.support.title",
       bullets: [

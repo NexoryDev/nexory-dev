@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useRef, useCallback } from "react";
 
-import { BrainCircuit, Boxes, Cloud, Folder, Shield } from "lucide-react";
+import { IconDiscord, IconPhone, IconCloud, IconSupport, IconShield } from "../icons/svgs";
 
 import { Link } from "react-router-dom";
 
@@ -464,7 +464,7 @@ export default function Hero({ onCardClick }) {
             >
               <div className="hero-sc">
                 <div className="hero-sc-icon">
-                  <Cloud size={18} />
+                  <IconDiscord size={18} />
                 </div>
 
                 <div className="hero-sc-title">
@@ -493,7 +493,7 @@ export default function Hero({ onCardClick }) {
             >
               <div className="hero-sc">
                 <div className="hero-sc-icon">
-                  <Folder size={18} />
+                  <IconCloud size={18} />
                 </div>
 
                 <div className="hero-sc-title">
@@ -522,7 +522,7 @@ export default function Hero({ onCardClick }) {
             >
               <div className="hero-sc hero-sc-purple">
                 <div className="hero-sc-icon hero-sc-icon-purple">
-                  <Boxes size={18} />
+                  <IconPhone size={18} />
                 </div>
 
                 <div className="hero-sc-title hero-sc-title-purple">
@@ -551,7 +551,7 @@ export default function Hero({ onCardClick }) {
             >
               <div className="hero-sc">
                 <div className="hero-sc-icon">
-                  <Shield size={18} />
+                  <IconShield size={18} />
                 </div>
 
                 <div className="hero-sc-title">
@@ -580,7 +580,7 @@ export default function Hero({ onCardClick }) {
             >
               <div className="hero-sc hero-sc-purple">
                 <div className="hero-sc-icon hero-sc-icon-purple">
-                  <BrainCircuit size={18} />
+                  <IconSupport size={18} />
                 </div>
 
                 <div className="hero-sc-title hero-sc-title-purple">

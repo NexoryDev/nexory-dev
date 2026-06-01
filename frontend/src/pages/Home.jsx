@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Cpu,
@@ -11,7 +11,7 @@ import {
 import Hero from "../components/hero/Hero";
 import "../styles/Home.css";
 import { useLanguage } from "../context/LanguageContext";
-import { IconDiscord, IconPhone, IconCloud, IconSupport, IconShield } from "../components/icons/svgs";
+import { IconDiscord, IconPhone, IconCloud, IconSupport, IconShield, IconPython, IconReact, IconNginx, IconDocker, IconRedis, IconMySQL, IconThreeJS, IconDiscordPy, IconFlask, IconFramerMotion } from "../components/icons/svgs";
 
 export default function Home() {
   const { t } = useLanguage();
@@ -133,118 +133,57 @@ export default function Home() {
     {
       name: "Python",
       color: "rgba(255, 223, 0, 0.4)",
-      svg: (
-        <svg viewBox="0 0 128 128" className="tech-logo-svg">
-          <path
-            fill="currentColor"
-            d="M63.9 0C31.5 0 33.5 14.1 33.5 14.1l.1 14.6h31v4.4H21.3S0 30.6 0 63.9c0 33.3 18.6 32.1 18.6 32.1h11.1V80.4s-.6-18.6 18.3-18.6h31.3s17.6.3 17.6-17V18S99.6 0 63.9 0zM46.8 10.7a5.6 5.6 0 1 1 0 11.2 5.6 5.6 0 0 1 0-11.2z"
-          />
-          <path
-            fill="currentColor"
-            d="M64.1 128c32.4 0 30.4-14.1 30.4-14.1l-.1-14.6h-31v-4.4h43.3S128 97.4 128 64.1c0-33.3-18.6-32.1-18.6-32.1H98.3v15.6s.6 18.6-18.3 18.6H48.7S31.1 65.9 31.1 83v26.8S28.4 128 64.1 128zM81.2 117.3a5.6 5.6 0 1 1 0-11.2 5.6 5.6 0 0 1 0 11.2z"
-          />
-        </svg>
-      )
+      svg: IconPython
     },
     {
       name: "Flask",
       color: "rgba(255, 255, 255, 0.4)",
-      svg: (
-        <svg viewBox="0 0 24 24" className="tech-logo-svg">
-          <path fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-        </svg>
-      )
+      svg: IconFlask
     },
     {
       name: "discord.py",
       color: "rgba(123, 47, 255, 0.4)",
-      svg: (
-        <svg viewBox="0 0 24 24" className="tech-logo-svg">
-          <path fill="currentColor" d="M20.3 5.4c-1.5-1.4-3.4-2.2-5.4-2.4l-.3.6c2 .5 3.8 1.5 5.4 2.8-1.7-1-3.6-1.6-5.7-1.8-1.5-.2-3-.2-4.5 0-2.1.2-4 .8-5.7 1.8 1.6-1.3 3.4-2.3 5.4-2.8l-.3-.6c-2 .2-3.9 1-5.4 2.4C1.3 9.4.5 13.9.9 18.3c2.4 2 5 2.7 7.4 2.7l1.5-1.9c-2.4-.7-4.5-2.1-6.1-3.9 1.8 1.1 3.8 1.8 6 2.1 1.5.2 3 .2 4.6 0 2.2-.3 4.2-1 6-2.1-1.6 1.8-3.7 3.2-6.1 3.9l1.5 1.9c2.4 0 5-.7 7.4-2.7.4-4.4-.4-8.9-3.4-12.9zM8.9 15.1c-.9 0-1.6-.8-1.6-1.8 0-1 .7-1.8 1.6-1.8s1.6.8 1.6 1.8c0 1-.7 1.8-1.6 1.8zm6.2 0c-.9 0-1.6-.8-1.6-1.8 0-1 .7-1.8 1.6-1.8s1.6.8 1.6 1.8c0 1-.7 1.8-1.6 1.8z" />
-        </svg>
-      )
+      svg: IconDiscordPy
     },
     {
       name: "React",
       color: "rgba(0, 212, 255, 0.4)",
-      svg: (
-        <svg viewBox="0 0 24 24" className="tech-logo-svg">
-          <path fill="none" stroke="currentColor" strokeWidth="2" d="M12 22C6.5 22 2 17.5 2 12S6.5 2 12 2s10 4.5 10 10-4.5 10-10 10z" />
-          <ellipse cx="12" cy="12" rx="10" ry="4" stroke="currentColor" strokeWidth="1.5" fill="none" transform="rotate(30 12 12)" />
-          <ellipse cx="12" cy="12" rx="10" ry="4" stroke="currentColor" strokeWidth="1.5" fill="none" transform="rotate(90 12 12)" />
-          <ellipse cx="12" cy="12" rx="10" ry="4" stroke="currentColor" strokeWidth="1.5" fill="none" transform="rotate(150 12 12)" />
-          <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-        </svg>
-      )
+      svg: IconReact
     },
     {
       name: "Three.js",
       color: "rgba(255, 255, 255, 0.4)",
-      svg: (
-        <svg viewBox="0 0 24 24" className="tech-logo-svg">
-          <path fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M4 6l8-4 8 4v12l-8 4-8-4V6z" />
-          <path fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M12 2v20M4 6l8 4 8-4M4 18l8-4 8 4" />
-        </svg>
-      )
+      svg: IconThreeJS
     },
     {
       name: "Framer Motion",
       color: "rgba(240, 10, 180, 0.4)",
-      svg: (
-        <svg viewBox="0 0 24 24" className="tech-logo-svg">
-          <path fill="currentColor" d="M12 2L2 12h10l10 10H12L2 12h10L22 2H12z" />
-        </svg>
-      )
+      svg: IconFramerMotion
     },
     {
       name: "GSAP",
       color: "rgba(136, 195, 39, 0.4)",
-      svg: (
-        <svg viewBox="0 0 24 24" className="tech-logo-svg">
-          <rect x="2" y="2" width="20" height="20" rx="4" fill="none" stroke="currentColor" strokeWidth="2" />
-          <circle cx="9" cy="9" r="2.5" fill="currentColor" />
-          <path fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" d="M15 15h.01M6.5 12h11" />
-        </svg>
-      )
+      svg: IconGSAP
     },
     {
       name: "MySQL",
       color: "rgba(0, 117, 143, 0.4)",
-      svg: (
-        <svg viewBox="0 0 24 24" className="tech-logo-svg">
-          <path
-            fill="currentColor"
-            d="M12 2C7.03 2 3 3.79 3 6v12c0 2.21 4.03 4 9 4s9-1.79 9-4V6c0-2.21-4.03-4-9-4zm0 2c4.42 0 7 .99 7 2s-2.58 2-7 2-7-.99-7-2 2.58-2 7-2zm0 16c-4.42 0-7-.99-7-2v-2.54C6.46 16.41 9.02 17 12 17s5.54-.59 7-1.54V18c0 1.01-2.58 2-7 2zm0-5c-4.42 0-7-.99-7-2v-2.54C6.46 11.41 9.02 12 12 12s5.54-.59 7-1.54V13c0 1.01-2.58 2-7 2zm0-5c-4.42 0-7-.99-7-2s2.58-2 7-2 7 .99 7 2-2.58 2-7 2z"
-          />
-        </svg>
-      )
+      svg: IconMySQL
     },
     {
       name: "Redis",
       color: "rgba(216, 44, 40, 0.4)",
-      svg: (
-        <svg viewBox="0 0 24 24" className="tech-logo-svg">
-          <path fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        </svg>
-      )
+      svg: IconRedis
     },
     {
       name: "Docker",
       color: "rgba(10, 140, 230, 0.4)",
-      svg: (
-        <svg viewBox="0 0 24 24" className="tech-logo-svg">
-          <path fill="currentColor" d="M2 13.5a1.5 1.5 0 0 1 1.5-1.5h17a1.5 1.5 0 0 1 1.5 1.5v4a1.5 1.5 0 0 1-1.5 1.5H3.5A1.5 1.5 0 0 1 2 17.5v-4zm4-7.5h3v3H6V6zm5 0h3v3h-3V6zm5 0h3v3h-3V6z" />
-        </svg>
-      )
+      svg: IconDocker
     },
     {
       name: "Nginx",
       color: "rgba(0, 150, 50, 0.4)",
-      svg: (
-        <svg viewBox="0 0 24 24" className="tech-logo-svg">
-          <path fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-        </svg>
-      )
+      svg: IconNginx
     }
   ];
 

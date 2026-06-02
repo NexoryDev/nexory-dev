@@ -5,7 +5,8 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-RUN groupadd --system app && useradd --system --gid app --create-home --home-dir /home/appuser appuser \
+RUN groupadd --system --gid 10001 app \
+    && useradd --system --uid 10001 --gid 10001 --create-home --home-dir /home/appuser appuser \
     && apt-get update && apt-get install -y gcc && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
@@ -14,9 +15,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN chown -R appuser:app /app
+RUN mkdir -p /app/static/uploads/avatars /app/static/uploads/avatar-quarantine /home/appuser \
+    && chown -R 10001:10001 /app /home/appuser
 
-USER appuser
+USER 10001:10001
 
 EXPOSE 5000
 

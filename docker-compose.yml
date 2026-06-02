@@ -16,6 +16,7 @@ services:
   backend:
     build:
       context: ./backend
+    command: gunicorn -w 2 -b 0.0.0.0:5000 app.app:app
     user: "10001:10001"
     read_only: true
     tmpfs:
@@ -44,6 +45,12 @@ services:
       AVATAR_CLAMD_HOST: clamav
       AVATAR_CLAMD_PORT: "3310"
       AVATAR_QUARANTINE_FOLDER: /app/static/uploads/avatar-quarantine
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import socket; s=socket.socket(); s.settimeout(2); s.connect((\"127.0.0.1\",5000)); s.close()' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   clamav:
     image: clamav/clamav:latest
@@ -83,9 +90,16 @@ services:
       - "8080:80"
     restart: always
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - app
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
 networks:
   app:

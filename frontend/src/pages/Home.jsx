@@ -11,7 +11,7 @@ import {
 import Hero from "../components/hero/Hero";
 import "../styles/Home.css";
 import { useLanguage } from "../context/LanguageContext";
-import { IconDiscord, IconPhone, IconCloud, IconSupport, IconShield, IconPython, IconReact, IconNginx, IconDocker, IconRedis, IconMySQL, IconThreeJS, IconDiscordPy, IconFlask, IconFramerMotion } from "../components/icons/svgs";
+import { IconDiscord, IconPhone, IconCloud, IconSupport, IconShield, IconPython, IconReact, IconNginx, IconDocker, IconRedis, IconMySQL, IconThreeJS, IconDiscordPy, IconFlask, IconFramerMotion, IconGSAP } from "../components/icons/svgs";
 
 export default function Home() {
   const { t } = useLanguage();
@@ -133,57 +133,57 @@ export default function Home() {
     {
       name: "Python",
       color: "rgba(255, 223, 0, 0.4)",
-      svg: IconPython
+      svg: IconPython()
     },
     {
       name: "Flask",
       color: "rgba(255, 255, 255, 0.4)",
-      svg: IconFlask
+      svg: IconFlask()
     },
     {
       name: "discord.py",
       color: "rgba(123, 47, 255, 0.4)",
-      svg: IconDiscordPy
+      svg: IconDiscordPy()
     },
     {
       name: "React",
       color: "rgba(0, 212, 255, 0.4)",
-      svg: IconReact
+      svg: IconReact()
     },
     {
       name: "Three.js",
       color: "rgba(255, 255, 255, 0.4)",
-      svg: IconThreeJS
+      svg: IconThreeJS()
     },
     {
       name: "Framer Motion",
       color: "rgba(240, 10, 180, 0.4)",
-      svg: IconFramerMotion
+      svg: IconFramerMotion()
     },
     {
       name: "GSAP",
       color: "rgba(136, 195, 39, 0.4)",
-      svg: IconGSAP
+      svg: IconGSAP()
     },
     {
       name: "MySQL",
       color: "rgba(0, 117, 143, 0.4)",
-      svg: IconMySQL
+      svg: IconMySQL()
     },
     {
       name: "Redis",
       color: "rgba(216, 44, 40, 0.4)",
-      svg: IconRedis
+      svg: IconRedis()
     },
     {
       name: "Docker",
       color: "rgba(10, 140, 230, 0.4)",
-      svg: IconDocker
+      svg: IconDocker()
     },
     {
       name: "Nginx",
       color: "rgba(0, 150, 50, 0.4)",
-      svg: IconNginx
+      svg: IconNginx()
     }
   ];
 

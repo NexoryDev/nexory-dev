@@ -93,47 +93,47 @@ export function IconShield(props) {
 }
 
 export function IconPython(props) {
-  return <FaPython size={ICON_SIZE} {...props} />;
+  return <FaPython size={48} {...props} />;
 }
 
 export function IconReact(props) {
-  return <FaReact size={ICON_SIZE} {...props} />;
+  return <FaReact size={48} {...props} />;
 }
 
 export function IconFlask(props) {
-  return <SiFlask size={16} {...props} />;
+  return <SiFlask size={48} {...props} />;
 }
 
 export function IconDiscordPy(props) {
-  return <SiDiscord size={16} {...props} />;
+  return <SiDiscord size={48} {...props} />;
 }
 
 export function IconThreeJS(props) {
-  return <SiThreedotjs size={16} {...props} />;
+  return <SiThreedotjs size={48} {...props} />;
 }
 
 export function IconMySQL(props) {
-  return <SiMysql size={16} {...props} />;
+  return <SiMysql size={48} {...props} />;
 }
 
 export function IconRedis(props) {
-  return <SiRedis size={16} {...props} />;
+  return <SiRedis size={48} {...props} />;
 }
 
 export function IconDocker(props) {
-  return <SiDocker size={16} {...props} />;
+  return <SiDocker size={48} {...props} />;
 }
 
 export function IconNginx(props) {
-  return <SiNginx size={16} {...props} />;
+  return <SiNginx size={48} {...props} />;
 }
 
 export function IconGSAP(props) {
-  return <SiGsap size={16} {...props} />;
+  return <SiGsap size={248} {...props} />;
 }
 
 export function IconFramerMotion(props) {
-  return <SiFramer size={16} {...props} />;
+  return <SiFramer size={48} {...props} />;
 }
 
 export const IconWeb = () => (

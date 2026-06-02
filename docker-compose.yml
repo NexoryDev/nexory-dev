@@ -83,7 +83,9 @@ services:
     tmpfs:
       - /tmp
       - /var/cache/nginx
+      - /var/cache/nginx/client_temp
       - /var/run
+      - /var/log/nginx
     pids_limit: 64
     mem_limit: 256m
     cpus: "0.25"

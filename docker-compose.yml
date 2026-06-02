@@ -1,6 +1,13 @@
 services:
   redis:
     image: redis:7-alpine
+    user: "redis"
+    read_only: true
+    tmpfs:
+      - /tmp
+    pids_limit: 64
+    mem_limit: 256m
+    cpus: "0.25"
     restart: always
     networks:
       - app
@@ -9,6 +16,14 @@ services:
   backend:
     build:
       context: ./backend
+    user: "10001:10001"
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/tmp
+    pids_limit: 128
+    mem_limit: 512m
+    cpus: "0.5"
     env_file:
       - ./backend/.env
     restart: always
@@ -32,6 +47,14 @@ services:
 
   clamav:
     image: clamav/clamav:latest
+    user: "clamav"
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /run/clamav
+    pids_limit: 128
+    mem_limit: 768m
+    cpus: "0.5"
     restart: always
     networks:
       - app
@@ -47,6 +70,15 @@ services:
   frontend:
     build:
       context: ./frontend
+    user: "nginx"
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
+      - /var/run
+    pids_limit: 64
+    mem_limit: 256m
+    cpus: "0.25"
     ports:
       - "8080:80"
     restart: always

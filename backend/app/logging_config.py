@@ -63,8 +63,7 @@ def _build_log_dir() -> Path:
     if configured:
         return Path(configured).expanduser().resolve()
 
-    backend_dir = Path(__file__).resolve().parents[1]
-    return backend_dir / "logs"
+    return Path("/tmp/nexory-logs")
 
 
 def _get_env_name() -> str:

@@ -22,6 +22,7 @@ services:
     tmpfs:
       - /tmp
       - /var/tmp
+      - /tmp/nexory-logs
     pids_limit: 128
     mem_limit: 512m
     cpus: "0.5"

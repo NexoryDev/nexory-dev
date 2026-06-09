@@ -12,7 +12,9 @@
   justify-content: space-between;
   z-index: 999;
   border-radius: 14px;
-  background: linear-gradient(180deg, rgba(4, 10, 25, 0.18) 0%, rgba(4, 10, 25, 0.06) 100%);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.016) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.016) 1px, transparent 1px);
   backdrop-filter: blur(6px);
   border: 1px solid rgba(72, 171, 255, 0.07);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.16), 0 0 16px rgba(0, 160, 255, 0.03);
@@ -21,10 +23,10 @@
 }
 
 .navbar.scrolled {
-  background: linear-gradient(180deg, rgba(3, 16, 32, 0.96) 0%, rgba(3, 11, 24, 0.92) 100%);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(72, 171, 255, 0.18);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 20px rgba(72, 171, 255, 0.06);
+  background: rgba(7, 10, 18, 0.72);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
 }
 
 .navbar.navbar-home {
@@ -36,7 +38,6 @@
   height: 78px;
   border-radius: 0;
   padding: 0 24px;
-  background: linear-gradient(180deg, rgba(4, 9, 24, 0.16) 0%, rgba(4, 9, 24, 0.02) 100%);
   border: 0;
   border-bottom: 1px solid rgba(80, 160, 255, 0.08);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
@@ -44,7 +45,6 @@
 }
 
 .navbar.navbar-home.scrolled {
-  background: linear-gradient(180deg, rgba(3, 16, 32, 0.96) 0%, rgba(3, 11, 24, 0.92) 100%);
   border-bottom: 1px solid rgba(80, 160, 255, 0.18);
 }
 
@@ -183,9 +183,10 @@
   isolation: isolate;
   padding: 4px;
   border-radius: 999px;
-  background: rgba(7, 18, 40, 0.72);
-  border: 1px solid rgba(132, 214, 255, 0.28);
-  box-shadow: inset 0 0 6px rgba(0, 212, 255, 0.05);
+
+  background: rgba(7, 10, 18, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .language-switch::before {
@@ -225,9 +226,16 @@
 }
 
 .language-switch button.active {
-  background: linear-gradient(135deg, #00d4ff, #2e86ff 58%, #7a6dff 100%);
+  background: linear-gradient(135deg,
+    rgba(124, 58, 237, 0.98),
+    rgba(168, 85, 247, 0.98) 54%,
+    rgba(14, 165, 233, 0.72)
+  );
+
   color: #fff;
-  box-shadow: 0 0 12px rgba(0, 212, 255, 0.24), inset 0 0 6px rgba(191, 242, 255, 0.12);
+  box-shadow:
+    0 0 18px rgba(168, 85, 247, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .language-switch-home button.active {
@@ -255,17 +263,30 @@
   isolation: isolate;
   height: 36px;
   padding: 0 16px;
-  border-radius: 6px;
-  border: 1px solid rgba(132, 214, 255, 0.5);
-  background: linear-gradient(135deg, #00d4ff, #7b2fff);
-  color: #e8f8ff;
+  border-radius: 8px;
+
+  border: 1px solid rgba(192, 132, 252, 0.58);
+
+  background:
+    linear-gradient(135deg, rgba(124, 58, 237, 0.98),
+    rgba(168, 85, 247, 0.98) 54%,
+    rgba(14, 165, 233, 0.72));
+
+  color: #fff;
   font-family: "JetBrains Mono", monospace;
-  font-weight: 500;
+  font-weight: 800;
   letter-spacing: 0.1em;
   font-size: 0.66rem;
+
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 12px rgba(0, 212, 255, 0.2), 0 0 18px rgba(123, 47, 255, 0.12), inset 0 0 6px rgba(204, 247, 255, 0.08);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s ease,
+              border-color 0.3s ease;
+
+  box-shadow:
+    0 0 28px rgba(124, 58, 237, 0.35),
+    0 16px 46px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .login-btn::before {
@@ -298,10 +319,11 @@
 
 .login-btn:hover {
   transform: translateY(-2px);
-  border: 1px solid rgba(140, 220, 255, 0.6);
-  box-shadow: 0 0 18px rgba(86, 200, 255, 0.26), 0 0 22px rgba(110, 60, 255, 0.14);
+  border-color: rgba(192, 132, 252, 0.8);
+  box-shadow:
+    0 0 44px rgba(168, 85, 247, 0.55),
+    0 22px 60px rgba(0, 0, 0, 0.44);
 }
-
 .language-switch:hover::before,
 .login-btn:hover::before {
   opacity: 0.42;

@@ -1,6 +1,6 @@
 {
   "nav.home": "Startseite",
-  "nav.github": "GitHub",
+  "nav.servies": "Services",
   "nav.contact": "Kontakt",
   "nav.policy": "Datenschutz",
   "nav.imprint": "Impressum",
@@ -12,12 +12,12 @@
   "footer.nav_heading": "Navigation",
   "footer.links_heading": "Links",
 
-  "home.hero.kicker": "DIGITALE LÖSUNGEN",
-  "home.hero.title_1": "Digitale Lösungen,",
+  "home.hero.kicker": "EINZIGARTIGE LÖSUNGEN",
+  "home.hero.title_1": "Einzigartige Lösungen,",
   "home.hero.title_2": "die begeistern.",
   "home.hero.title_3": "mit klarer Marke und sauberer Technik.",
-  "home.hero.description": "Wir entwickeln Discord Bots, Webanwendungen und Mobile Apps – modern, performant und maßgeschneidert.",
-  "home.hero.cta.primary": "Projekt starten",
+  "home.hero.description": "Wir entwickeln Discord Bots, Webanwendungen und Mobile Apps – modern, sicher und maßgeschneidert.",
+  "home.hero.cta.primary": "Services entdecken",
   "home.hero.cta.secondary": "Kontakt aufnehmen",
   "home.hero.scroll_hint": "Scrollen um zu entdecken",
 
@@ -76,13 +76,13 @@
   "home.section.web.title": "Web Entwicklung",
   "home.section.web.desc": "Moderne Webanwendungen mit neuester Technologie. Schnell, sicher, skalierbar.",
   "home.section.app.title": "App Entwicklung",
-  "home.section.app.desc": "Native & Cross-Platform Apps für iOS & Android. Benutzerfreundlich. Schnell. Stabil.",
+  "home.section.app.desc": "Cross-Platform Apps für iOS & Android. Benutzerfreundlich. Schnell. Stabil.",
   "home.section.individual.title": "Individuelle Lösungen",
   "home.section.individual.desc": "Deine Idee. Unsere Umsetzung. Wir bauen, was du brauchst. Maßgeschneidert für dich.",
   "home.section.learn_more": "Mehr erfahren",
 
-  "home.cta.title": "Deine Idee. Engineered.",
-  "home.cta.button": "Projekt starten",
+  "home.cta.title": "Deine Idee. Auf deine Anforderungen angepasst.",
+  "home.cta.button": "Projekt besprechen",
 
   "contact.label": "Information",
   "contact.title": "Kontakt",

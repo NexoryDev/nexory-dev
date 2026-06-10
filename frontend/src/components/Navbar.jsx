@@ -40,19 +40,19 @@ export default function Navbar() {
   }
 
   return (
-    <nav className={`navbar navbar-home ${scrolled ? "scrolled" : ""}`.trim()}>
+    <nav className={`navbar ${isHomeRoute ? "navbar-home" : ""} ${scrolled ? "scrolled" : ""}`.trim()}>
 
       <div className="navbar-left">
 
-        <Link to="/home" className="logo-wrapper logo-wrapper-home">
+        <Link to="/home" className={`logo-wrapper ${isHomeRoute ? "logo-wrapper-home" : ""}`}>
 
           <img
             src="/favicon.ico"
             alt="NexoryDev Logo"
-            className="logo logo-home-round"
+            className={`logo ${isHomeRoute ? "logo-home-round" : ""}`}
           />
 
-          <span className="logo-text logo-text-home">
+          <span className={`logo-text ${isHomeRoute ? "logo-text-home" : ""}`}>
             NexoryDev
           </span>
 
@@ -60,7 +60,7 @@ export default function Navbar() {
 
       </div>
 
-      <ul className={`navbar-menu navbar-menu-home ${menuOpen ? "active" : ""}`.trim()}>
+      <ul className={`navbar-menu ${isHomeRoute ? "navbar-menu-home" : ""} ${menuOpen ? "active" : ""}`.trim()}>
 
         <li>
           <Link
@@ -90,7 +90,7 @@ export default function Navbar() {
         </li>
 
         <li className="navbar-menu-controls">
-          <div className="language-switch language-switch-home">
+          <div className={`language-switch ${isHomeRoute ? "language-switch-home" : ""}`}>
 
             <button
               className={language === "de" ? "active" : ""}
@@ -109,7 +109,7 @@ export default function Navbar() {
           </div>
 
           <button
-            className="login-btn login-btn-home"
+            className={`login-btn ${isHomeRoute ? "login-btn-home" : ""}`}
             onClick={() => navigate("/login")}
           >
             {t("nav.login")}
@@ -118,9 +118,9 @@ export default function Navbar() {
 
       </ul>
 
-      <div className="navbar-right navbar-right-home">
+      <div className={`navbar-right ${isHomeRoute ? "navbar-right-home" : ""}`}>
 
-        <div className="language-switch language-switch-home">
+        <div className={`language-switch ${isHomeRoute ? "language-switch-home" : ""}`}>
 
           <button
             className={language === "de" ? "active" : ""}
@@ -139,7 +139,7 @@ export default function Navbar() {
         </div>
 
         <button
-          className="login-btn login-btn-home"
+          className={`login-btn ${isHomeRoute ? "login-btn-home" : ""}`}
           onClick={() => navigate("/login")}
         >
           {t("nav.login")}

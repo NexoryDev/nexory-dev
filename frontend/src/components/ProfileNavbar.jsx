@@ -11,6 +11,7 @@ export default function ProfileNavbar() {
   const { language, setLanguage, t } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
+  const isHomeRoute = location.pathname === "/" || location.pathname === "/home";
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -63,15 +64,15 @@ export default function ProfileNavbar() {
   const avatar = user?.avatar;
 
   return (
-    <nav className={`navbar navbar-home ${scrolled ? "scrolled" : ""}`.trim()}>
+    <nav className={`navbar ${isHomeRoute ? "navbar-home" : ""} ${scrolled ? "scrolled" : ""}`.trim()}>
       <div className="navbar-left">
-        <Link to="/home" className="logo-wrapper logo-wrapper-home">
-          <img src="/favicon.ico" alt="NexoryDev Logo" className="logo logo-home-round" />
-          <span className="logo-text logo-text-home">NexoryDev</span>
+        <Link to="/home" className={`logo-wrapper ${isHomeRoute ? "logo-wrapper-home" : ""}`}>
+          <img src="/favicon.ico" alt="NexoryDev Logo" className={`logo ${isHomeRoute ? "logo-home-round" : ""}`} />
+          <span className={`logo-text ${isHomeRoute ? "logo-text-home" : ""}`}>NexoryDev</span>
         </Link>
       </div>
 
-      <ul className={`navbar-menu navbar-menu-home ${menuOpen ? "active" : ""}`.trim()}>
+      <ul className={`navbar-menu ${isHomeRoute ? "navbar-menu-home" : ""} ${menuOpen ? "active" : ""}`.trim()}>
         <li>
           <Link
             to="/home"
@@ -81,7 +82,7 @@ export default function ProfileNavbar() {
           </Link>
         </li>
         <li className="navbar-menu-controls">
-          <div className="language-switch" aria-label={t("nav.language_switcher")}> 
+          <div className={`language-switch ${isHomeRoute ? "language-switch-home" : ""}`} aria-label={t("nav.language_switcher")}> 
             <button className={language === "de" ? "active" : ""} onClick={() => setLanguage("de")}>DE</button>
             <button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")}>EN</button>
           </div>
@@ -111,8 +112,8 @@ export default function ProfileNavbar() {
         </li>
       </ul>
 
-      <div className="navbar-right navbar-right-home">
-        <div className="language-switch language-switch-home" aria-label={t("nav.language_switcher")}>
+      <div className={`navbar-right ${isHomeRoute ? "navbar-right-home" : ""}`}>
+        <div className={`language-switch ${isHomeRoute ? "language-switch-home" : ""}`} aria-label={t("nav.language_switcher")}>
           <button
             className={language === "de" ? "active" : ""}
             onClick={() => setLanguage("de")}

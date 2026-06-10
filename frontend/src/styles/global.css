@@ -77,6 +77,10 @@
   --color-danger-08:       rgba(255, 138, 131, 0.08);
   --color-danger-20:       rgba(255, 138, 131, 0.2);
   --color-danger-25:       rgba(255, 138, 131, 0.25);
+
+  --fade-purple: linear-gradient(135deg, rgb(99,102,241) 0%, rgb(112,76,245) 12%, rgb(124,58,237) 25%, rgb(145,70,242) 37%, rgb(168,85,247) 50%, rgb(152,88,247) 62%, rgb(139,92,246) 75%, rgb(120,140,250) 88%, rgb(96,200,255) 100% );
+  --text-decoration: rgba(139, 92, 246, 0.6);
+  --text-decoration-shadow: rgba(139, 92, 246, 0.4);
 }
 
 *, *::before, *::after {

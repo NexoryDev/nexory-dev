@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Points, PointMaterial, Environment, RoundedBox } from "@react-three/drei";
+import { Points, PointMaterial, RoundedBox } from "@react-three/drei";
 import { motion, useReducedMotion } from "framer-motion";
 import * as THREE from "three";
 import { ArrowRight, Mouse, MessageSquare, Code2, Smartphone, Users } from "lucide-react";
@@ -534,16 +534,15 @@ function Scene({ progressRef, pointerRef, reducedMotion, mobile, cubeTexts = {} 
       <color attach="background" args={[BG]} />
       <fog attach="fog" args={[BG, 10, 28]} />
 
-      <ambientLight intensity={0.5} />
-      <pointLight position={[3, 2, 5]} intensity={12} />
-      <Environment preset="night" />
+      <hemisphereLight args={["#6f8cff", "#020409", 1.15]} />
+      <directionalLight position={[4, 5, 6]} color="#dbe7ff" intensity={2.6} />
 
       <group ref={cubeRef}>
         <RoundedBox args={[2.3, 2.3, 2.3]} radius={0.1} smoothness={8}>
           <meshPhysicalMaterial
             color="#050e28"
-            metalness={0.9}
-            roughness={0.15}
+            metalness={0.68}
+            roughness={0.22}
             clearcoat={0.6}
             clearcoatRoughness={0.25}
             emissiveIntensity={0.12}

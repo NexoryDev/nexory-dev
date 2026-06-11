@@ -3,7 +3,6 @@ import { LanguageProvider } from './context/LanguageContext';
 import { AuthProvider, useAuth } from "./auth/AuthProvider";
 import ScrollToTop from './components/ScrollToTop';
 import Navbar from './components/Navbar';
-import ProfileNavbar from './components/ProfileNavbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import GitHub from './pages/GitHub';
@@ -29,7 +28,7 @@ function AppContent() {
     <BrowserRouter>
       <ScrollToTop />
       <div id="page" style={{ opacity: 1, transition: 'opacity 0.4s ease' }}>
-        {user ? <ProfileNavbar /> : <Navbar />}
+        <Navbar />
 
         <Routes>
           <Route path="/" element={<Home />} />

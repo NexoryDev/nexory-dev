@@ -1,73 +1,51 @@
 :root {
-  --bg:                    #0d1117;
-  --surface:               #161b22;
-  --border:                rgba(134, 236, 255, 0.18);
-  --accent:                #86ecff;
-  --secondary:             #b788ff;
-  --text:                  #e6edf3;
-  --muted:                 #9ea8c7;
+  --bg:                    #030b18;
+  --bg-deep:               #01050f;
+  --surface:               rgba(4, 13, 30, 0.45);
+  --surface-hover:         rgba(255, 255, 255, 0.04);
+  --border:                rgba(139, 92, 246, 0.12);
+  --border-hover:          rgba(139, 92, 246, 0.3);
+  --border-focus:          rgba(96, 200, 255, 0.4);
+  --accent:                #8878ff;
+  --accent-secondary:      #60aaff;
+  --text:                  #f0f4ff;
+  --muted:                 #6a7590;
+  --text-dim:              #5a637a;
 
-  --color-bg:              #0d1117;
-  --color-bg-deep:         #010409;
-  --color-bg-elevated:     #111827;
-  --color-bg-surface:      #161b22;
-  --color-bg-surface-2:    rgba(22, 27, 34, 0.92);
+  --color-bg:              #030b18;
+  --color-bg-deep:         #01050f;
+  --color-bg-elevated:     rgba(4, 13, 30, 0.55);
+  --color-bg-surface:      rgba(4, 13, 30, 0.45);
+  --color-bg-surface-2:    rgba(4, 13, 30, 0.45);
+  --color-border:          rgba(139, 92, 246, 0.12);
+  --color-border-subtle:   rgba(139, 92, 246, 0.08);
+  --color-accent:          #60aaff;
+  --color-accent-2:        #8878ff;
+  --color-accent-soft:     #a8b8ff;
+  --color-accent-soft-2:   #b0b8f8;
+  --color-grad-1:          #60aaff;
+  --color-grad-2:          #8878ff;
+  --color-grad-3:          #a855f7;
+  --color-grad-4:          #ec4899;
+  --color-text:            #f0f4ff;
+  --color-text-bright:     #ffffff;
+  --color-text-soft:       #d0d8ff;
+  --color-text-muted:      #6a7590;
+  --color-text-dim:        #5a637a;
+  --color-shadow-soft:     rgba(0, 0, 0, 0.2);
+  --color-shadow-card:     0 24px 60px rgba(0, 0, 0, 0.35);
+  --color-shadow-strong:   rgba(0, 0, 0, 0.65);
 
-  --color-border:          #364054;
-  --color-border-subtle:   #242b38;
-
-  --color-accent:          #86ecff;
-  --color-accent-2:        #7fbeff;
-  --color-accent-soft:     #93cfff;
-  --color-accent-soft-2:   #9fd4ff;
-
-  --color-grad-1:          #8ef0ff;
-  --color-grad-2:          #73d8ff;
-  --color-grad-3:          #8d9bff;
-  --color-grad-4:          #c08bff;
-
-  --color-text:            #e6edf3;
-  --color-text-bright:     #f0f6fc;
-  --color-text-soft:       #c9d1d9;
-  --color-text-muted:      #9ea8c7;
-  --color-text-dim:        #8b949e;
-
-  --color-dot-red:         #ff5f57;
-  --color-dot-yellow:      #ffbd2e;
-  --color-dot-green:       #28c940;
-
-  --color-white-03:        rgba(255, 255, 255, 0.03);
-  --color-white-04:        rgba(255, 255, 255, 0.04);
-  --color-white-05:        rgba(255, 255, 255, 0.05);
-  --color-white-06:        rgba(255, 255, 255, 0.06);
-  --color-white-08:        rgba(255, 255, 255, 0.08);
-  --color-white-10:        rgba(255, 255, 255, 0.1);
-  --color-white-12:        rgba(255, 255, 255, 0.12);
-  --color-white-25:        rgba(255, 255, 255, 0.25);
-  --color-white-48:        rgba(255, 255, 255, 0.48);
-  --color-white-55:        rgba(255, 255, 255, 0.55);
-  --color-white-60:        rgba(255, 255, 255, 0.6);
-  --color-white-65:        rgba(255, 255, 255, 0.65);
-  --color-white-68:        rgba(255, 255, 255, 0.68);
-  --color-white-72:        rgba(255, 255, 255, 0.72);
-  --color-white-78:        rgba(255, 255, 255, 0.78);
-  --color-white-82:        rgba(255, 255, 255, 0.82);
-  --color-white-90:        rgba(255, 255, 255, 0.9);
-
-  --color-shadow-soft:     rgba(0, 0, 0, 0.18);
-  --color-shadow-card:     rgba(0, 0, 0, 0.35);
-  --color-shadow-strong:   rgba(0, 0, 0, 0.6);
-
-  --color-accent-06:       rgba(134, 236, 255, 0.06);
-  --color-accent-08:       rgba(134, 236, 255, 0.08);
-  --color-accent-10:       rgba(134, 236, 255, 0.1);
-  --color-accent-12:       rgba(134, 236, 255, 0.12);
-  --color-accent-18:       rgba(134, 236, 255, 0.18);
-  --color-accent-25:       rgba(134, 236, 255, 0.25);
-  --color-accent-30:       rgba(134, 236, 255, 0.3);
-  --color-accent-35:       rgba(134, 236, 255, 0.35);
-  --color-accent-40:       rgba(134, 236, 255, 0.4);
-  --color-accent-50:       rgba(134, 236, 255, 0.5);
+  --color-accent-06:       rgba(139, 92, 246, 0.06);
+  --color-accent-08:       rgba(139, 92, 246, 0.08);
+  --color-accent-10:       rgba(139, 92, 246, 0.1);
+  --color-accent-12:       rgba(139, 92, 246, 0.12);
+  --color-accent-18:       rgba(139, 92, 246, 0.18);
+  --color-accent-25:       rgba(139, 92, 246, 0.25);
+  --color-accent-30:       rgba(139, 92, 246, 0.3);
+  --color-accent-35:       rgba(139, 92, 246, 0.35);
+  --color-accent-40:       rgba(139, 92, 246, 0.4);
+  --color-accent-50:       rgba(139, 92, 246, 0.5);
 
   --color-success:         #6ce89a;
   --color-success-08:      rgba(108, 232, 154, 0.08);
@@ -78,8 +56,8 @@
   --color-danger-20:       rgba(255, 138, 131, 0.2);
   --color-danger-25:       rgba(255, 138, 131, 0.25);
 
-  --fade-purple: linear-gradient(135deg, rgb(99,102,241) 0%, rgb(112,76,245) 12%, rgb(124,58,237) 25%, rgb(145,70,242) 37%, rgb(168,85,247) 50%, rgb(152,88,247) 62%, rgb(139,92,246) 75%, rgb(120,140,250) 88%, rgb(96,200,255) 100% );
-  --text-decoration: rgba(139, 92, 246, 0.6);
+  --fade-purple:           linear-gradient(135deg, #4858e8 0%, #6838d8 100%);
+  --text-decoration:       rgba(139, 92, 246, 0.6);
   --text-decoration-shadow: rgba(139, 92, 246, 0.4);
 }
 
@@ -93,9 +71,13 @@ html, body, #root {
 
 body {
   margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
   font-display: swap;
   background-color: var(--bg);
+  background-image: 
+    radial-gradient(circle at 80% 25%, rgba(96, 80, 220, 0.06) 0%, transparent 55%),
+    radial-gradient(circle at 20% 75%, rgba(136, 120, 255, 0.03) 0%, transparent 60%);
+  background-attachment: fixed;
   color: var(--text);
   display: flex;
   flex-direction: column;
@@ -108,11 +90,16 @@ body {
 }
 
 a {
-  color: var(--accent);
+  color: var(--accent-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--text);
 }
 
 main {
   flex: 1;
   width: 100%;
 }
-

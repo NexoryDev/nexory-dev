@@ -6,35 +6,26 @@
   display: flex;
   align-items: center;
   gap: 7px;
-
   position: relative;
   overflow: hidden;
-
-  background: transparent;
-  border: 2px solid transparent;
+  background: rgba(7, 18, 40, 0.4);
+  border: 1px solid rgba(139, 92, 246, 0.2);
   border-radius: 999px;
-
   font-family: 'Fira Code', monospace;
   font-size: 0.8rem;
   font-weight: 600;
-
-  padding: 4px 10px 4px 5px;
-  color: var(--color-text-muted);
+  padding: 4px 12px 4px 6px;
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
-
-  background-image: linear-gradient(var(--color-bg), var(--color-bg)),
-    linear-gradient(90deg, var(--color-grad-1), var(--color-grad-2), var(--color-grad-3));
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-
   transition: all 0.25s ease;
   white-space: nowrap;
 }
 
 .user-menu__btn:hover,
 .user-menu__btn.open {
-  color: var(--color-text);
-  box-shadow: 0 0 14px rgba(88, 166, 255, 0.2);
+  color: #ffffff;
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.15);
 }
 
 .user-menu__avatar {
@@ -60,8 +51,8 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-grad-2), var(--color-grad-3));
-  color: var(--color-bg);
+  background: linear-gradient(135deg, #4858e8 0%, #6838d8 100%);
+  color: #ffffff;
   font-size: 0.7rem;
   font-weight: 700;
   display: flex;
@@ -78,7 +69,7 @@
 }
 
 .user-menu__chevron {
-  color: var(--color-text-muted);
+  color: rgba(255, 255, 255, 0.6);
   transition: transform 0.2s ease;
   flex-shrink: 0;
 }
@@ -92,12 +83,14 @@
   top: calc(100% + 12px);
   right: 0;
   width: 220px;
-
-  background: linear-gradient( 180deg, rgba(7, 12, 24, 0.404), rgba(5, 10, 20, 0.5));
-  border: 1px solid var(--color-border);
+  background: rgba(4, 10, 24, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(139, 92, 246, 0.18);
   border-radius: 10px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
-
+  box-shadow: 
+    0 12px 48px rgba(0, 0, 0, 0.6), 
+    0 0 32px rgba(139, 92, 246, 0.05);
   overflow: hidden;
   z-index: 2000;
   animation: user-menu-in 0.14s ease;
@@ -118,7 +111,7 @@
 .user-menu__dropdown-email {
   font-family: 'Fira Code', monospace;
   font-size: 0.74rem;
-  color: var(--color-text-muted);
+  color: rgba(255, 255, 255, 0.5);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -127,7 +120,7 @@
 .user-menu__dropdown-username {
   font-family: 'Fira Code', monospace;
   font-size: 0.74rem;
-  color: var(--color-accent);
+  color: rgba(96, 200, 255, 0.9);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -135,7 +128,7 @@
 
 .user-menu__divider {
   height: 1px;
-  background: var(--color-border);
+  background: rgba(139, 92, 246, 0.12);
 }
 
 .user-menu__item {
@@ -143,19 +136,16 @@
   align-items: center;
   gap: 9px;
   width: 100%;
-  padding: 9px 14px;
-
+  padding: 10px 16px;
   background: transparent;
   border: none;
   cursor: pointer;
   text-align: left;
-
   font-family: 'Fira Code', monospace;
   font-size: 0.8rem;
   font-weight: 400;
-  color: var(--color-text-muted);
-
-  transition: background 0.15s ease, color 0.15s ease;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.15s ease;
 }
 
 .user-menu__item svg {
@@ -165,8 +155,8 @@
 }
 
 .user-menu__item:hover {
-  background: rgba(88, 166, 255, 0.08);
-  color: var(--color-text);
+  background: rgba(139, 92, 246, 0.12);
+  color: #ffffff;
 }
 
 .user-menu__item:hover svg {
@@ -201,4 +191,3 @@
     width: 200px;
   }
 }
-

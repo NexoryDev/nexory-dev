@@ -568,10 +568,13 @@ function HomeCanvas({ progressRef, pointerRef, webglSupported, ctaVisible, cubeT
   const [mobile, setMobile] = useState(false);
 
   useEffect(() => {
-    const update = () => setMobile(window.innerWidth < 768);
+    const mediaQuery = window.matchMedia("(max-width: 980px)");
+    const update = () => setMobile(mediaQuery.matches);
+
     update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
+    mediaQuery.addEventListener("change", update);
+
+    return () => mediaQuery.removeEventListener("change", update);
   }, []);
 
   if (!webglSupported) {
@@ -614,7 +617,7 @@ function TechList({ items }) {
   );
 }
 
-function ServiceSection({ id, icon, align = "left", title, desc, children, learnMore }) {
+function ServiceSection({ id, serviceHref, icon, align = "left", title, desc, children, learnMore }) {
   return (
     <section id={id} className={`journey-section service-journey-section service--${align}`}>
       <div className="service-grid">
@@ -629,7 +632,7 @@ function ServiceSection({ id, icon, align = "left", title, desc, children, learn
           <h2>{title}</h2>
           <p>{desc}</p>
           {children}
-          <Link className="journey-link" to="/contact">
+          <Link className="journey-link" to={serviceHref}>
             {learnMore}
             <ArrowRight size={14} />
           </Link>
@@ -776,7 +779,7 @@ export default function Home() {
           </h1>
           <p className="hero-desc">{t("home.hero.description")}</p>
           <div className="journey-actions">
-            <Link className="home-primary-button" to="/contact">
+            <Link className="home-primary-button" to="/services">
               {t("home.hero.cta.primary")}
               <ArrowRight size={16} />
             </Link>
@@ -798,6 +801,7 @@ export default function Home() {
 
       <ServiceSection
         id="discord"
+        serviceHref="/services#discord-bots"
         icon={<MessageSquare size={22} />}
         align="left"
         title={t("home.section.discord.title")}
@@ -809,6 +813,7 @@ export default function Home() {
 
       <ServiceSection
         id="web"
+        serviceHref="/services#web-development"
         icon={<Code2 size={22} />}
         align="right"
         title={t("home.section.web.title")}
@@ -820,6 +825,7 @@ export default function Home() {
 
       <ServiceSection
         id="mobile"
+        serviceHref="/services#app-development"
         icon={<Smartphone size={22} />}
         align="left"
         title={t("home.section.app.title")}
@@ -831,6 +837,7 @@ export default function Home() {
 
       <ServiceSection
         id="individual"
+        serviceHref="/services#individual-solutions"
         icon={<Users size={22} />}
         align="right"
         title={t("home.section.individual.title")}
@@ -856,8 +863,8 @@ export default function Home() {
               {t("home.cta.button")}
               <ArrowRight size={16} />
             </Link>
-            <Link className="home-secondary-button" to="/github">
-              {t("nav.servies")}
+            <Link className="home-secondary-button" to="/services">
+              {t("nav.services")}
             </Link>
           </div>
         </motion.div>

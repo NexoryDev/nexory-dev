@@ -30,12 +30,14 @@
     radial-gradient(circle at 70% 45%, rgba(112, 80, 232, 0.12) 0%, transparent 55%),
     #030b18;
 }
+
 .home-static-cube {
   font-size: 120px;
   font-weight: 900;
   letter-spacing: -0.04em;
   background: linear-gradient(135deg, #60c0ff 0%, #8060ff 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   user-select: none;
 }
@@ -85,10 +87,10 @@
   text-transform: uppercase;
   color: #8878ff;
   margin-bottom: 28px;
-  border: 1px solid rgba(136, 120, 255, 0.22);
-  padding: 5px 14px 5px 10px;
-  border-radius: 100px;
-  background: rgba(136, 120, 255, 0.07);
+  border: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
 }
 .journey-kicker::before {
   content: "+";
@@ -108,10 +110,11 @@
   max-width: 560px;
 }
 .hero-accent {
-  background: linear-gradient(130deg, #60aaff 0%, #9060ff 48%, #60e0ff 100%);
+  background: linear-gradient(130deg, #74a8ee 0%, #8878df 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 28px rgba(100, 130, 255, 0.28));
+  filter: drop-shadow(0 0 14px rgba(100, 130, 255, 0.14));
 }
 .hero-desc {
   font-size: clamp(14px, 1.45vw, 16.5px);
@@ -148,13 +151,13 @@
   max-width: 520px;
   padding: 48px;
   border-radius: 24px;
-  background: rgba(4, 13, 30, 0.42);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: rgba(4, 13, 30, 0.64);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 16px 40px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
   transition:
     border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
@@ -162,7 +165,7 @@
 }
 
 .service-text:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
 }
 
 .service--left .service-grid {
@@ -191,63 +194,51 @@
 
 #discord {
   background:
-    radial-gradient(circle at 15% 30%, rgba(88, 101, 242, 0.12) 0%, transparent 50%),
-    radial-gradient(circle at 85% 70%, rgba(88, 101, 242, 0.04) 0%, transparent 60%);
+    radial-gradient(circle at 15% 30%, rgba(88, 101, 242, 0.07) 0%, transparent 50%),
+    radial-gradient(circle at 85% 70%, rgba(88, 101, 242, 0.02) 0%, transparent 60%);
   border-top: 1px solid rgba(88, 101, 242, 0.06);
   border-bottom: 1px solid rgba(88, 101, 242, 0.06);
 }
 
 #discord .service-text:hover {
-  border-color: rgba(88, 101, 242, 0.3);
-  box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.45),
-    0 0 32px rgba(88, 101, 242, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border-color: rgba(88, 101, 242, 0.2);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.3);
 }
 
 #web {
   background:
-    radial-gradient(circle at 15% 30%, rgba(14, 165, 233, 0.12) 0%, transparent 55%),
-    radial-gradient(circle at 85% 70%, rgba(14, 165, 233, 0.03) 0%, transparent 50%);
+    radial-gradient(circle at 15% 30%, rgba(14, 165, 233, 0.07) 0%, transparent 55%),
+    radial-gradient(circle at 85% 70%, rgba(14, 165, 233, 0.02) 0%, transparent 50%);
   border-bottom: 1px solid rgba(14, 165, 233, 0.06);
 }
 
 #web .service-text:hover {
-  border-color: rgba(14, 165, 233, 0.3);
-  box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.45),
-    0 0 32px rgba(14, 165, 233, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border-color: rgba(14, 165, 233, 0.2);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.3);
 }
 
 #mobile {
   background:
-    radial-gradient(circle at 15% 30%, rgba(236, 72, 153, 0.09) 0%, transparent 50%),
-    radial-gradient(circle at 85% 70%, rgba(236, 72, 153, 0.03) 0%, transparent 60%);
+    radial-gradient(circle at 15% 30%, rgba(236, 72, 153, 0.055) 0%, transparent 50%),
+    radial-gradient(circle at 85% 70%, rgba(236, 72, 153, 0.018) 0%, transparent 60%);
   border-bottom: 1px solid rgba(236, 72, 153, 0.06);
 }
 
 #mobile .service-text:hover {
-  border-color: rgba(236, 72, 153, 0.3);
-  box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.45),
-    0 0 32px rgba(236, 72, 153, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border-color: rgba(236, 72, 153, 0.18);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.3);
 }
 
 #individual {
   background:
-    radial-gradient(circle at 15% 30%, rgba(168, 85, 247, 0.12) 0%, transparent 55%),
-    radial-gradient(circle at 85% 70%, rgba(168, 85, 247, 0.03) 0%, transparent 50%);
+    radial-gradient(circle at 15% 30%, rgba(168, 85, 247, 0.07) 0%, transparent 55%),
+    radial-gradient(circle at 85% 70%, rgba(168, 85, 247, 0.02) 0%, transparent 50%);
   border-bottom: 1px solid rgba(168, 85, 247, 0.06);
 }
 
 #individual .service-text:hover {
-  border-color: rgba(168, 85, 247, 0.3);
-  box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.45),
-    0 0 32px rgba(168, 85, 247, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border-color: rgba(168, 85, 247, 0.2);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.3);
 }
 
 #cta {
@@ -270,9 +261,8 @@
   transition: background 0.24s, border-color 0.24s, box-shadow 0.24s;
 }
 .svc-icon:hover {
-  background: rgba(112, 80, 232, 0.16);
-  border-color: rgba(136, 120, 255, 0.36);
-  box-shadow: 0 0 18px rgba(112, 80, 232, 0.18);
+  background: rgba(112, 80, 232, 0.13);
+  border-color: rgba(136, 120, 255, 0.28);
 }
 #discord    .svc-icon { background: rgba(88,101,242,0.10); border-color: rgba(88,101,242,0.22); color: #7888f8; }
 #web        .svc-icon { background: rgba(14,165,233,0.08); border-color: rgba(14,165,233,0.20); color: #38b8f8; }
@@ -330,20 +320,20 @@
   gap: 9px;
   padding: 13px 28px;
   border-radius: 100px;
-  background: linear-gradient(135deg, #4858e8 0%, #6838d8 100%);
+  background: linear-gradient(135deg, #5060d4 0%, #6250bc 100%);
   color: #fff;
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
   border: none;
-  box-shadow: 0 4px 22px rgba(72, 88, 232, 0.32);
+  box-shadow: 0 4px 16px rgba(40, 50, 130, 0.24);
   transition: transform 0.28s ease, box-shadow 0.28s ease, filter 0.22s ease;
   white-space: nowrap;
 }
 .home-primary-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 36px rgba(72, 88, 232, 0.52);
-  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 7px 22px rgba(40, 50, 130, 0.3);
+  filter: brightness(1.05);
 }
 
 .home-secondary-button {
@@ -391,10 +381,9 @@
   letter-spacing: 0.01em;
 }
 .journey-tags span:hover {
-  background: rgba(120, 100, 255, 0.12);
-  border-color: rgba(136, 120, 255, 0.28);
-  color: #b0b8f8;
-  box-shadow: 0 0 12px rgba(120, 100, 255, 0.12);
+  background: rgba(120, 100, 255, 0.09);
+  border-color: rgba(136, 120, 255, 0.22);
+  color: #9ca8dc;
 }
 
 .journey-link {
@@ -467,9 +456,7 @@
   line-height: 1.08;
   letter-spacing: -0.034em;
   margin: 0 0 20px;
-  background: linear-gradient(135deg, #e8ecff 28%, #b0a8ff 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #e8ecff;
 }
 .final-journey-content > p {
   font-size: 16.5px;

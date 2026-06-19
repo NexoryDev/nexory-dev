@@ -1,12 +1,12 @@
 .not-found-page {
-  min-height: 100vh;
+  min-height: 100dvh;
   background:
     radial-gradient(circle at top, var(--color-accent-18), transparent 35%),
     linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-elevated) 100%);
 }
 
 .not-found-hero {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,7 +17,7 @@
   width: min(720px, 100%);
   text-align: center;
   padding: 38px 26px;
-  border-radius: 22px;
+  border-radius: 14px;
   border: 1px solid var(--color-accent-25);
   background: rgba(22, 27, 34, 0.82);
   backdrop-filter: blur(12px);
@@ -69,11 +69,18 @@
   padding: 12px 18px;
   border-radius: 999px;
   font-weight: 600;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  transition:
+    transform 140ms var(--ease-out-strong),
+    box-shadow 160ms var(--ease-out-strong),
+    background-color 160ms var(--ease-out-strong);
 }
 
 .not-found-btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
+}
+
+.not-found-btn:active {
+  transform: scale(0.98);
 }
 
 .not-found-btn.primary {

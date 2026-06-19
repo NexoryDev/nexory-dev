@@ -149,7 +149,7 @@ def get_public_profile(username):
 
     try:
         cursor.execute(
-            "SELECT username, avatar, role, badges, created_at, bio, location, timezone, github_username "
+            "SELECT username, avatar, badges, created_at, bio, location, timezone, github_username "
             "FROM users WHERE username = %s AND verified = 1",
             (username,),
         )
@@ -170,20 +170,23 @@ def get_public_profile(username):
             badges = []
 
     created_at = user.get("created_at")
+    avatar = user.get("avatar")
+    if not isinstance(avatar, str) or not avatar.startswith("/uploads/avatars/"):
+        avatar = None
+
     member_since = (
-        created_at.isoformat() if hasattr(created_at, "isoformat")
-        else str(created_at) if created_at
+        created_at.strftime("%Y-%m-01") if hasattr(created_at, "strftime")
+        else str(created_at)[:7] + "-01" if created_at
         else None
     )
 
     return {
         "username":     user["username"],
-        "avatar":       user.get("avatar"),
+        "avatar":       avatar,
         "bio":          user.get("bio"),
         "location":     user.get("location"),
         "timezone":     user.get("timezone"),
         "github_username": user.get("github_username"),
-        "role":         user.get("role"),
         "badges":       badges,
         "member_since": member_since,
     }

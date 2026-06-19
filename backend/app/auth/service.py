@@ -176,7 +176,7 @@ def _verify_backup_code(cur, user_id, code):
     if not row:
         return False
 
-    cur.execute("UPDATE user_2fa_backup_codes SET used_at=NOW() WHERE id=%s", (row["id"],))
+    cur.execute("DELETE FROM user_2fa_backup_codes WHERE id=%s", (row["id"],))
     return True
 
 

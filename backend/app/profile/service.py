@@ -64,7 +64,7 @@ def update_user(user_id, data):
 
     if avatar is not None:
         avatar = avatar.strip()
-        if avatar and not avatar.startswith(("http://", "https://", "/uploads/")):
+        if avatar and not avatar.startswith("/uploads/avatars/"):
             db.close()
             return False, "invalid_avatar"
         fields.append("avatar=%s")
@@ -129,6 +129,12 @@ _ALLOWED_AVATAR_TYPES = {"jpg", "jpeg", "png", "webp"}
 _ALLOWED_PIL_FORMATS = {"JPEG", "PNG", "WEBP"}
 
 logger = logging.getLogger(__name__)
+
+
+def _local_avatar_url(value):
+    if isinstance(value, str) and value.startswith("/uploads/avatars/"):
+        return value
+    return None
 
 
 def _safe_unlink(path):
@@ -314,7 +320,7 @@ def serialize_user(user):
         "bio": user.get("bio"),
         "location": user.get("location"),
         "timezone": user.get("timezone"),
-        "avatar": user.get("avatar"),
+        "avatar": _local_avatar_url(user.get("avatar")),
         "role": user.get("role"),
         "badges": user.get("badges") or [],
         "achievements": user.get("achievements") or [],
@@ -339,15 +345,29 @@ def get_user_and_refresh_token(user_id):
 def delete_user_account(user_id):
     db = get_db()
     cursor = db.cursor()
+    avatar_path = None
 
     try:
+        cursor.execute("SELECT avatar FROM users WHERE id=%s", (user_id,))
+        user = cursor.fetchone()
+        if not user:
+            return False
+
+        avatar = user.get("avatar")
+        if avatar and avatar.startswith("/uploads/avatars/"):
+            avatar_path = os.path.join(
+                current_app.config["UPLOAD_FOLDER"],
+                avatar.rsplit("/", 1)[-1],
+            )
+
         cursor.execute("DELETE FROM refresh_tokens WHERE user_id=%s", (user_id,))
         cursor.execute("DELETE FROM password_resets WHERE user_id=%s", (user_id,))
         cursor.execute("DELETE FROM email_verifications WHERE user_id=%s", (user_id,))
         cursor.execute("DELETE FROM users WHERE id=%s", (user_id,))
 
         db.commit()
-        return cursor.rowcount > 0
+        _safe_unlink(avatar_path)
+        return True
     except Exception:
         db.rollback()
         return False

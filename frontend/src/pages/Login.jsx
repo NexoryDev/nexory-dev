@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { IconEye, IconEyeOff } from "../components/icons/svgs";
 import { useLanguage } from "../context/LanguageContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
 import "../styles/Login.css";
 
@@ -291,6 +291,13 @@ export default function Login() {
                     />
                     {t("login.remember_me")}
                   </label>
+                )}
+
+                {mode === "register" && (
+                  <p className="register-privacy-notice">
+                    {t("login.register_privacy_prefix")}{" "}
+                    <Link to="/privacy">{t("login.register_privacy_link")}</Link>.
+                  </p>
                 )}
 
                 {mode === "login" ? (

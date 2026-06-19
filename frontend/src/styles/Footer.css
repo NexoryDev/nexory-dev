@@ -12,8 +12,8 @@
   color: #ffffff;
   margin-top: 0;
   border-top: var(--text-decoration) 1px solid;
-  background: linear-gradient(180deg, rgba(4, 13, 30, 0.45) 0%, rgba(3, 10, 24, 0.6) 100%);
-  box-shadow: inset 0 1px 0 var(--text-decoration-shadow), 0 0 12px var(--text-decoration-shadow);
+  background: linear-gradient(180deg, rgba(8, 14, 24, 0.72) 0%, rgba(3, 6, 12, 0.88) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045);
 }
 
 .footer::before,
@@ -31,7 +31,7 @@
 }
 
 .footer::after {
-  background: linear-gradient(180deg, rgba(7, 12, 24, 0.404), rgba(5, 10, 20, 0.5));
+  background: linear-gradient(180deg, rgba(7, 12, 24, 0.34), rgba(5, 10, 20, 0.62));
   opacity: 0.35;
 }
 
@@ -57,11 +57,11 @@
   font-weight: 850;
   line-height: 1.2;
   letter-spacing: 0;
-  background: linear-gradient(135deg, #ffffff 0%, #c084fc 52%, #67e8f9 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #9fd7ff 52%, #6ee7f2 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  text-shadow: 0 0 24px var(--text-decoration-shadow);
+  text-shadow: none;
 }
 
 .footer-tagline {
@@ -77,7 +77,7 @@
 
 .footer-section-title {
   margin: 0 0 0.95rem;
-  color: rgba(192, 132, 252, 0.82);
+  color: rgba(110, 231, 242, 0.78);
   font-size: 0.72rem;
   font-weight: 850;
   letter-spacing: 0.12em;
@@ -105,7 +105,9 @@
   color: rgba(208, 210, 214, 0.72);
   font-size: 0.88rem;
   text-decoration: none;
-  transition: color var(--footer-transition), transform var(--footer-transition);
+  transition:
+    color 160ms var(--ease-out-strong),
+    transform 160ms var(--ease-out-strong);
 }
 
 .footer-nav-list a::after {
@@ -115,11 +117,13 @@
   bottom: -4px;
   width: 100%;
   height: 1px;
-  background: linear-gradient(90deg, #a855f7, #67e8f9);
+  background: linear-gradient(90deg, #8fb3ff, #6ee7f2);
   opacity: 0;
   transform: scaleX(0.4);
   transform-origin: left;
-  transition: opacity var(--footer-transition), transform var(--footer-transition);
+  transition:
+    opacity 160ms var(--ease-out-strong),
+    transform 160ms var(--ease-out-strong);
 }
 
 .footer-nav-list a:hover {
@@ -139,7 +143,7 @@
 }
 
 .footer-social-link:hover {
-  color: #67e8f9;
+  color: #6ee7f2;
 }
 
 .footer-bottom {

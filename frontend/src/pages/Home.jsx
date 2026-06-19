@@ -4,27 +4,20 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial, RoundedBox } from "@react-three/drei";
 import { motion, useReducedMotion } from "framer-motion";
 import * as THREE from "three";
-import { ArrowRight, Mouse, MessageSquare, Code2, Smartphone, Users } from "lucide-react";
+import { ArrowRight, Mouse } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
+import {
+  SERVICE_ICON_PATHS,
+  SvgAppDevelopment,
+  SvgDiscordBot,
+  SvgIndividualSolutions,
+  SvgWebDevelopment,
+} from "../components/icons/svgs";
 import "../styles/Home.css";
 
-const BG = "#020409";
+const BG = "#03060b";
 const fadeEase = [0.16, 1, 0.3, 1];
 const SECTION_IDS = ["hero", "discord", "web", "mobile", "individual", "cta"];
-
-function rrect(ctx, x, y, w, h, r) {
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.lineTo(x + w - r, y);
-  ctx.arcTo(x + w, y, x + w, y + r, r);
-  ctx.lineTo(x + w, y + h - r);
-  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
-  ctx.lineTo(x + r, y + h);
-  ctx.arcTo(x, y + h, x, y + h - r, r);
-  ctx.lineTo(x, y + r);
-  ctx.arcTo(x, y, x + r, y, r);
-  ctx.closePath();
-}
 
 function fitText(ctx, text, maxWidth, startSize, minSize) {
   let size = startSize;
@@ -38,7 +31,13 @@ function fitText(ctx, text, maxWidth, startSize, minSize) {
   return size;
 }
 
-function drawFace(label, iconFn, color) {
+function drawServiceIcon(ctx, paths) {
+  paths.forEach((path) => {
+    ctx.stroke(new Path2D(path));
+  });
+}
+
+function drawFace(label, iconPaths, color) {
   const cv = document.createElement("canvas");
   cv.width = 1024;
   cv.height = 1024;
@@ -59,7 +58,7 @@ function drawFace(label, iconFn, color) {
   c.lineJoin = "round";
   c.shadowBlur = 16;
   c.shadowColor = color;
-  iconFn(c);
+  drawServiceIcon(c, iconPaths);
   c.restore();
 
   c.shadowBlur = 0;
@@ -86,72 +85,6 @@ function drawFace(label, iconFn, color) {
   return texture;
 }
 
-const ICONS = {
-  discord: (c) => {
-    c.beginPath();
-    c.moveTo(5.5, 10);
-    c.bezierCurveTo(4.8, 7, 6.8, 4.5, 9.2, 4.5);
-    c.lineTo(14.8, 4.5);
-    c.bezierCurveTo(17.2, 4.5, 19.2, 7, 18.5, 10);
-    c.lineTo(18.2, 15.5);
-    c.bezierCurveTo(17.8, 18.2, 16, 19.5, 14.2, 19.5);
-    c.lineTo(13, 21.2);
-    c.lineTo(12, 19.5);
-    c.lineTo(9.8, 19.5);
-    c.bezierCurveTo(8, 19.5, 6.2, 18.2, 5.8, 15.5);
-    c.closePath();
-    c.stroke();
-    c.beginPath();
-    c.arc(9.2, 12.5, 1.9, 0, Math.PI * 2);
-    c.fill();
-    c.beginPath();
-    c.arc(14.8, 12.5, 1.9, 0, Math.PI * 2);
-    c.fill();
-    c.beginPath();
-    c.moveTo(9.5, 16.2);
-    c.quadraticCurveTo(12, 18, 14.5, 16.2);
-    c.stroke();
-  },
-  web: (c) => {
-    c.lineWidth = 2.1;
-    c.beginPath();
-    c.moveTo(8, 6.5);
-    c.lineTo(2.5, 12);
-    c.lineTo(8, 17.5);
-    c.stroke();
-    c.beginPath();
-    c.moveTo(14.5, 4.5);
-    c.lineTo(9.5, 19.5);
-    c.stroke();
-    c.beginPath();
-    c.moveTo(16, 6.5);
-    c.lineTo(21.5, 12);
-    c.lineTo(16, 17.5);
-    c.stroke();
-  },
-  app: (c) => {
-    rrect(c, 6.5, 1.5, 11, 21, 2.2);
-    c.stroke();
-    c.beginPath();
-    c.moveTo(10, 20);
-    c.lineTo(14, 20);
-    c.stroke();
-    c.beginPath();
-    c.arc(12, 4.2, 1, 0, Math.PI * 2);
-    c.fill();
-  },
-  individual: (c) => {
-    c.beginPath();
-    c.arc(12, 7.5, 3.8, 0, Math.PI * 2);
-    c.stroke();
-    c.beginPath();
-    c.moveTo(3.5, 22);
-    c.bezierCurveTo(3.5, 16.5, 7.2, 13.5, 12, 13.5);
-    c.bezierCurveTo(16.8, 13.5, 20.5, 16.5, 20.5, 22);
-    c.stroke();
-  },
-};
-
 function Particles({ count, progressRef }) {
   const ref = useRef();
 
@@ -177,7 +110,7 @@ function Particles({ count, progressRef }) {
 
   return (
     <Points ref={ref} positions={pos} stride={3} frustumCulled={false}>
-      <PointMaterial transparent depthWrite={false} color="#8090d8" opacity={0.14} size={0.014} sizeAttenuation />
+      <PointMaterial transparent depthWrite={false} color="#9bb8ff" opacity={0.12} size={0.014} sizeAttenuation />
     </Points>
   );
 }
@@ -216,10 +149,10 @@ function AccentCubes({ mobile }) {
       {cubes.map((cube, index) => (
         <mesh key={index} position={cube.pos} scale={cube.scale}>
           <boxGeometry args={[1, 1, 1]} />
-          <meshBasicMaterial color={index % 2 ? "#0a1a40" : "#0c1a38"} />
+          <meshBasicMaterial color={index % 2 ? "#0d2440" : "#0a2236"} />
           <lineSegments>
             <edgesGeometry args={[new THREE.BoxGeometry(1, 1, 1)]} />
-            <lineBasicMaterial color={index % 3 === 0 ? "#3060e0" : index % 3 === 1 ? "#6040e0" : "#30a0e0"} transparent opacity={0.45} />
+            <lineBasicMaterial color={index % 3 === 0 ? "#4a86ff" : index % 3 === 1 ? "#6ee7f2" : "#30a0e0"} transparent opacity={0.42} />
           </lineSegments>
         </mesh>
       ))}
@@ -514,10 +447,10 @@ function Scene({ progressRef, pointerRef, reducedMotion, mobile, cubeTexts = {} 
 
   const textures = useMemo(
     () => ({
-      discord: drawFace(cubeTexts.discord || "Discord Bot", ICONS.discord, "#5865f2"),
-      web: drawFace(cubeTexts.web || "Web Entwicklung", ICONS.web, "#0ea5e9"),
-      app: drawFace(cubeTexts.app || "Mobile App", ICONS.app, "#ec4899"),
-      individual: drawFace(cubeTexts.individual || "Individual", ICONS.individual, "#a855f7"),
+      discord: drawFace(cubeTexts.discord || "Discord Bot", SERVICE_ICON_PATHS.discord, "#5865f2"),
+      web: drawFace(cubeTexts.web || "Web Entwicklung", SERVICE_ICON_PATHS.web, "#0ea5e9"),
+      app: drawFace(cubeTexts.app || "Mobile App", SERVICE_ICON_PATHS.app, "#ec4899"),
+      individual: drawFace(cubeTexts.individual || "Individual", SERVICE_ICON_PATHS.individual, "#a855f7"),
     }),
     [cubeTexts]
   );
@@ -534,19 +467,20 @@ function Scene({ progressRef, pointerRef, reducedMotion, mobile, cubeTexts = {} 
       <color attach="background" args={[BG]} />
       <fog attach="fog" args={[BG, 10, 28]} />
 
-      <hemisphereLight args={["#6f8cff", "#020409", 1.15]} />
-      <directionalLight position={[4, 5, 6]} color="#dbe7ff" intensity={2.6} />
+      <hemisphereLight args={["#9bb8ff", "#03060b", 1.35]} />
+      <directionalLight position={[4, 5, 6]} color="#f3fbff" intensity={3.0} />
+      <directionalLight position={[-5, 2, 3]} color="#6ee7f2" intensity={0.75} />
 
       <group ref={cubeRef}>
         <RoundedBox args={[2.3, 2.3, 2.3]} radius={0.1} smoothness={8}>
           <meshPhysicalMaterial
-            color="#050e28"
-            metalness={0.68}
-            roughness={0.22}
-            clearcoat={0.6}
-            clearcoatRoughness={0.25}
-            emissiveIntensity={0.12}
-            emissive={new THREE.Color("#111833")}
+            color="#071a2c"
+            metalness={0.58}
+            roughness={0.18}
+            clearcoat={0.72}
+            clearcoatRoughness={0.18}
+            emissiveIntensity={0.18}
+            emissive={new THREE.Color("#0b2838")}
           />
         </RoundedBox>
 
@@ -802,49 +736,49 @@ export default function Home() {
       <ServiceSection
         id="discord"
         serviceHref="/services#discord-bots"
-        icon={<MessageSquare size={22} />}
+        icon={<SvgDiscordBot size={22} />}
         align="left"
         title={t("home.section.discord.title")}
         desc={t("home.section.discord.desc")}
         learnMore={t("home.section.learn_more")}
       >
-        <TechList items={["Moderation", "Tickets", "Economy", "AI", "Analytics"]} />
+        <TechList items={["Slash Commands", "Tickets", "Rollen", "Webhooks", "PostgreSQL"]} />
       </ServiceSection>
 
       <ServiceSection
         id="web"
         serviceHref="/services#web-development"
-        icon={<Code2 size={22} />}
+        icon={<SvgWebDevelopment size={22} />}
         align="right"
         title={t("home.section.web.title")}
         desc={t("home.section.web.desc")}
         learnMore={t("home.section.learn_more")}
       >
-        <TechList items={["Next.js", "React", "Node.js", "API", "Cloud", "SEO"]} />
+        <TechList items={["React", "Node.js", "OpenAPI", "Docker", "PostgreSQL", "SEO"]} />
       </ServiceSection>
 
       <ServiceSection
         id="mobile"
         serviceHref="/services#app-development"
-        icon={<Smartphone size={22} />}
+        icon={<SvgAppDevelopment size={22} />}
         align="left"
         title={t("home.section.app.title")}
         desc={t("home.section.app.desc")}
         learnMore={t("home.section.learn_more")}
       >
-        <TechList items={["Push Notifications", "Maps", "Chat", "Analytics", "Auth"]} />
+        <TechList items={["Push API", "Maps", "Chat", "Auth", "Store Builds"]} />
       </ServiceSection>
 
       <ServiceSection
         id="individual"
         serviceHref="/services#individual-solutions"
-        icon={<Users size={22} />}
+        icon={<SvgIndividualSolutions size={22} />}
         align="right"
         title={t("home.section.individual.title")}
         desc={t("home.section.individual.desc")}
         learnMore={t("home.section.learn_more")}
       >
-        <TechList items={["APIs", "Automation", "Integrations", "Scalable"]} />
+        <TechList items={["n8n", "Webhooks", "Admin Panels", "PostgreSQL"]} />
       </ServiceSection>
 
       <section id="cta" className="journey-section final-journey-section">

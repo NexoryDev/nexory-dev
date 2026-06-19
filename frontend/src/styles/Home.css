@@ -1,9 +1,34 @@
 .home-page {
   position: relative;
-  background: #030b18;
+  background: #03060b;
   color: #fff;
-  min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
+}
+
+.home-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(126, 155, 190, 0.035) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(126, 155, 190, 0.028) 1px, transparent 1px),
+    linear-gradient(135deg, transparent 0 49%, rgba(110, 231, 242, 0.035) 49.08% 49.18%, transparent 49.3% 100%);
+  background-size: 96px 96px, 96px 96px, 560px 560px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.34) 62%, transparent 100%);
+}
+
+.home-page::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(3, 6, 11, 0.76) 0%, rgba(3, 6, 11, 0.36) 34%, transparent 58%),
+    linear-gradient(180deg, rgba(3, 6, 11, 0.2) 0%, transparent 35%, rgba(3, 6, 11, 0.38) 100%);
 }
 
 .home-canvas-shell {
@@ -11,6 +36,7 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
+  filter: saturate(1.08) contrast(1.04) brightness(1.1);
 }
 
 .home-canvas-shell > canvas {
@@ -27,15 +53,16 @@
   align-items: center;
   justify-content: center;
   background:
-    radial-gradient(circle at 70% 45%, rgba(112, 80, 232, 0.12) 0%, transparent 55%),
-    #030b18;
+    linear-gradient(115deg, transparent 0 42%, rgba(110, 231, 242, 0.06) 42.2% 42.42%, transparent 42.62% 100%),
+    linear-gradient(180deg, rgba(143, 179, 255, 0.035), transparent 58%),
+    #03060b;
 }
 
 .home-static-cube {
   font-size: 120px;
   font-weight: 900;
-  letter-spacing: -0.04em;
-  background: linear-gradient(135deg, #60c0ff 0%, #8060ff 100%);
+  letter-spacing: 0;
+  background: linear-gradient(135deg, #dff9ff 0%, #6ee7f2 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -47,12 +74,18 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
+  background:
+    linear-gradient(115deg, transparent 0 18%, rgba(255, 255, 255, 0.02) 18.08% 18.18%, transparent 18.32% 100%),
+    linear-gradient(90deg, transparent 0 65%, rgba(110, 231, 242, 0.028) 65.08% 65.18%, transparent 65.32% 100%);
+  opacity: 0.64;
 }
 
 .journey-section {
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
   z-index: 2;
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   padding: 120px 0;
@@ -60,8 +93,30 @@
   width: 100%;
 }
 
+.journey-section::before,
+.journey-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.journey-section::before {
+  background:
+    linear-gradient(90deg, rgba(126, 155, 190, 0.026) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(126, 155, 190, 0.018) 1px, transparent 1px);
+  background-size: 96px 96px;
+  mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.14) 42%, transparent 78%);
+  opacity: 0.16;
+}
+
+.journey-section::after {
+  display: none;
+}
+
 .hero-journey-section {
-  min-height: 100vh;
+  min-height: 100dvh;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
@@ -70,6 +125,8 @@
 }
 
 .journey-content {
+  position: relative;
+  z-index: 2;
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
@@ -85,7 +142,7 @@
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #8878ff;
+  color: #6ee7f2;
   margin-bottom: 28px;
   border: 0;
   padding: 0;
@@ -96,7 +153,7 @@
   content: "+";
   font-size: 13px;
   line-height: 1;
-  color: #8878ff;
+  color: #6ee7f2;
   opacity: 0.8;
 }
 
@@ -104,17 +161,17 @@
   font-size: clamp(40px, 5.8vw, 76px);
   font-weight: 800;
   line-height: 1.06;
-  letter-spacing: -0.044em;
+  letter-spacing: 0;
   margin: 0 0 28px;
   color: #f0f4ff;
   max-width: 560px;
 }
 .hero-accent {
-  background: linear-gradient(130deg, #74a8ee 0%, #8878df 100%);
+  background: linear-gradient(130deg, #f7fbff 0%, #6ee7f2 46%, #8fb3ff 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 14px rgba(100, 130, 255, 0.14));
+  filter: none;
 }
 .hero-desc {
   font-size: clamp(14px, 1.45vw, 16.5px);
@@ -126,11 +183,13 @@
 }
 
 .service-journey-section {
-  min-height: 100vh;
+  min-height: 100dvh;
   padding: 0;
 }
 
 .service-grid {
+  position: relative;
+  z-index: 2;
   display: grid;
   width: 100%;
   max-width: 1280px;
@@ -139,7 +198,7 @@
   box-sizing: border-box;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: center;
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .service-text {
@@ -148,24 +207,19 @@
   align-items: flex-start;
   width: 100%;
   min-width: 0;
-  max-width: 520px;
-  padding: 48px;
-  border-radius: 24px;
-  background: rgba(4, 13, 30, 0.64);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  max-width: 540px;
+  padding: 44px 0 44px 34px;
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 0;
+  border-left: 1px solid rgba(122, 151, 185, 0.18);
   box-shadow:
-    0 16px 40px rgba(0, 0, 0, 0.24),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    none;
   transition:
     border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
     transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.service-text:hover {
-  transform: translateY(-2px);
 }
 
 .service--left .service-grid {
@@ -184,67 +238,89 @@
   justify-self: end;
   align-items: flex-end;
   text-align: right;
+  padding: 44px 34px 44px 0;
+  border-left: 0;
+  border-right: 1px solid rgba(122, 151, 185, 0.18);
 }
 
 #hero {
   background:
-    radial-gradient(circle at 80% 25%, rgba(96, 80, 220, 0.12) 0%, transparent 55%),
-    radial-gradient(circle at 20% 75%, rgba(136, 120, 255, 0.05) 0%, transparent 60%);
+    linear-gradient(90deg, rgba(3, 6, 11, 0.72) 0%, rgba(3, 6, 11, 0.38) 34%, transparent 64%),
+    linear-gradient(180deg, rgba(3, 6, 11, 0.2), transparent 38%, rgba(3, 6, 11, 0.24));
+}
+
+#hero::before {
+  opacity: 0.18;
+  background:
+    linear-gradient(90deg, rgba(126, 155, 190, 0.036) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(126, 155, 190, 0.024) 1px, transparent 1px);
+  background-size: 88px 88px;
+  mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.12) 48%, transparent 74%);
 }
 
 #discord {
-  background:
-    radial-gradient(circle at 15% 30%, rgba(88, 101, 242, 0.07) 0%, transparent 50%),
-    radial-gradient(circle at 85% 70%, rgba(88, 101, 242, 0.02) 0%, transparent 60%);
+  --section-rgb: 88, 101, 242;
+  --section-color: #5865f2;
+  background: transparent;
   border-top: 1px solid rgba(88, 101, 242, 0.06);
   border-bottom: 1px solid rgba(88, 101, 242, 0.06);
 }
 
-#discord .service-text:hover {
-  border-color: rgba(88, 101, 242, 0.2);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.3);
-}
-
 #web {
-  background:
-    radial-gradient(circle at 15% 30%, rgba(14, 165, 233, 0.07) 0%, transparent 55%),
-    radial-gradient(circle at 85% 70%, rgba(14, 165, 233, 0.02) 0%, transparent 50%);
+  --section-rgb: 14, 165, 233;
+  --section-color: #0ea5e9;
+  background: transparent;
   border-bottom: 1px solid rgba(14, 165, 233, 0.06);
 }
 
-#web .service-text:hover {
-  border-color: rgba(14, 165, 233, 0.2);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.3);
-}
-
 #mobile {
-  background:
-    radial-gradient(circle at 15% 30%, rgba(236, 72, 153, 0.055) 0%, transparent 50%),
-    radial-gradient(circle at 85% 70%, rgba(236, 72, 153, 0.018) 0%, transparent 60%);
+  --section-rgb: 236, 72, 153;
+  --section-color: #ec4899;
+  background: transparent;
   border-bottom: 1px solid rgba(236, 72, 153, 0.06);
 }
 
-#mobile .service-text:hover {
-  border-color: rgba(236, 72, 153, 0.18);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.3);
-}
-
 #individual {
-  background:
-    radial-gradient(circle at 15% 30%, rgba(168, 85, 247, 0.07) 0%, transparent 55%),
-    radial-gradient(circle at 85% 70%, rgba(168, 85, 247, 0.02) 0%, transparent 50%);
+  --section-rgb: 168, 85, 247;
+  --section-color: #a855f7;
+  background: transparent;
   border-bottom: 1px solid rgba(168, 85, 247, 0.06);
 }
 
-#individual .service-text:hover {
-  border-color: rgba(168, 85, 247, 0.2);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.3);
+.service-journey-section::before {
+  opacity: 1;
+  background:
+    linear-gradient(90deg, rgba(3, 6, 11, 0.64) 0%, rgba(3, 6, 11, 0.24) 38%, transparent 68%),
+    linear-gradient(90deg, rgba(var(--section-rgb), 0.045), transparent 42%),
+    linear-gradient(90deg, rgba(var(--section-rgb), 0.08) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(126, 155, 190, 0.018) 1px, transparent 1px);
+  background-size: auto, auto, 92px 92px, 92px 92px;
+  mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.16) 52%, transparent 78%);
+}
+
+.service-journey-section::after {
+  display: none;
+}
+
+.service-journey-section.service--right::before {
+  background:
+    linear-gradient(270deg, rgba(3, 6, 11, 0.64) 0%, rgba(3, 6, 11, 0.24) 38%, transparent 68%),
+    linear-gradient(270deg, rgba(var(--section-rgb), 0.045), transparent 42%),
+    linear-gradient(90deg, rgba(var(--section-rgb), 0.08) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(126, 155, 190, 0.018) 1px, transparent 1px);
+  background-size: auto, auto, 92px 92px, 92px 92px;
+  mask-image: linear-gradient(270deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.16) 52%, transparent 78%);
 }
 
 #cta {
   background:
-    radial-gradient(circle at 50% 50%, rgba(96, 80, 255, 0.11) 0%, transparent 65%);
-  border-top: 1px solid rgba(96, 80, 255, 0.06);
+    linear-gradient(90deg, transparent 0%, rgba(3, 6, 11, 0.36) 50%, transparent 100%),
+    linear-gradient(180deg, transparent, rgba(3, 6, 11, 0.28));
+  border-top: 1px solid rgba(110, 231, 242, 0.08);
+}
+
+#cta::after {
+  display: none;
 }
 
 .svc-icon {
@@ -253,16 +329,20 @@
   justify-content: center;
   width: 52px;
   height: 52px;
-  border-radius: 14px;
+  border-radius: 12px;
   margin-bottom: 24px;
-  background: rgba(112, 80, 232, 0.1);
-  border: 1px solid rgba(112, 80, 232, 0.22);
-  color: #8878ff;
-  transition: background 0.24s, border-color 0.24s, box-shadow 0.24s;
+  background: rgba(110, 231, 242, 0.08);
+  border: 1px solid rgba(110, 231, 242, 0.2);
+  color: #6ee7f2;
+  transition:
+    background 180ms var(--ease-out-strong),
+    border-color 180ms var(--ease-out-strong),
+    transform 180ms var(--ease-out-strong);
 }
 .svc-icon:hover {
-  background: rgba(112, 80, 232, 0.13);
-  border-color: rgba(136, 120, 255, 0.28);
+  background: rgba(110, 231, 242, 0.11);
+  border-color: rgba(110, 231, 242, 0.3);
+  transform: translateY(-1px);
 }
 #discord    .svc-icon { background: rgba(88,101,242,0.10); border-color: rgba(88,101,242,0.22); color: #7888f8; }
 #web        .svc-icon { background: rgba(14,165,233,0.08); border-color: rgba(14,165,233,0.20); color: #38b8f8; }
@@ -274,7 +354,7 @@
   font-size: clamp(28px, 3.4vw, 48px);
   font-weight: 800;
   line-height: 1.08;
-  letter-spacing: -0.032em;
+  letter-spacing: 0;
   margin: 0 0 18px;
   color: #eef0ff;
   padding-bottom: 18px;
@@ -287,7 +367,7 @@
   width: 40px;
   height: 3px;
   border-radius: 2px;
-  background: #8878ff;
+  background: #6ee7f2;
 }
 .service--right .service-text h2::after {
   left: auto;
@@ -319,21 +399,30 @@
   align-items: center;
   gap: 9px;
   padding: 13px 28px;
-  border-radius: 100px;
-  background: linear-gradient(135deg, #5060d4 0%, #6250bc 100%);
+  border-radius: 999px;
+  background: linear-gradient(135deg, #1e5fe7 0%, #21aabd 100%);
   color: #fff;
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
   border: none;
-  box-shadow: 0 4px 16px rgba(40, 50, 130, 0.24);
-  transition: transform 0.28s ease, box-shadow 0.28s ease, filter 0.22s ease;
+  box-shadow: 0 12px 26px rgba(20, 85, 140, 0.24);
+  transition:
+    transform 160ms var(--ease-out-strong),
+    box-shadow 180ms var(--ease-out-strong),
+    filter 180ms var(--ease-out-strong);
   white-space: nowrap;
 }
 .home-primary-button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 7px 22px rgba(40, 50, 130, 0.3);
+  box-shadow: 0 16px 30px rgba(20, 85, 140, 0.32);
   filter: brightness(1.05);
+}
+
+.home-primary-button:active,
+.home-secondary-button:active,
+.journey-link:active {
+  transform: scale(0.98);
 }
 
 .home-secondary-button {
@@ -348,7 +437,11 @@
   font-weight: 600;
   text-decoration: none;
   border: 1.5px solid rgba(180, 190, 255, 0.1);
-  transition: transform 0.28s ease, background 0.22s ease, border-color 0.22s ease, color 0.22s ease;
+  transition:
+    transform 160ms var(--ease-out-strong),
+    background 180ms var(--ease-out-strong),
+    border-color 180ms var(--ease-out-strong),
+    color 180ms var(--ease-out-strong);
   white-space: nowrap;
 }
 .home-secondary-button:hover {
@@ -376,13 +469,16 @@
   font-size: 11.5px;
   font-weight: 600;
   color: #7080a8;
-  transition: background 0.22s, border-color 0.22s, color 0.22s, box-shadow 0.22s;
+  transition:
+    background 160ms var(--ease-out-strong),
+    border-color 160ms var(--ease-out-strong),
+    color 160ms var(--ease-out-strong);
   cursor: default;
   letter-spacing: 0.01em;
 }
 .journey-tags span:hover {
   background: rgba(120, 100, 255, 0.09);
-  border-color: rgba(136, 120, 255, 0.22);
+  border-color: rgba(110, 231, 242, 0.22);
   color: #9ca8dc;
 }
 
@@ -399,7 +495,12 @@
   padding: 8px 16px 8px 14px;
   border-radius: 100px;
   background: rgba(112, 128, 184, 0.06);
-  transition: gap 0.22s ease, color 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+  transition:
+    gap 160ms var(--ease-out-strong),
+    color 160ms var(--ease-out-strong),
+    border-color 160ms var(--ease-out-strong),
+    background 160ms var(--ease-out-strong),
+    transform 120ms var(--ease-out-strong);
 }
 .journey-link:hover {
   gap: 12px;
@@ -454,7 +555,7 @@
   font-size: clamp(32px, 4.4vw, 58px);
   font-weight: 800;
   line-height: 1.08;
-  letter-spacing: -0.034em;
+  letter-spacing: 0;
   margin: 0 0 20px;
   color: #e8ecff;
 }
@@ -467,9 +568,9 @@
 }
 
 ::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: #030b18; }
-::-webkit-scrollbar-thumb { background: rgba(112, 80, 232, 0.22); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(136, 120, 255, 0.38); }
+::-webkit-scrollbar-track { background: #05070c; }
+::-webkit-scrollbar-thumb { background: rgba(110, 231, 242, 0.22); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(110, 231, 242, 0.36); }
 
 @media (max-width: 1100px) {
   .journey-content,
@@ -480,7 +581,7 @@
 }
 
 @media (max-width: 980px) {
-  .journey-section { padding: 96px 0; min-height: 90vh; }
+  .journey-section { padding: 96px 0; min-height: 90dvh; }
   .hero-journey-section { padding-top: 118px; padding-bottom: 56px; }
 
   .journey-content,
@@ -490,7 +591,7 @@
     grid-template-columns: 1fr;
     grid-template-areas: "text" !important;
     padding: 96px 24px;
-    min-height: 90vh;
+    min-height: 90dvh;
     align-items: center;
     justify-items: center;
   }
@@ -502,6 +603,11 @@
     max-width: 620px !important;
     justify-self: center !important;
     padding: 32px 24px !important;
+    border: 1px solid rgba(122, 151, 185, 0.14) !important;
+    border-radius: 12px !important;
+    background: rgba(5, 9, 17, 0.62);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     margin-left: 0 !important;
     margin-right: 0 !important;
   }
@@ -525,8 +631,22 @@
 
   .home-atmosphere {
     background:
-      radial-gradient(ellipse 90% 45% at 50% 0%, rgba(3, 11, 24, 0.45) 0%, transparent 65%),
-      linear-gradient(to top, rgba(3, 11, 24, 0.72) 0%, transparent 28%);
+      linear-gradient(90deg, rgba(126, 155, 190, 0.025) 1px, transparent 1px),
+      linear-gradient(0deg, rgba(126, 155, 190, 0.02) 1px, transparent 1px),
+      linear-gradient(to top, rgba(3, 6, 11, 0.5) 0%, transparent 28%);
+    background-size: 58px 58px, 58px 58px, auto;
+  }
+
+  .journey-section::before {
+    opacity: 0.18;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent 76%);
+  }
+
+  .journey-section::after,
+  .service-journey-section::after,
+  #hero::after,
+  #cta::after {
+    opacity: 0.16;
   }
 }
 

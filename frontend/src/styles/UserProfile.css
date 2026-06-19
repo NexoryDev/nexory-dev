@@ -71,9 +71,9 @@
   padding: 0;
   margin-bottom: 18px;
   align-self: flex-start;
-  transition: opacity 0.15s;
+  transition: opacity 140ms var(--ease-out-strong);
   position: relative;
-  z-index: 9999;
+  z-index: 2;
 }
 
 .up-back-btn:hover { opacity: 0.75; }

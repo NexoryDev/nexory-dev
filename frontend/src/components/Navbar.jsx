@@ -105,6 +105,15 @@ export default function Navbar() {
 
         <li>
           <Link
+            to="/services"
+            className={`nav-link-featured ${isActive("/services") ? "active" : ""}`.trim()}
+          >
+            {t("nav.services")}
+          </Link>
+        </li>
+
+        <li>
+          <Link
             to="/github"
             className={`nav-link-featured ${isActive("/github") ? "active" : ""}`.trim()}
           >

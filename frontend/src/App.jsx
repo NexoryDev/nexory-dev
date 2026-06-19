@@ -20,6 +20,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 import ResetPassword from "./pages/ResetPassword";
 import UserProfile from "./pages/user/UserProfile";
 import GitHubCallback from "./pages/GitHubCallback";
+import Services from "./pages/services";
 
 function AppContent() {
   const { user } = useAuth();
@@ -33,6 +34,7 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/services" element={<Services />} />
           <Route path="/github" element={<GitHub />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/imprint" element={<Imprint />} />

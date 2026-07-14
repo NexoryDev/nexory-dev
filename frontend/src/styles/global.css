@@ -1,70 +1,37 @@
 :root {
-  --bg:                    #05070c;
-  --bg-deep:               #02040a;
-  --surface:               rgba(8, 14, 24, 0.68);
-  --surface-hover:         rgba(255, 255, 255, 0.04);
-  --border:                rgba(122, 151, 185, 0.16);
-  --border-hover:          rgba(110, 231, 242, 0.32);
-  --border-focus:          rgba(110, 231, 242, 0.48);
-  --accent:                #6ee7f2;
-  --accent-secondary:      #8fb3ff;
-  --text:                  #f0f4ff;
-  --muted:                 #6a7590;
-  --text-dim:              #5a637a;
 
-  --color-bg:              #05070c;
-  --color-bg-deep:         #02040a;
-  --color-bg-elevated:     rgba(9, 16, 28, 0.78);
-  --color-bg-surface:      rgba(8, 14, 24, 0.68);
-  --color-bg-surface-2:    rgba(10, 18, 30, 0.72);
-  --color-border:          rgba(122, 151, 185, 0.16);
-  --color-border-subtle:   rgba(122, 151, 185, 0.09);
-  --color-accent:          #6ee7f2;
-  --color-accent-2:        #8fb3ff;
-  --color-accent-soft:     #c7d7ff;
-  --color-accent-soft-2:   #9adbe4;
-  --color-grad-1:          #6ee7f2;
-  --color-grad-2:          #8fb3ff;
-  --color-grad-3:          #b8a4ff;
-  --color-grad-4:          #f0a3c4;
-  --color-text:            #f0f4ff;
-  --color-text-bright:     #ffffff;
-  --color-text-soft:       #d0d8ff;
-  --color-text-muted:      #6a7590;
-  --color-text-dim:        #5a637a;
-  --color-shadow-soft:     rgba(0, 0, 0, 0.2);
-  --color-shadow-card:     0 24px 60px rgba(0, 0, 0, 0.35);
-  --color-shadow-strong:   rgba(0, 0, 0, 0.65);
+  --bg:                    #0a0b0d;
+  --bg-deep:               #060708;
+  --bg-elevated:           #101216;
+  --surface:               rgba(255, 255, 255, 0.035);
+  --surface-hover:         rgba(255, 255, 255, 0.055);
+  --border:                rgba(255, 255, 255, 0.09);
+  --border-hover:          rgba(255, 255, 255, 0.16);
+  --border-focus:          rgba(76, 122, 245, 0.55);
 
-  --color-accent-06:       rgba(110, 231, 242, 0.06);
-  --color-accent-08:       rgba(110, 231, 242, 0.08);
-  --color-accent-10:       rgba(110, 231, 242, 0.1);
-  --color-accent-12:       rgba(110, 231, 242, 0.12);
-  --color-accent-18:       rgba(110, 231, 242, 0.18);
-  --color-accent-25:       rgba(110, 231, 242, 0.25);
-  --color-accent-30:       rgba(110, 231, 242, 0.3);
-  --color-accent-35:       rgba(110, 231, 242, 0.35);
-  --color-accent-40:       rgba(110, 231, 242, 0.4);
-  --color-accent-50:       rgba(110, 231, 242, 0.5);
+  --accent:                #4c7af5;
+  --accent-strong:         #6690ff;
+  --accent-dim:            #2f4e9e;
+  --accent-06:             rgba(76, 122, 245, 0.06);
+  --accent-10:             rgba(76, 122, 245, 0.1);
+  --accent-16:             rgba(76, 122, 245, 0.16);
+  --accent-24:             rgba(76, 122, 245, 0.24);
+  --accent-40:             rgba(76, 122, 245, 0.4);
 
-  --color-success:         #6ce89a;
-  --color-success-08:      rgba(108, 232, 154, 0.08);
-  --color-success-25:      rgba(108, 232, 154, 0.25);
+  --text:                  #f4f3ef;
+  --text-bright:           #ffffff;
+  --text-muted:            #93959c;
+  --text-dim:              #5e6067;
 
-  --color-danger:          #ff8a83;
-  --color-danger-08:       rgba(255, 138, 131, 0.08);
-  --color-danger-20:       rgba(255, 138, 131, 0.2);
-  --color-danger-25:       rgba(255, 138, 131, 0.25);
+  --font-display: 'General Sans', 'Outfit', 'Inter', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', 'IBM Plex Mono', monospace;
 
-  --fade-purple:           linear-gradient(135deg, #2f6df6 0%, #34c3d6 100%);
-  --text-decoration:       rgba(110, 231, 242, 0.48);
-  --text-decoration-shadow: rgba(110, 231, 242, 0.18);
-  --color-white-03:        rgba(255, 255, 255, 0.03);
-  --color-white-04:        rgba(255, 255, 255, 0.04);
-  --color-white-12:        rgba(255, 255, 255, 0.12);
-  --color-white-78:        rgba(255, 255, 255, 0.78);
-  --ease-out-strong:       cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out-strong:    cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-out-strong:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+
+  --shadow-card: 0 24px 60px rgba(0, 0, 0, 0.4);
+  --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.28);
 }
 
 *, *::before, *::after {
@@ -81,12 +48,12 @@ html {
 
 body {
   margin: 0;
-  font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-body);
   font-display: swap;
   background-color: var(--bg);
-  background-image: 
-    radial-gradient(circle at 78% 18%, rgba(110, 231, 242, 0.045) 0%, transparent 40%),
-    radial-gradient(circle at 16% 76%, rgba(143, 179, 255, 0.035) 0%, transparent 42%);
+  background-image:
+    radial-gradient(circle at 82% 12%, rgba(76, 122, 245, 0.05) 0%, transparent 42%),
+    radial-gradient(circle at 12% 82%, rgba(76, 122, 245, 0.03) 0%, transparent 46%);
   background-attachment: fixed;
   color: var(--text);
   display: flex;
@@ -102,24 +69,15 @@ body {
 }
 
 a {
-  color: var(--accent-secondary);
+  color: var(--text);
   text-decoration: none;
   transition: color 180ms var(--ease-out-strong);
 }
+a:hover { color: var(--accent-strong); }
 
-a:hover {
-  color: var(--text);
-}
+main { flex: 1; width: 100%; }
 
-main {
-  flex: 1;
-  width: 100%;
-}
-
-button,
-a {
-  -webkit-tap-highlight-color: transparent;
-}
+button, a { -webkit-tap-highlight-color: transparent; }
 
 :focus-visible {
   outline: 2px solid var(--border-focus);
@@ -127,14 +85,12 @@ a {
 }
 
 ::selection {
-  background: rgba(110, 231, 242, 0.22);
-  color: var(--color-text-bright);
+  background: var(--accent-24);
+  color: var(--text-bright);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 1ms !important;
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;

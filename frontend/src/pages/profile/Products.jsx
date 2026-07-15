@@ -12,22 +12,22 @@ const Projects = () => {
   ];
 
   return (
-    <div className="me-layout">
-      <main className="me-content">
+    <section className="account-panel">
+      <div className="account-header">
+        <p className="journey-kicker">{t("account.products.title")}</p>
+        <h1 className="account-page-title">{t("account.products.title")}</h1>
+        <p className="account-page-subtitle">{t("account.products.subtitle")}</p>
+      </div>
 
-        <div className="projects-grid">
-
-          {projects.map((p, i) => (
-            <div className="project-card" key={i}>
-              <h3>{p.name}</h3>
-              <p>{p.desc}</p>
-            </div>
-          ))}
-
-        </div>
-
-      </main>
-    </div>
+      <div className="projects-grid">
+        {projects.map((p, i) => (
+          <article className="project-card" key={i}>
+            <h3>{p.name}</h3>
+            <p>{p.desc}</p>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 };
 

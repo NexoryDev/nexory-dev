@@ -304,7 +304,6 @@
   "account.me.avatar_error.no_file": "Please select a file.",
   "account.me.avatar_error.upload_failed": "Could not upload the avatar.",
   "account.me.bio_label": "Bio",
-  "account.me.bio_placeholder": "Tell people a little about yourself…",
   "account.me.location_label": "Location",
   "account.me.save_profile": "Save",
   "account.me.saving_profile": "Saving…",

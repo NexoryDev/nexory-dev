@@ -510,11 +510,12 @@ const Settings = () => {
   if (loading || !user) return <div className="me-loading">{t("account.loading")}</div>;
 
   return (
-    <div className="me-layout settings-layout">
-      <main className="me-content settings-content">
-        <div className="me-settings">
-          <h1 className="settings-page-title">{t("account.settings.title")}</h1>
-          <p className="settings-page-subtitle">{t("account.settings.subtitle")}</p>
+    <section className="account-panel settings-panel">
+      <div className="account-header">
+        <p className="journey-kicker">{t("account.settings.title")}</p>
+      </div>
+
+      <div className="me-settings">
 
           {error ? <p className="settings-error">{error}</p> : null}
 
@@ -749,8 +750,7 @@ const Settings = () => {
             </div>
           </div>
         ) : null}
-      </main>
-    </div>
+    </section>
   );
 };
 

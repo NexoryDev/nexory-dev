@@ -349,13 +349,15 @@ const Me = () => {
   if (!user) return <div className="me-loading">{t("account.loading")}</div>;
 
   return (
-    <div className="me-layout">
-      <main className="me-content">
+    <section className="account-panel">
+      <div className="account-header">
+        <p className="journey-kicker">{t("account.me.profile_details")}</p>
+      </div>
 
-        {profileError ? <p className="settings-error me-top-msg">{profileError}</p> : null}
-        {profileSuccess ? <p className="settings-success me-top-msg">{profileSuccess}</p> : null}
+      {profileError ? <p className="settings-error me-top-msg">{profileError}</p> : null}
+      {profileSuccess ? <p className="settings-success me-top-msg">{profileSuccess}</p> : null}
 
-        <div className="me-header">
+      <div className="me-header">
           <div
             className="avatar avatar-editable"
             onClick={onAvatarClick}
@@ -465,6 +467,7 @@ const Me = () => {
                 <button
                   key={b.id}
                   className={`me-badge-card me-badge-card--${b.rarity}`}
+                  data-rarity={b.rarity}
                   onClick={() => setActiveBadge(b)}
                   style={{ "--badge-color": b.color, "--badge-glow": RARITY_GLOW[b.rarity] ?? "transparent" }}
                 >
@@ -497,8 +500,6 @@ const Me = () => {
             {profileSaving ? t("account.me.saving_profile") : t("account.me.save_profile")}
           </button>
         </div>
-
-      </main>
 
       {activeBadge ? (
         <div className="badge-modal-backdrop" onClick={() => setActiveBadge(null)}>
@@ -539,7 +540,7 @@ const Me = () => {
           </div>
         </div>
       ) : null}
-    </div>
+    </section>
   );
 };
 

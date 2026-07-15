@@ -6,6 +6,8 @@ import {
   RepoForkedIcon,
   StarIcon,
   TrophyIcon,
+  CreditCardIcon,
+  PackageIcon
 } from "@primer/octicons-react";
 
 const ICON_SIZE = 16;
@@ -62,6 +64,8 @@ export const SvgProfile = () => <PersonIcon size={ICON_SIZE} color={ICON_COLOR} 
 export const SvgSettings = () => <GearIcon size={ICON_SIZE} color={ICON_COLOR} />;
 export const SvgProducts = () => <ProjectIcon size={ICON_SIZE} color={ICON_COLOR} />;
 export const SvgBadges = () => <TrophyIcon size={ICON_SIZE} color={ICON_COLOR} />;
+export const SvgBilling = () => <CreditCardIcon size={ICON_SIZE} color={ICON_COLOR} />;
+export const SvgOrders = () => <PackageIcon size={ICON_SIZE} color={ICON_COLOR} />;
 
 function ServiceSvg({ children, size = 24, ...props }) {
   return (

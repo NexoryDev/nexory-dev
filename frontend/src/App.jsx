@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { LanguageProvider } from './context/LanguageContext';
 import { AuthProvider, useAuth } from "./auth/AuthProvider";
 import ScrollToTop from './components/ScrollToTop';
@@ -15,21 +15,24 @@ import Me from "./pages/profile/Me";
 import Settings from "./pages/profile/Settings";
 import Products from "./pages/profile/Products";
 import ProtectedRoute from "./auth/ProtectedRoute";
-import AccountLayout from "./pages/profile/AccountLayout";
+import DashboardLayout from "./pages/profile/DashboardLayout";
 import VerifyEmail from "./pages/VerifyEmail";
 import ResetPassword from "./pages/ResetPassword";
 import UserProfile from "./pages/user/UserProfile";
 import GitHubCallback from "./pages/GitHubCallback";
 import Services from "./pages/services";
 
-function AppContent() {
+function AppShell() {
   const { user } = useAuth();
+  const location = useLocation();
+  const showNavbar = !location.pathname.startsWith('/me');
+  const showFooter = !location.pathname.startsWith('/me');
 
   return (
-    <BrowserRouter>
+    <>
       <ScrollToTop />
       <div id="page" style={{ opacity: 1, transition: 'opacity 0.4s ease' }}>
-        <Navbar />
+        {showNavbar ? <Navbar /> : null}
 
         <Routes>
           <Route path="/" element={<Home />} />
@@ -47,21 +50,34 @@ function AppContent() {
             path="/me"
             element={
               <ProtectedRoute>
-                <AccountLayout />
+                <DashboardLayout />
               </ProtectedRoute>
             }
           >
             <Route index element={<Me />} />
             <Route path="products" element={<Products />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="licenses" element={<Me />} />
+            <Route path="billing" element={<Products />} />
+            <Route path="orders" element={<Products />} />
+            <Route path="security" element={<Settings />} />
+            <Route path="api" element={<Products />} />
           </Route>
           <Route path="/user/:username" element={<UserProfile />} />
           <Route path="/github/callback" element={<GitHubCallback />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
 
-        <Footer />
+        {showFooter ? <Footer /> : null}
       </div>
+    </>
+  );
+}
+
+function AppContent() {
+  return (
+    <BrowserRouter>
+      <AppShell />
     </BrowserRouter>
   );
 }
